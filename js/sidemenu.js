@@ -13,7 +13,7 @@ $(function() {
     } else {
       slideoutMenu.animate({
         left: -slideoutMenuWidth
-      }, 250);
+      }, 200);
     }
   });
 });

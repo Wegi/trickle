@@ -13,9 +13,7 @@ $ ->
         if slideoutMenu.hasClass("open")
             slideoutMenu.animate left: "0px"
         else
-            slideoutMenu.animate
-                left: -slideoutMenuWidth
-            , 250
+            slideoutMenu.animate left: -slideoutMenuWidth, 200
         return
 
     return
