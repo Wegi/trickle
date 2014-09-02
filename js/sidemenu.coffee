@@ -1,5 +1,5 @@
 $ ->
-    $(".slideout-menu-toggle").on "click", (event) ->
+    $(".slideout-menu-toggle").click (event) ->
         event.preventDefault()
 
         # create menu variables
