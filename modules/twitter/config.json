@@ -1,0 +1,9 @@
+{
+    "name": "Twitter",
+    "description": "Display your Twitter Stream inside trickle.
+                    Needs you to authorize the App to Twitter",
+    "type": "stream",
+    "options": ["Twitter-Name"],
+    "hook": "twitter.js"
+    "version": 0.1
+}
