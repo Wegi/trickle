@@ -6,14 +6,9 @@ root = typeof exports !== "undefined" && exports !== null ? exports : this;
 numBoxes = 0;
 
 $(function() {
-  $(".draggable").draggable({
-    snap: true
-  });
   $("#new-box").click(function() {
     $("#boxes").append("<div class='draggable ui-widget-content' id='box-" + numBoxes + "'>I am a new Box! Go and add some modules.</div>");
-    $("#box-" + numBoxes).draggable({
-      snap: true
-    });
+    $("#box-" + numBoxes).draggable().resizable();
     root.toggleSidebar();
     numBoxes++;
   });
