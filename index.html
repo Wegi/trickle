@@ -13,11 +13,15 @@
   <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css" rel="stylesheet">
 
   <!-- Custom styles for this template -->
+  <link rel="stylesheet" href="https://code.jquery.com/ui/1.11.1/themes/smoothness/jquery-ui.css">
   <link href="css/cover.css" rel="stylesheet">
   <link href="css/sidemenu.css" rel="stylesheet">
+  <link href="css/draggableboxes.css" rel="stylesheet">
 
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+  <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+  <script type="text/javascript" src="https://code.jquery.com/ui/1.11.1/jquery-ui.js"></script>
   <script type="text/javascript" src="js/sidemenu.js"></script>
+  <script type="text/javascript" src="js/draggableboxes.js"></script>
 </head>
 <!-- NAVBAR
 ================================================== -->
@@ -29,11 +33,9 @@
     <div class="slideout-menu">
       <h3><span class="glyphicon glyphicon-cog slideout-menu-toggle"></span></h3>
       <ul>
-        <li><a href="#">Jeah <span class="glyphicon glyphicon-chevron-right"></span></a></li>
-        <li><a href="#">Wow <span class="glyphicon glyphicon-chevron-right"></span></a></li>
-        <li><a href="#">Such links <span class="glyphicon glyphicon-chevron-right"></span></a></li>
-        <li><a href="#">Many wow <span class="glyphicon glyphicon-chevron-right"></span></a></li>
-        <li><a href="#">Wegi ist doof <span class="glyphicon glyphicon-chevron-right"></span></a></li>
+        <li><a id="#box-facebook-trigger" href="#">Facebook</a></li>
+        <li><a id="#box-twitter-trigger" href="#">Twitter</a></li>
+        <li><a id="#box-googleplus-trigger" href="#">Google+</a></li>
       </ul>
     </div>
     <!-- /Sidebar -->
@@ -42,11 +44,22 @@
       <div class="cover-container">
 
         <div class="inner cover">
-          <h1 class="cover-heading">Cover your page.</h1>
-          <p class="lead">Cover is a one-page template for building simple and beautiful home pages. Download, edit the text, and add your own fullscreen background photo to make it your own.</p>
-          <p class="lead">
-            <a href="#" class="btn btn-lg btn-default">Learn more</a>
-          </p>
+          <div id="box-facebook" class="draggable ui-widget-content">
+            <p>Facebook</p>
+          </div>
+
+          <div id="box-twitter" class="draggable ui-widget-content">
+            <p>Twitter</p>
+          </div>
+
+          <div id="box-googleplus" class="draggable ui-widget-content">
+            <p>Google+</p>
+          </div>
+        </div>
+
+        <div class="inner cover">
+          <h1 class="cover-heading">Trickle</h1>
+          <p class="lead">A personal Social Media Hub. Get your Streams drop by drop.</p>
         </div>
 
       </div> <!-- /.cover-container -->
