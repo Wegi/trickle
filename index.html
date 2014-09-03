@@ -13,7 +13,6 @@
   <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css" rel="stylesheet">
 
   <!-- Custom styles for this template -->
-  <link rel="stylesheet" href="https://code.jquery.com/ui/1.11.1/themes/smoothness/jquery-ui.css">
   <link href="css/cover.css" rel="stylesheet">
   <link href="css/sidemenu.css" rel="stylesheet">
   <link href="css/draggableboxes.css" rel="stylesheet">
@@ -33,9 +32,7 @@
     <div class="slideout-menu">
       <h3><span class="glyphicon glyphicon-cog slideout-menu-toggle"></span></h3>
       <ul>
-        <li><a id="#box-facebook-trigger" href="#">Facebook</a></li>
-        <li><a id="#box-twitter-trigger" href="#">Twitter</a></li>
-        <li><a id="#box-googleplus-trigger" href="#">Google+</a></li>
+        <li><a id="new-box" href="#">Add new Box <span class="glyphicon glyphicon-plus"></span></a></li>
       </ul>
     </div>
     <!-- /Sidebar -->
@@ -44,17 +41,10 @@
       <div class="cover-container">
 
         <div class="inner cover">
-          <div id="box-facebook" class="draggable ui-widget-content">
-            <p>Facebook</p>
-          </div>
 
-          <div id="box-twitter" class="draggable ui-widget-content">
-            <p>Twitter</p>
-          </div>
+          <!-- Important! Append new boxes into this div -->
+          <div id="boxes"></div>
 
-          <div id="box-googleplus" class="draggable ui-widget-content">
-            <p>Google+</p>
-          </div>
         </div>
 
         <div class="inner cover">

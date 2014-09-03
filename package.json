@@ -2,7 +2,7 @@
   "name": "Trickle - The Social Media Hub",
   "main": "index.html",
   "window": {
-    "toolbar": false,
+    "toolbar": true,
     "width": 1280,
     "height": 700
   }

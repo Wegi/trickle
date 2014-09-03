@@ -1,11 +1,16 @@
 .draggable {
-    width: 90px;
-    height: 80px;
-    padding: 5px;
+    width: 250px;
+    height: 250px;
+    padding: 1em;
     float: left;
-    margin: 0 10px 10px 0;
-    font-size: .9em;
+    font-size: 1em;
+    background: none;
+    border: black;
 }
 .ui-widget-header p, .ui-widget-content p {
     margin: 0;
+}
+
+.ui-widget-content {
+    border: 1px solid #aaaaaa;
 }
