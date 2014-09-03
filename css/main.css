@@ -1,0 +1,5 @@
+html, body {
+    /* Disable scrolling */
+    overflow: hidden;
+    width: 100%;
+}
