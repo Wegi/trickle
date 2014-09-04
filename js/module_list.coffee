@@ -1,20 +1,17 @@
 modules = exports ? this
 
 # List all modules
-list = ->
-    console.log "To be implemented"
+modules.list = ->
+    console.log "To be implemented..."
     return
 
-$ ->
-    dir = require("node-dir")
+dir = require("node-dir")
 
-    # Path to the trickle-modules
-    path = "modules"
-    modules = []
+# Path to the trickle-modules
+path = "modules"
 
-    # List all Modules
-    dir.subdirs path, (err, subdirs) ->
-        console.log subdirs
-        return
-
+# List all Modules
+dir.subdirs path, (err, subdirs) ->
+    console.log subdirs
     return
+

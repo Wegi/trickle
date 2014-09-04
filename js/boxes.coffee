@@ -20,7 +20,7 @@ $ ->
 
         #
         $(".module_list").click ->
-            console.log "To be implemented"
+            modules.list()
             return
         return
 

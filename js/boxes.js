@@ -16,7 +16,7 @@ $(function() {
     sidemenu.close();
     numBoxes++;
     $(".module_list").click(function() {
-      console.log("To be implemented");
+      modules.list();
     });
   });
 });
