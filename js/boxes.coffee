@@ -44,7 +44,6 @@ fs.readdir path, (err, files) ->
 list = (boxid) ->
     content = "<ul>"
     for module in modules
-        console.log module
         content += "<li><a class='module_single' href='#' name='#{module}'>#{module}</a></li>"
     content += "</ul>"
 
@@ -57,6 +56,8 @@ list = (boxid) ->
         return
     return
 
+# Get into the module and look for config.json
+# TODO use PATH module
 get_config = (modname) ->
     moddir = path + "/" + modname + "/"
     fs.readFile moddir + "config.json", "utf8", (err, data) ->

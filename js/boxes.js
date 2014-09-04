@@ -40,7 +40,6 @@ list = function(boxid) {
   content = "<ul>";
   for (_i = 0, _len = modules.length; _i < _len; _i++) {
     module = modules[_i];
-    console.log(module);
     content += "<li><a class='module_single' href='#' name='" + module + "'>" + module + "</a></li>";
   }
   content += "</ul>";
