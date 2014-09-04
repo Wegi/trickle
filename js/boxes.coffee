@@ -26,15 +26,16 @@ $("#new-box").click ->
 
 ### Show all modules ###
 # TODO move this into modules.coffee and load it properly
+path = require "path"
+fs = require "fs"
 
 # Path to the trickle-modules
-path = "./modules"
+modpath = "./modules"
 modules = []
 
 # List all modules in path
 # TODO Check for invalid files
-fs = require("fs")
-fs.readdir path, (err, files) ->
+fs.readdir modpath, (err, files) ->
     throw err if err
     modules = files
     return
@@ -56,16 +57,18 @@ list = (boxid) ->
         return
     return
 
+
 # Get into the module and look for config.json
-# TODO use PATH module
 get_config = (modname) ->
-    moddir = path + "/" + modname + "/"
-    fs.readFile moddir + "config.json", "utf8", (err, data) ->
+    moddir = path.join modpath, modname
+    fs.readFile path.join(moddir, "config.json"), "utf8", (err, config) ->
         if err
             console.log "Error: " + err
             return
-        data = JSON.parse(data)
-        mod = require(moddir + data.hook[..-4])
+        config = JSON.parse(config)
+
+        # Take hook and require it. This should be in a different function
+        mod = require("./" + path.join(moddir, path.basename(config.hook, path.extname(config.hook))))
         mod "#box", {}
         return
     return
