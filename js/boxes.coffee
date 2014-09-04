@@ -53,22 +53,27 @@ list = (boxid) ->
 
     # Add listener
     $(".module_single").click ->
-        get_config $(this).attr("name")
+        config = get_config $(this).attr("name")
+        init_module config, boxid
         return
     return
 
 
 # Get into the module and look for config.json
 get_config = (modname) ->
-    moddir = path.join modpath, modname
+    moddir = path.join(modpath, modname)
     fs.readFile path.join(moddir, "config.json"), "utf8", (err, config) ->
         if err
             console.log "Error: " + err
             return
-        config = JSON.parse(config)
-
-        # Take hook and require it. This should be in a different function
-        mod = require("./" + path.join(moddir, path.basename(config.hook, path.extname(config.hook))))
-        mod "#box", {}
-        return
+        return JSON.parse(config)
     return
+
+init_module = (config, boxid) ->
+    # Take hook and require it.
+    mod = require("./" + path.join(moddir, path.basename(config.hook, path.extname(config.hook))))
+    mod boxid, session
+    return
+
+
+
