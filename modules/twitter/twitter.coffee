@@ -1,5 +1,6 @@
 ab64 = 'QWJHZkNEOWJxWXBLcDBtYmtqTVF2QTJRWWxnWlZlUGNuZHcwMkxvOHBYSmdpVDk2WHk='
 consumer_key = '8CMdYgIYpDM6uknWRAfWEhGEj'
+consumeSecret = new Buffer(ab64, 'base64').toString 'utf8'
 
 OAuth = require('oauth').OAuth
 readline = require 'readline'
@@ -13,7 +14,7 @@ module.exports = (div_id, session) ->
           "https://api.twitter.com/oauth/request_token",
           "https://api.twitter.com/oauth/access_token",
           consumer_key,
-          new Buffer(ab64, 'base64').toString 'utf8',
+          consumeSecret,
           "1.0",
           "oob",
           "HMAC-SHA1"
@@ -55,6 +56,8 @@ module.exports = (div_id, session) ->
                         callback null, body
 
 
+    if not session.twitter
+        session.twitter = {}
     if not session.twitter.access_token || not session.twitter.access_secret
         async.series {one: authenticate, two: get_stream}, (err, result) ->
             for item in JSON.parse result.two
