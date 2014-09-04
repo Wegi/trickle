@@ -10,7 +10,7 @@ list = function() {
 $(function() {
   var dir, path;
   dir = require("node-dir");
-  path = "temp_modules";
+  path = "modules";
   modules = [];
   dir.subdirs(path, function(err, subdirs) {
     console.log(subdirs);

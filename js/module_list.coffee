@@ -9,7 +9,7 @@ $ ->
     dir = require("node-dir")
 
     # Path to the trickle-modules
-    path = "temp_modules"
+    path = "modules"
     modules = []
 
     # List all Modules
