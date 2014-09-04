@@ -24,23 +24,25 @@ $("#new-box").click ->
 
 ### Show all modules ###
 # TODO move this into modules.coffee and load it properly
-dir = require "node-dir"
 
 # Path to the trickle-modules
-path = "modules"
+path = "./modules"
 modules = []
 
 # List all modules in path
-dir.subdirs path, (err, subdirs) ->
-    if not err
-        modules = subdirs
+# TODO Check for invalid files
+fs = require("fs")
+fs.readdir path, (err, files) ->
+    throw err if err
+    modules = files
     return
+
 
 # List all modules
 list = (boxid) ->
     content = "<ul>"
     for module in modules
-        content += "<li>#{module}</li>"
+        content += "<li><a class='module_single' href='#'>#{module}</a></li>"
     content += "</ul>"
     $(boxid).html content
     return
