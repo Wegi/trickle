@@ -1,4 +1,5 @@
 numBoxes = 0
+session = {}
 
 # Make boxes draggable and resizable and snap them to other boxes
 $("#new-box").click ->
@@ -17,8 +18,9 @@ $("#new-box").click ->
 
     # Show list of Modules
     $(".module_list").click ->
-        list "##{$(this).attr 'id'}"
+        list "#" + $(this).attr("id")
         return
+
     return
 
 
@@ -42,7 +44,27 @@ fs.readdir path, (err, files) ->
 list = (boxid) ->
     content = "<ul>"
     for module in modules
-        content += "<li><a class='module_single' href='#'>#{module}</a></li>"
+        console.log module
+        content += "<li><a class='module_single' href='#' name='#{module}'>#{module}</a></li>"
     content += "</ul>"
+
+    # Print content
     $(boxid).html content
+
+    # Add listener
+    $(".module_single").click ->
+        get_config $(this).attr("name")
+        return
+    return
+
+get_config = (modname) ->
+    moddir = path + "/" + modname + "/"
+    fs.readFile moddir + "config.json", "utf8", (err, data) ->
+        if err
+            console.log "Error: " + err
+            return
+        data = JSON.parse(data)
+        mod = require(moddir + data.hook[..-4])
+        mod "#box", {}
+        return
     return
