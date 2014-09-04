@@ -1,3 +1,9 @@
+/* Customize boxes */
+.module_list ul {
+    list-style-type: none;
+    padding: 0;
+}
+
 /* Style draggable */
 .draggable {
     width: 250px;
