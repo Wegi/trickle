@@ -3,16 +3,19 @@
 /*
     Trickle Core
  */
+var fs, gui, root, win;
+
+root = typeof exports !== "undefined" && exports !== null ? exports : this;
+
 
 /* Require modules */
-var fs, gui, session, win;
 
 fs = require("fs");
 
 
 /* Global variables */
 
-session = {};
+root.session = {};
 
 gui = require("nw.gui");
 
@@ -22,7 +25,7 @@ fs.readFile('data/session.json', "utf8", function(err, data) {
   if (err) {
     return console.error(err);
   } else {
-    return session = JSON.parse(data);
+    return root.session = JSON.parse(data);
   }
 });
 
