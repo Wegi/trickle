@@ -69,7 +69,7 @@ module.exports = (div_id, session) ->
         console.log query
         treq.request 'statuses/home_timeline', query: query,
                      (err, res, body) ->
-                        session.twitter.last_id = Number body[0].id
+                        session.twitter.last_id = (Number (JSON.parse body)[0].id)+1
                         callback null, body
 
     print_tweets = (err, result) ->

@@ -70,7 +70,7 @@ module.exports = function(div_id, session) {
     return treq.request('statuses/home_timeline', {
       query: query
     }, function(err, res, body) {
-      session.twitter.last_id = Number(body[0].id);
+      session.twitter.last_id = (Number((JSON.parse(body))[0].id)) + 1;
       return callback(null, body);
     });
   };
