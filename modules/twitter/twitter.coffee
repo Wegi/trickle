@@ -28,11 +28,12 @@ module.exports = (div_id, session) ->
             session.twitter.user_secret = user_secret
             link = 'https://twitter.com/oauth/authenticate?oauth_token='+user_token
             query_html = """
-<form autocomplete="on">
-  Please visit the following Link and enter the PIN.<br>
-  <a id="twitter-link">Click me</a><br>
-  PIN: <input type="text" id="twitter-input><br>
-  <button id="twitter-pin">Submit</button>
+<form role="form" autocomplete="on">
+  <div class="form-group">
+    <label>Please visit the following Link and enter the PIN.<br><a id="twitter-link">Click me</a><br></label>
+    <input type="number" class="form-control" id="exampleInputEmail1" placeholder="PIN">
+  </div>
+  <button type="submit" class="btn btn-default" id="twitter-pin">Submit</button>
 </form>
 """
             $(div_id).html query_html

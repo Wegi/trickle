@@ -29,7 +29,7 @@ module.exports = function(div_id, session) {
       session.twitter.user_token = user_token;
       session.twitter.user_secret = user_secret;
       link = 'https://twitter.com/oauth/authenticate?oauth_token=' + user_token;
-      query_html = "<form autocomplete=\"on\">\n  Please visit the following Link and enter the PIN.<br>\n  <a id=\"twitter-link\">Click me</a><br>\n  PIN: <input type=\"text\" id=\"twitter-input><br>\n  <button id=\"twitter-pin\">Submit</button>\n</form>";
+      query_html = "<form role=\"form\" autocomplete=\"on\">\n  <div class=\"form-group\">\n    <label>Please visit the following Link and enter the PIN.<br><a id=\"twitter-link\">Click me</a><br></label>\n    <input type=\"number\" class=\"form-control\" id=\"exampleInputEmail1\" placeholder=\"PIN\">\n  </div>\n  <button type=\"submit\" class=\"btn btn-default\" id=\"twitter-pin\">Submit</button>\n</form>";
       $(div_id).html(query_html);
       $("#twitter-link").click(function() {
         return gui.Shell.openExternal(link);
