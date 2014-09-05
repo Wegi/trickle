@@ -47,11 +47,11 @@ list = function(boxid) {
   content += "</ul>";
   $(boxid).html(content);
   $(".module_single").click(function() {
-    get_config($(this).attr("name"));
+    get_config($(this).attr("name"), boxid);
   });
 };
 
-get_config = function(modname) {
+get_config = function(modname, boxid) {
   var moddir;
   moddir = path.join(modpath, modname);
   fs.readFile(path.join(moddir, "config.json"), "utf8", function(err, config) {
@@ -62,6 +62,6 @@ get_config = function(modname) {
     }
     config = JSON.parse(config);
     mod = require("./" + path.join(moddir, path.basename(config.hook, path.extname(config.hook))));
-    mod("#box", {});
+    mod(boxid, session);
   });
 };
