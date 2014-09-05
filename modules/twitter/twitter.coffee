@@ -3,15 +3,16 @@ consumer_key = '8CMdYgIYpDM6uknWRAfWEhGEj'
 consumerSecret = new Buffer(ab64, 'base64').toString 'utf8'
 
 OAuth = require('oauth').OAuth
-readline = require 'readline'
 twitter_req = require 'twitter-request'
 async = require 'async'
 $ = require 'jquery'
 gui = window.require 'nw.gui'
 
 module.exports = (div_id, session) ->
+    if not session.twitter
+        session.twitter = {}
+    #create session namespace if there is
 
-    rl = readline.createInterface(process.stdin, process.stdout)
     oauth = new OAuth(
           "https://api.twitter.com/oauth/request_token",
           "https://api.twitter.com/oauth/access_token",
@@ -59,21 +60,36 @@ module.exports = (div_id, session) ->
             token_secret: session.twitter.access_secret
 
         treq = new twitter_req(readyoauth)
+        #only get twees since last pull
+        if not session.twitter.last_id
+            session.twitter.last_id = 1
         query =
-            #'screen_name': 'darealwegi'
-            'count': 20
-
-        treq.request 'statuses/home_timeline', query,
+            since_id: session.twitter.last_id,
+            count: 100
+        console.log query
+        treq.request 'statuses/home_timeline', query: query,
                      (err, res, body) ->
+                        console.log "Header: "+res
                         callback null, body
 
+    print_tweets = (err, result) ->
+        if err
+            return err
+        else
+            $(div_id).html " "
+            console.log (JSON.parse result.tweets).length
+            for tweet in (JSON.parse result.tweets).reverse()
+                tweet_entry = """
+<div class="row">
+    <div class="col-md-2">Here go Picture</div>
+    <div class="col-md-10">#{tweet.text}</div>
+</div>
+"""
+                $(div_id).prepend tweet_entry
+            #set last retrieved tweet
+            session.twitter.last_id = Number result.tweets[0].id
 
-    if not session.twitter
-        session.twitter = {}
     if not session.twitter.access_token || not session.twitter.access_secret
-        async.series {one: authenticate, two: get_stream}, (err, result) ->
-            for item in JSON.parse result.two
-                console.log item.text
+        async.series {auth: authenticate, tweets: get_stream}, print_tweets
     else
-        get_stream (a, b) ->
-            return null # placeholder
+        async.series {tweets: get_stream}, print_tweets
