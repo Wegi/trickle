@@ -22,6 +22,7 @@ module.exports = function(div_id, session) {
   if (!session.twitter) {
     session.twitter = {};
   }
+  $(div_id).html("<span class='btn'><span class='glyphicon glyphicon-refresh'></span> Initializing...</span>");
   oauth = new OAuth("https://api.twitter.com/oauth/request_token", "https://api.twitter.com/oauth/access_token", consumer_key, consumerSecret, "1.0", "oob", "HMAC-SHA1");
   authenticate = function(callback) {
     return oauth.getOAuthRequestToken(function(error, user_token, user_secret, results) {
@@ -38,10 +39,13 @@ module.exports = function(div_id, session) {
       return $("#twitter-pin-" + snipid).click(function() {
         var PIN;
         PIN = $("#twitter-input-" + snipid).val();
+        $(div_id).html("<span class='btn'><span class='glyphicon glyphicon-refresh'></span> Validating PIN...</span>");
         return oauth.getOAuthAccessToken(user_token, user_secret, PIN, function(error, oauth_access_token, oauth_access_token_secret, results) {
           if (error) {
+            $(div_id).html("<span class='btn'><span class='glyphicon glyphicon-remove'></span> An error occured.</span>");
             return console.log(error);
           } else {
+            $(div_id).html("<span class='btn'><span class='glyphicon glyphicon-refresh'></span> Loading tweets...</span>");
             session.twitter.access_token = oauth_access_token;
             session.twitter.access_secret = oauth_access_token_secret;
             return callback(null, oauth_access_token);

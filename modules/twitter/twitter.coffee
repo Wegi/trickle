@@ -11,7 +11,10 @@ gui = window.require 'nw.gui'
 module.exports = (div_id, session) ->
     if not session.twitter
         session.twitter = {}
-    #create session namespace if there is
+    # create session namespace if there is
+
+    # Show spinner while loading
+    $(div_id).html "<span class='btn'><span class='glyphicon glyphicon-refresh'></span> Initializing...</span>"
 
     oauth = new OAuth(
           "https://api.twitter.com/oauth/request_token",
@@ -42,11 +45,17 @@ module.exports = (div_id, session) ->
                 gui.Shell.openExternal link
             $("#twitter-pin-#{snipid}").click ->
                 PIN = $("#twitter-input-#{snipid}").val()
+
+                # Show spinner while loading
+                $(div_id).html "<span class='btn'><span class='glyphicon glyphicon-refresh'></span> Validating PIN...</span>"
+
                 oauth.getOAuthAccessToken user_token, user_secret, PIN ,
                 (error, oauth_access_token, oauth_access_token_secret, results) ->
                     if error
+                        $(div_id).html "<span class='btn'><span class='glyphicon glyphicon-remove'></span> An error occured.</span>"
                         console.log(error)
                     else
+                        $(div_id).html "<span class='btn'><span class='glyphicon glyphicon-refresh'></span> Loading tweets...</span>"
                         session.twitter.access_token = oauth_access_token;
                         session.twitter.access_secret = oauth_access_token_secret;
                         callback null, oauth_access_token
