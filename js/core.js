@@ -3,18 +3,24 @@
 /*
     Trickle Core
  */
-var fs, gui, win;
+
+/* Require modules */
+var fs, gui, session, win;
 
 fs = require("fs");
+
+
+/* Global variables */
+
+session = {};
 
 gui = require("nw.gui");
 
 win = gui.Window.get();
 
-fs.readFileSync('data/session.json', "utf8", function(err, data) {
-  var session;
+fs.readFile('data/session.json', "utf8", function(err, data) {
   if (err) {
-    return session = {};
+    return console.error(err);
   } else {
     return session = JSON.parse(data);
   }
