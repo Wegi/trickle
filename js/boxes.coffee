@@ -4,21 +4,25 @@ session = {}
 # Make boxes draggable and resizable and snap them to other boxes
 $("#new-box").click ->
     defaultContent = "
-        <div class='draggable ui-widget-content module_list' id='box-#{numBoxes}'>
-            I am a new Box!<br><br>
-            Go and add some modules.<br><br>
-            <a class='' href='#'><span class='glyphicon glyphicon-plus'></span></a>
+        <div class='draggable ui-widget-content' id='box-#{numBoxes}'>
+            <div class='module-list' id='box-content-#{numBoxes}'>
+                I am a new Box!<br><br>
+                Go and add some modules.<br><br>
+                <a id='a-#{numBoxes}' href='#' box-id='#{numBoxes}'><span class='glyphicon glyphicon-plus'></span></a>
+            </div>
         </div>
     "
     $("#boxes").append defaultContent
     $("#box-#{numBoxes}").draggable(snap: true).resizable()
 
+    # Show list of Modules
+    $("div#box-content-#{numBoxes} a#a-#{numBoxes}").click ->
+        alert "#box-content-" + $(this).attr("box-id")
+        list "#box-content-" + $(this).attr("box-id")
+
+    # Close Sidebar and prepare for next box to add
     sidemenu.close()
     numBoxes++
-
-    # Show list of Modules
-    $(".module_list").click ->
-        list "#" + $(this).attr("id")
 
 
 ### Show all modules ###
@@ -41,14 +45,14 @@ fs.readdir modpath, (err, files) ->
 list = (boxid) ->
     content = "<ul>"
     for module in modules
-        content += "<li><a class='module_single' href='#' name='#{module}'>#{module}</a></li>"
+        content += "<li><a class='module-single' href='#' name='#{module}'>#{module}</a></li>"
     content += "</ul>"
 
     # Print content
     $(boxid).html content
 
     # Add listener
-    $(".module_single").click ->
+    $(".module-single").click ->
         load_module $(this).attr("name"), boxid
 
 

@@ -1,5 +1,5 @@
 /* Customize boxes */
-.module_list ul {
+div .module_list ul {
     list-style-type: none;
     padding: 0;
 }

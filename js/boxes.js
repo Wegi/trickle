@@ -7,16 +7,17 @@ session = {};
 
 $("#new-box").click(function() {
   var defaultContent;
-  defaultContent = "<div class='draggable ui-widget-content module_list' id='box-" + numBoxes + "'> I am a new Box!<br><br> Go and add some modules.<br><br> <a class='' href='#'><span class='glyphicon glyphicon-plus'></span></a> </div>";
+  defaultContent = "<div class='draggable ui-widget-content' id='box-" + numBoxes + "'> <div class='module-list' id='box-content-" + numBoxes + "'> I am a new Box!<br><br> Go and add some modules.<br><br> <a id='a-" + numBoxes + "' href='#' box-id='" + numBoxes + "'><span class='glyphicon glyphicon-plus'></span></a> </div> </div>";
   $("#boxes").append(defaultContent);
   $("#box-" + numBoxes).draggable({
     snap: true
   }).resizable();
-  sidemenu.close();
-  numBoxes++;
-  return $(".module_list").click(function() {
-    return list("#" + $(this).attr("id"));
+  $("div#box-content-" + numBoxes + " a#a-" + numBoxes).click(function() {
+    alert("#box-content-" + $(this).attr("box-id"));
+    return list("#box-content-" + $(this).attr("box-id"));
   });
+  sidemenu.close();
+  return numBoxes++;
 });
 
 
@@ -42,11 +43,11 @@ list = function(boxid) {
   content = "<ul>";
   for (_i = 0, _len = modules.length; _i < _len; _i++) {
     module = modules[_i];
-    content += "<li><a class='module_single' href='#' name='" + module + "'>" + module + "</a></li>";
+    content += "<li><a class='module-single' href='#' name='" + module + "'>" + module + "</a></li>";
   }
   content += "</ul>";
   $(boxid).html(content);
-  return $(".module_single").click(function() {
+  return $(".module-single").click(function() {
     return load_module($(this).attr("name"), boxid);
   });
 };
