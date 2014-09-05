@@ -2,11 +2,13 @@
     Trickle Core
 ###
 
+root = exports ? this
+
 ### Require modules ###
 fs = require "fs"
 
 ### Global variables ###
-session = {}
+root.session = {}
 
 # Load native UI library
 gui = require "nw.gui"
@@ -18,7 +20,7 @@ fs.readFile 'data/session.json', "utf8", (err, data) ->
     if err
         console.error err
     else
-        session = JSON.parse(data)  # Parse file to session
+        root.session = JSON.parse(data)  # Parse file to session
 
 # Before closing window, write session to file
 win.on "close", ->
