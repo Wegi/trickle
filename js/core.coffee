@@ -26,4 +26,4 @@ win.on "close", ->
     # Write session to file
     fs.writeFile "data/session.json", JSON.stringify(session), (err) ->
         throw err if err
-        @close true
+        gui.App.quit()

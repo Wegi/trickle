@@ -32,6 +32,6 @@ win.on("close", function() {
     if (err) {
       throw err;
     }
-    return this.close(true);
+    return gui.App.quit();
   });
 });
