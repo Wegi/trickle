@@ -1,6 +1,8 @@
 /* Customize boxes */
 div#boxes div.box-content {
-    /* General stylings */
+    position: relative;
+    height: 100%;
+    overflow: auto;
 }
     div#boxes div.box-content ul {
         list-style-type: none;
