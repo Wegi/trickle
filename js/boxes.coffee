@@ -3,15 +3,15 @@ session = {}
 
 # Make boxes draggable and resizable and snap them to other boxes
 $("#new-box").click ->
-    defaultContent = "
+    defaultContent = """
         <div class='draggable ui-widget-content' id='box-#{numBoxes}'>
-            <div class='module-list' id='box-content-#{numBoxes}'>
+            <div id='box-content-#{numBoxes}'>
                 I am a new Box!<br><br>
                 Go and add some modules.<br><br>
                 <a id='a-#{numBoxes}' href='#' box-id='#{numBoxes}'><span class='glyphicon glyphicon-plus'></span></a>
             </div>
         </div>
-    "
+    """
     $("#boxes").append defaultContent
     $("#box-#{numBoxes}").draggable(snap: true).resizable()
 
@@ -42,7 +42,7 @@ fs.readdir modpath, (err, files) ->
 
 # List all modules
 list = (boxid) ->
-    content = "<ul>"
+    content = "<ul class='module-list'>"
     for module in modules
         content += "<li><a class='module-single' href='#' name='#{module}'>#{module}</a></li>"
     content += "</ul>"
