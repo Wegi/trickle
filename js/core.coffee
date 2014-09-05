@@ -26,6 +26,6 @@ fs.readFile 'data/session.json', "utf8", (err, data) ->
 win.on "close", ->
     @hide() # Pretend to be closed already
     # Write session to file
-    fs.writeFile "data/session.json", JSON.stringify(session), (err) ->
+    fs.writeFile "data/session.json", JSON.stringify(root.session), (err) ->
         throw err if err
         gui.App.quit()

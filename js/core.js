@@ -31,7 +31,7 @@ fs.readFile('data/session.json', "utf8", function(err, data) {
 
 win.on("close", function() {
   this.hide();
-  return fs.writeFile("data/session.json", JSON.stringify(session), function(err) {
+  return fs.writeFile("data/session.json", JSON.stringify(root.session), function(err) {
     if (err) {
       throw err;
     }
