@@ -1,6 +1,6 @@
 ab64 = 'QWJHZkNEOWJxWXBLcDBtYmtqTVF2QTJRWWxnWlZlUGNuZHcwMkxvOHBYSmdpVDk2WHk='
 consumer_key = '8CMdYgIYpDM6uknWRAfWEhGEj'
-consumeSecret = new Buffer(ab64, 'base64').toString 'utf8'
+consumerSecret = new Buffer(ab64, 'base64').toString 'utf8'
 
 OAuth = require('oauth').OAuth
 readline = require 'readline'
@@ -16,7 +16,7 @@ module.exports = (div_id, session) ->
           "https://api.twitter.com/oauth/request_token",
           "https://api.twitter.com/oauth/access_token",
           consumer_key,
-          consumeSecret,
+          consumerSecret,
           "1.0",
           "oob",
           "HMAC-SHA1"
@@ -27,21 +27,20 @@ module.exports = (div_id, session) ->
             session.twitter.user_token = user_token
             session.twitter.user_secret = user_secret
             link = 'https://twitter.com/oauth/authenticate?oauth_token='+user_token
+            snipid = div_id[1..]
             query_html = """
-<form role="form" autocomplete="on">
-  <div class="form-group">
-    <label>Please visit the following Link and enter the PIN.<br><a id="twitter-link">Click me</a><br></label>
-    <input type="number" class="form-control" id="exampleInputEmail1" placeholder="PIN">
-  </div>
-  <button type="submit" class="btn btn-default" id="twitter-pin">Submit</button>
-</form>
+<div class="form-group">
+    <label>Please visit the following Link and enter the PIN.<br>
+    <a id="twitter-link-#{snipid}">Click me</a><br></label>
+    <input type="number" class="form-control" id="twitter-input-#{snipid}" placeholder="PIN">
+</div>
+<button class="btn btn-default" id="twitter-pin-#{snipid}">Submit</button>
 """
             $(div_id).html query_html
-            $("#twitter-link").click ->
+            $("#twitter-link-#{snipid}").click ->
                 gui.Shell.openExternal link
-            $("#twitter-pin").click ->
-                PIN = $("#twitter-input").val()
-
+            $("#twitter-pin-#{snipid}").click ->
+                PIN = $("#twitter-input-#{snipid}").val()
                 oauth.getOAuthAccessToken user_token, user_secret, PIN ,
                 (error, oauth_access_token, oauth_access_token_secret, results) ->
                     if error
