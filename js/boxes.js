@@ -7,7 +7,8 @@ session = {};
 
 $("#new-box").click(function() {
   var defaultContent;
-  defaultContent = "<div class='draggable ui-widget-content' id='box-" + numBoxes + "'>\n    <div id='box-content-" + numBoxes + "'>\n        I am a new Box!<br><br>\n        Go and add some modules.<br><br>\n        <a id='a-" + numBoxes + "' href='#' box-id='" + numBoxes + "'><span class='glyphicon glyphicon-plus'></span></a>\n    </div>\n</div>";
+  defaultContent = "<div class='draggable ui-widget-content' id='box-" + numBoxes + "'>\n    <div class='box-content' id='box-content-" + numBoxes + "'>\n        I am a new Box!<br><br>\n        Go and add some modules.<br><br>\n        <a id='a-" + numBoxes + "' href='#' box-id='" + numBoxes + "'><span class='glyphicon glyphicon-plus'></span></a>\n    </div>\n</div>";
+  root.session.foo = "foo";
   $("#boxes").append(defaultContent);
   $("#box-" + numBoxes).draggable({
     snap: true
@@ -39,7 +40,7 @@ fs.readdir(modpath, function(err, files) {
 
 list = function(boxid) {
   var content, module, _i, _len;
-  content = "<ul class='module-list'>";
+  content = "<ul>";
   for (_i = 0, _len = modules.length; _i < _len; _i++) {
     module = modules[_i];
     content += "<li><a class='module-single' href='#' name='" + module + "'>" + module + "</a></li>";

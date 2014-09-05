@@ -1,8 +1,11 @@
 /* Customize boxes */
-div .module_list ul {
-    list-style-type: none;
-    padding: 0;
+div#boxes div.box-content {
+    /* General stylings */
 }
+    div#boxes div.box-content ul {
+        list-style-type: none;
+        padding: 0;
+    }
 
 /* Style draggable */
 .draggable {

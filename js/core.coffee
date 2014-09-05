@@ -26,6 +26,9 @@ fs.readFile 'data/session.json', "utf8", (err, data) ->
 win.on "close", ->
     @hide() # Pretend to be closed already
     # Write session to file
-    fs.writeFile "data/session.json", JSON.stringify(root.session), (err) ->
-        throw err if err
+    root.session.bar = "bar"
+    console.log root.session
+    fs.writeFile "data/session.json", JSON.stringify(root.session, null, 4), (err) ->
+        if err
+            console.error err
         gui.App.quit()
