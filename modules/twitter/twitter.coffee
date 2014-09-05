@@ -69,7 +69,7 @@ module.exports = (div_id, session) ->
         console.log query
         treq.request 'statuses/home_timeline', query: query,
                      (err, res, body) ->
-                        console.log "Header: "+res
+                        session.twitter.last_id = Number body[0].id
                         callback null, body
 
     print_tweets = (err, result) ->
@@ -87,7 +87,6 @@ module.exports = (div_id, session) ->
 """
                 $(div_id).prepend tweet_entry
             #set last retrieved tweet
-            session.twitter.last_id = Number result.tweets[0].id
 
     if not session.twitter.access_token || not session.twitter.access_secret
         async.series {auth: authenticate, tweets: get_stream}, print_tweets

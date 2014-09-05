@@ -70,24 +70,25 @@ module.exports = function(div_id, session) {
     return treq.request('statuses/home_timeline', {
       query: query
     }, function(err, res, body) {
-      console.log("Header: " + res);
+      session.twitter.last_id = Number(body[0].id);
       return callback(null, body);
     });
   };
   print_tweets = function(err, result) {
-    var tweet, tweet_entry, _i, _len, _ref;
+    var tweet, tweet_entry, _i, _len, _ref, _results;
     if (err) {
       return err;
     } else {
       $(div_id).html(" ");
       console.log((JSON.parse(result.tweets)).length);
       _ref = (JSON.parse(result.tweets)).reverse();
+      _results = [];
       for (_i = 0, _len = _ref.length; _i < _len; _i++) {
         tweet = _ref[_i];
         tweet_entry = "<div class=\"row\">\n    <div class=\"col-md-2\">Here go Picture</div>\n    <div class=\"col-md-10\">" + tweet.text + "</div>\n</div>";
-        $(div_id).prepend(tweet_entry);
+        _results.push($(div_id).prepend(tweet_entry));
       }
-      return session.twitter.last_id = Number(result.tweets[0].id);
+      return _results;
     }
   };
   if (!session.twitter.access_token || !session.twitter.access_secret) {
