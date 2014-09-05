@@ -13,7 +13,6 @@ $("#new-box").click(function() {
     snap: true
   }).resizable();
   $("div#box-content-" + numBoxes + " a#a-" + numBoxes).click(function() {
-    alert("#box-content-" + $(this).attr("box-id"));
     return list("#box-content-" + $(this).attr("box-id"));
   });
   sidemenu.close();

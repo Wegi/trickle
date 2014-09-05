@@ -17,7 +17,6 @@ $("#new-box").click ->
 
     # Show list of Modules
     $("div#box-content-#{numBoxes} a#a-#{numBoxes}").click ->
-        alert "#box-content-" + $(this).attr("box-id")
         list "#box-content-" + $(this).attr("box-id")
 
     # Close Sidebar and prepare for next box to add
