@@ -6,6 +6,8 @@ OAuth = require('oauth').OAuth
 readline = require 'readline'
 twitter_req = require 'twitter-request'
 async = require 'async'
+$ = require 'jquery'
+gui = window.require 'nw.gui'
 
 module.exports = (div_id, session) ->
 
@@ -24,10 +26,20 @@ module.exports = (div_id, session) ->
         oauth.getOAuthRequestToken (error, user_token, user_secret, results) ->
             session.twitter.user_token = user_token
             session.twitter.user_secret = user_secret
-            console.log('https://twitter.com/oauth/authenticate?oauth_token='+user_token)
-            rl.question 'Please Enter the PIN: ', (PIN) ->
-                rl.close()
-                process.stdin.destroy()
+            link = 'https://twitter.com/oauth/authenticate?oauth_token='+user_token
+            query_html = """
+<form autocomplete="on">
+  Please visit the following Link and enter the PIN.<br>
+  <a id="twitter-link">Click me</a><br>
+  PIN: <input type="text" id="twitter-input><br>
+  <button id="twitter-pin">Submit</button>
+</form>
+"""
+            $(div_id).html query_html
+            $("#twitter-link").click ->
+                gui.Shell.openExternal link
+            $("#twitter-pin").click ->
+                PIN = $("#twitter-input").val()
 
                 oauth.getOAuthAccessToken user_token, user_secret, PIN ,
                 (error, oauth_access_token, oauth_access_token_secret, results) ->
