@@ -25,6 +25,9 @@ module.exports = (div_id, session) ->
             session.twitter.user_token = user_token
             session.twitter.user_secret = user_secret
             console.log('https://twitter.com/oauth/authenticate?oauth_token='+user_token)
+            $(div_id).html '<p>Visit: '+'https://twitter.com/oauth/authenticate?oauth_token='+user_token+'</p> <input type="text" name="pin" id="pinbox"><br>'
+
+
             rl.question 'Please Enter the PIN: ', (PIN) ->
                 rl.close()
                 process.stdin.destroy()

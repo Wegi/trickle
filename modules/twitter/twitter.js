@@ -24,6 +24,7 @@ module.exports = function(div_id, session) {
       session.twitter.user_token = user_token;
       session.twitter.user_secret = user_secret;
       console.log('https://twitter.com/oauth/authenticate?oauth_token=' + user_token);
+      $(div_id).html('<p>Visit: ' + 'https://twitter.com/oauth/authenticate?oauth_token=' + user_token + '</p> <input type="text" name="pin" id="pinbox"><br>');
       return rl.question('Please Enter the PIN: ', function(PIN) {
         rl.close();
         process.stdin.destroy();
