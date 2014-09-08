@@ -3,3 +3,13 @@ html, body {
     overflow: hidden;
     width: 100%;
 }
+
+/* Config dialogue overlay */
+.config-dialogue-wrapper {
+
+}
+#config-dialogue {
+    display: none;
+    padding: 1em;
+    border: 1px solid #aaa;
+}
