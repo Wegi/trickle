@@ -80,7 +80,6 @@ module.exports = function(div_id, config_id, session) {
       if (result.length < 1) {
         return callback("No new tweets");
       } else {
-        session.twitter.last_id = Number(result[0].id);
         return callback(null, body);
       }
     });
@@ -92,17 +91,18 @@ module.exports = function(div_id, config_id, session) {
     } else {
       tweets = JSON.parse(result.tweets);
       $(div_id).html(" ");
-      if (tweets[0] && Number(tweets[0].id === session.twitter.last_id)) {
-        tweets = tweets.slice(1);
+      if (Number(tweets[tweets.length - 1].id === session.twitter.last_id)) {
+        tweets.pop();
+      }
+      if (tweets[0]) {
+        session.twitter.last_id = Number(tweets[0].id);
       }
       _ref = tweets.reverse();
       _results = [];
       for (_i = 0, _len = _ref.length; _i < _len; _i++) {
         tweet = _ref[_i];
         user_img = tweet.user.profile_image_url;
-        console.log(user_img);
-        tweet_entry = "<div class=\"row\">\n    <div class=\"col-md-2\"><img src=\"" + user_img + "\" height=\"50\" width=\"50\"></div>\n    <div class=\"col-md-10\">" + tweet.text + "</div>\n    <div class=\"col-md-12\"><hr></div>\n</div>";
-        console.log(tweet_entry);
+        tweet_entry = "<div class=\"row\">\n    <div class=\"col-md-2\"><img class=\"img-rounded \"src=\"" + user_img + "\" height=\"55\" width=\"55\"></div>\n    <div class=\"col-md-10\">" + tweet.text + "</div>\n    <div class=\"col-md-12\"><hr></div>\n</div>";
         _results.push($(div_id).prepend(tweet_entry));
       }
       return _results;

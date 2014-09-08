@@ -83,7 +83,6 @@ module.exports = (div_id, config_id, session) ->
                         if result.length < 1
                             callback "No new tweets"
                         else
-                            session.twitter.last_id = (Number result[0].id)
                             callback null, body
 
     print_tweets = (err, result) ->
@@ -92,19 +91,21 @@ module.exports = (div_id, config_id, session) ->
         else
             tweets = JSON.parse result.tweets
             $(div_id).html " "
-            if tweets[0] && Number tweets[0].id == session.twitter.last_id
-                tweets = tweets[1..]
+            # kill the duplicate tweet
+            if Number tweets[tweets.length-1].id == session.twitter.last_id
+                tweets.pop()
+            if tweets[0]
+                session.twitter.last_id = (Number tweets[0].id)
+
             for tweet in tweets.reverse()
                 user_img = tweet.user.profile_image_url
-                console.log user_img
                 tweet_entry = """
 <div class="row">
-    <div class="col-md-2"><img src="#{user_img}" height="50" width="50"></div>
+    <div class="col-md-2"><img class="img-rounded "src="#{user_img}" height="55" width="55"></div>
     <div class="col-md-10">#{tweet.text}</div>
     <div class="col-md-12"><hr></div>
 </div>
 """
-                console.log tweet_entry
                 $(div_id).prepend tweet_entry
                     #set last retrieved tweet
 
