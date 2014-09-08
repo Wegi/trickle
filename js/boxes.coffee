@@ -67,17 +67,19 @@ list = (boxid) ->
 # Get into the module and look for config.json
 load_module = (modname, boxid) ->
     moddir = path.join(modpath, modname)
-    fs.readFile path.join(moddir, "config.json"), "utf8", (err, config) ->
-        if err
-            console.log "Error: " + err
-            return
-        config = JSON.parse(config)
+    config = load_conf moddir
 
-        # Take hook and require it. This should be in a different function
-        mod = require("./" + path.join(moddir, path.basename(config.hook, path.extname(config.hook))))
+    # Take hook and require it. This should be in a different function
+    mod = require("./" + path.join(moddir, path.basename(config.hook, path.extname(config.hook))))
 
-        # Load module
-        mod boxid, configDialogue, session
+    # Load module
+    mod boxid, configDialogue, session
+
+
+# Load config of given module
+load_conf = (moddir) ->
+    config = fs.readFileSync path.join(moddir, "config.json"), "utf8"
+    return JSON.parse config
 
 
 # Center boxes in window, use it with $("path").center()
