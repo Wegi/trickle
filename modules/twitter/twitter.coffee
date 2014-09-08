@@ -81,14 +81,14 @@ module.exports = (div_id, session) ->
                         result = JSON.parse body
                         console.log "res: %j", res
                         if result.length < 1
-                            callback "No new tweets Error"
+                            callback "No new tweets"
                         else
                             session.twitter.last_id = (Number result[0].id)+1
                             callback null, body
 
     print_tweets = (err, result) ->
         if err
-            return err
+            console.log err
         else
             $(div_id).html " "
             console.log "##Result.tweets: "+result.tweets

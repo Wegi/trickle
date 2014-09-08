@@ -78,7 +78,7 @@ module.exports = function(div_id, session) {
       result = JSON.parse(body);
       console.log("res: %j", res);
       if (result.length < 1) {
-        return callback("No new tweets Error");
+        return callback("No new tweets");
       } else {
         session.twitter.last_id = (Number(result[0].id)) + 1;
         return callback(null, body);
@@ -88,7 +88,7 @@ module.exports = function(div_id, session) {
   print_tweets = function(err, result) {
     var tweet, tweet_entry, _i, _len, _ref, _results;
     if (err) {
-      return err;
+      return console.log(err);
     } else {
       $(div_id).html(" ");
       console.log("##Result.tweets: " + result.tweets);
