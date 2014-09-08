@@ -3,7 +3,7 @@
 /*
     Trickle Core
  */
-var fs, gui, root, win;
+var fs, gui, home_path, root, win;
 
 root = typeof exports !== "undefined" && exports !== null ? exports : this;
 
@@ -21,19 +21,38 @@ gui = require("nw.gui");
 
 win = gui.Window.get();
 
-fs.readFile('data/session.json', "utf8", function(err, data) {
-  if (err) {
-    return console.error(err);
-  } else {
-    return root.session = JSON.parse(data);
-  }
-});
+home_path = process.env.HOME || process.env.HOMEPATH || process.env.USERPROFILE;
+
+if (!fs.existsSync(home_path + '/.trickle')) {
+  fs.mkdirSync(home_path + '/.trickle');
+}
+
+if (!fs.existsSync(home_path + '/.trickle/session.json')) {
+  fs.writeFileSync(home_path + '/.trickle/session.json', '{ }');
+}
+
+try {
+  fs.readFile(home_path + '/.trickle/session.json', "utf8", function(err, data) {
+    if (err) {
+      return console.error(err);
+    } else {
+      try {
+        return root.session = JSON.parse(data);
+      } catch (_error) {
+        return console.log("close call");
+      }
+    }
+  });
+} catch (_error) {
+  console.log("gotcha buddy");
+  root.session = {};
+}
 
 win.on("close", function() {
+  var jsonified;
   this.hide();
-  root.session.bar = "bar";
-  console.log(root.session);
-  return fs.writeFile("data/session.json", JSON.stringify(root.session, null, 4), function(err) {
+  jsonified = JSON.stringify(root.session, null, 2);
+  return fs.writeFile(home_path + '/.trickle/session.json', jsonified, 'utf8', function(err) {
     if (err) {
       console.error(err);
     }
