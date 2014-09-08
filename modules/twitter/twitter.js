@@ -45,7 +45,7 @@ module.exports = function(div_id, config_id, session) {
             $(config_id).html("<span class='btn'><span class='glyphicon glyphicon-remove'></span> An error occured.</span>");
             return console.log(error);
           } else {
-            $(config_id).html("<span class='btn'><span class='glyphicon glyphicon-ok'></span> Everything worked</span>");
+            $(config_id).html("<span class='btn'><span class='glyphicon glyphicon-refresh'></span> Loading Tweets...</span>");
             session.twitter.access_token = oauth_access_token;
             session.twitter.access_secret = oauth_access_token_secret;
             return callback(null, oauth_access_token);
@@ -56,6 +56,7 @@ module.exports = function(div_id, config_id, session) {
   };
   get_stream = function(callback) {
     var query, readyoauth, treq;
+    $(config_id).html("<span class='btn'><span class='glyphicon glyphicon-ok'></span>Everything worked. You can close the config now.</span>");
     readyoauth = {
       consumer_key: consumer_key,
       consumer_secret: consumerSecret,
@@ -85,7 +86,7 @@ module.exports = function(div_id, config_id, session) {
     });
   };
   print_tweets = function(err, result) {
-    var tweet, tweet_entry, tweets, _i, _len, _ref, _results;
+    var tweet, tweet_entry, tweets, user_img, _i, _len, _ref, _results;
     if (err) {
       return console.log(err);
     } else {
@@ -98,7 +99,10 @@ module.exports = function(div_id, config_id, session) {
       _results = [];
       for (_i = 0, _len = _ref.length; _i < _len; _i++) {
         tweet = _ref[_i];
-        tweet_entry = "<div class=\"row\">\n    <div class=\"col-md-2\">Here go Picture</div>\n    <div class=\"col-md-10\">" + tweet.text + "</div>\n</div>";
+        user_img = tweet.user.profile_image_url;
+        console.log(user_img);
+        tweet_entry = "<div class=\"row\">\n    <div class=\"col-md-2\"><img src=\"" + user_img + "\" height=\"50\" width=\"50\"></div>\n    <div class=\"col-md-10\">" + tweet.text + "</div>\n    <div class=\"col-md-12\"><hr></div>\n</div>";
+        console.log(tweet_entry);
         _results.push($(div_id).prepend(tweet_entry));
       }
       return _results;

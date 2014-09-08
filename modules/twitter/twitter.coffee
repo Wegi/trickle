@@ -55,13 +55,14 @@ module.exports = (div_id, config_id, session) ->
                         $(config_id).html "<span class='btn'><span class='glyphicon glyphicon-remove'></span> An error occured.</span>"
                         console.log(error)
                     else
-                        $(config_id).html "<span class='btn'><span class='glyphicon glyphicon-ok'></span> Everything worked</span>"
+                        $(config_id).html "<span class='btn'><span class='glyphicon glyphicon-refresh'></span> Loading Tweets...</span>"
                         session.twitter.access_token = oauth_access_token;
                         session.twitter.access_secret = oauth_access_token_secret;
                         callback null, oauth_access_token
 
 
     get_stream = (callback) ->
+        $(config_id).html "<span class='btn'><span class='glyphicon glyphicon-ok'></span>Everything worked. You can close the config now.</span>"
         readyoauth =
             consumer_key: consumer_key
             consumer_secret: consumerSecret
@@ -94,12 +95,16 @@ module.exports = (div_id, config_id, session) ->
             if tweets[0] && Number tweets[0].id == session.twitter.last_id
                 tweets = tweets[1..]
             for tweet in tweets.reverse()
+                user_img = tweet.user.profile_image_url
+                console.log user_img
                 tweet_entry = """
 <div class="row">
-    <div class="col-md-2">Here go Picture</div>
+    <div class="col-md-2"><img src="#{user_img}" height="50" width="50"></div>
     <div class="col-md-10">#{tweet.text}</div>
+    <div class="col-md-12"><hr></div>
 </div>
 """
+                console.log tweet_entry
                 $(div_id).prepend tweet_entry
                     #set last retrieved tweet
 
