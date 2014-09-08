@@ -74,12 +74,14 @@ module.exports = function(div_id, session) {
     return treq.request('statuses/home_timeline', {
       query: query
     }, function(err, res, body) {
-      if (body === void 0) {
+      var result;
+      result = JSON.parse(body);
+      if (result[0] === void 0) {
         return callback(null, {
-          tweets: {}
+          tweets: false
         });
       } else {
-        session.twitter.last_id = (Number((JSON.parse(body))[0].id)) + 1;
+        session.twitter.last_id = (Number(result[0].id)) + 1;
         return callback(null, body);
       }
     });
