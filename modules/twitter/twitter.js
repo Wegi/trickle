@@ -74,8 +74,14 @@ module.exports = function(div_id, session) {
     return treq.request('statuses/home_timeline', {
       query: query
     }, function(err, res, body) {
-      session.twitter.last_id = (Number((JSON.parse(body))[0].id)) + 1;
-      return callback(null, body);
+      if (body === void 0) {
+        return callback(null, {
+          tweets: {}
+        });
+      } else {
+        session.twitter.last_id = (Number((JSON.parse(body))[0].id)) + 1;
+        return callback(null, body);
+      }
     });
   };
   print_tweets = function(err, result) {
@@ -84,15 +90,17 @@ module.exports = function(div_id, session) {
       return err;
     } else {
       $(div_id).html(" ");
-      console.log((JSON.parse(result.tweets)).length);
-      _ref = (JSON.parse(result.tweets)).reverse();
-      _results = [];
-      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-        tweet = _ref[_i];
-        tweet_entry = "<div class=\"row\">\n    <div class=\"col-md-2\">Here go Picture</div>\n    <div class=\"col-md-10\">" + tweet.text + "</div>\n</div>";
-        _results.push($(div_id).prepend(tweet_entry));
+      if (result.tweets) {
+        console.log((JSON.parse(result.tweets)).length);
+        _ref = (JSON.parse(result.tweets)).reverse();
+        _results = [];
+        for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+          tweet = _ref[_i];
+          tweet_entry = "<div class=\"row\">\n    <div class=\"col-md-2\">Here go Picture</div>\n    <div class=\"col-md-10\">" + tweet.text + "</div>\n</div>";
+          _results.push($(div_id).prepend(tweet_entry));
+        }
+        return _results;
       }
-      return _results;
     }
   };
   if (!session.twitter.access_token || !session.twitter.access_secret) {
