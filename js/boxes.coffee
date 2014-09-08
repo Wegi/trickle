@@ -5,17 +5,19 @@ session = {}
 # Make boxes draggable and resizable and snap them to other boxes
 $("#new-box").click ->
     defaultContent = """
-        <div class='draggable ui-widget-content' id='box-#{numBoxes}' style='z-index: #{baseZIndex + numBoxes}'>
-            <div class='box-content' id='box-content-#{numBoxes}'>
-                I am a new Box!<br><br>
-                Go and add some modules.<br><br>
-                <a id='a-#{numBoxes}' href='#' box-id='#{numBoxes}'><span class='glyphicon glyphicon-plus'></span></a>
+        <div class="box-wrapper" style="margin: 1em;">
+            <div class='draggable ui-widget-content' id='box-#{numBoxes}' style='z-index: #{baseZIndex + numBoxes}'>
+                <div class='box-content' id='box-content-#{numBoxes}'>
+                    I am a new Box!<br><br>
+                    Go and add some modules.<br><br>
+                    <a id='a-#{numBoxes}' href='#' box-id='#{numBoxes}'><span class='glyphicon glyphicon-plus'></span></a>
+                </div>
             </div>
         </div>
     """
     root.session.foo = "foo"
     $("#boxes").append defaultContent
-    $("#box-#{numBoxes}").draggable(snap: true).resizable()
+    $("#box-#{numBoxes}").draggable(grid: [10, 10]).resizable(grid: 10)
     $("#box-#{numBoxes}").center()
 
     # Show list of Modules
