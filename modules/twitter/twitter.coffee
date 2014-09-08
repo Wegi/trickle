@@ -88,7 +88,7 @@ module.exports = (div_id, session) ->
 
     print_tweets = (err, result) ->
         if err
-            console.log err
+            $(div_id).html err
         else
             $(div_id).html " "
             console.log "##Result.tweets: "+result.tweets
