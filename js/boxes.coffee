@@ -1,10 +1,11 @@
+baseZIndex = 50
 numBoxes = 0
 session = {}
 
 # Make boxes draggable and resizable and snap them to other boxes
 $("#new-box").click ->
     defaultContent = """
-        <div class='draggable ui-widget-content' id='box-#{numBoxes}'>
+        <div class='draggable ui-widget-content' id='box-#{numBoxes}' style='z-index: #{baseZIndex + numBoxes}'>
             <div class='box-content' id='box-content-#{numBoxes}'>
                 I am a new Box!<br><br>
                 Go and add some modules.<br><br>
@@ -15,6 +16,7 @@ $("#new-box").click ->
     root.session.foo = "foo"
     $("#boxes").append defaultContent
     $("#box-#{numBoxes}").draggable(snap: true).resizable()
+    $("#box-#{numBoxes}").center()
 
     # Show list of Modules
     $("div#box-content-#{numBoxes} a#a-#{numBoxes}").click ->
@@ -68,3 +70,11 @@ load_module = (modname, boxid) ->
         # Take hook and require it. This should be in a different function
         mod = require("./" + path.join(moddir, path.basename(config.hook, path.extname(config.hook))))
         mod boxid, session
+
+
+# Center boxes, use it with $("path").center()
+jQuery.fn.center = ->
+    @css "position", "absolute"
+    @css "top", Math.max(0, (($(window).height() - $(this).outerHeight()) / 2) + $(window).scrollTop()) + "px"
+    @css "left", Math.max(0, (($(window).width() - $(this).outerWidth()) / 2) + $(window).scrollLeft()) + "px"
+    this
