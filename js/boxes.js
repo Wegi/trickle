@@ -9,7 +9,7 @@ session = {};
 
 $("#new-box").click(function() {
   var defaultContent;
-  defaultContent = "<div class=\"box-wrapper\" style=\"margin: 1em;\">\n    <div class='draggable ui-widget-content' id='box-" + numBoxes + "' style='z-index: " + (baseZIndex + numBoxes) + "'>\n        <div class='box-content' id='box-content-" + numBoxes + "'>\n            I am a new Box!<br><br>\n            Go and add some modules.<br><br>\n            <a id='a-" + numBoxes + "' href='#' box-id='" + numBoxes + "'><span class='glyphicon glyphicon-plus'></span></a>\n        </div>\n    </div>\n</div>";
+  defaultContent = "<div class='draggable ui-widget-content' id='box-" + numBoxes + "' style='z-index: " + (baseZIndex + numBoxes) + "'>\n    <div class='box-content' id='box-content-" + numBoxes + "'>\n        I am a new Box!<br><br>\n        Go and add some modules.<br><br>\n        <a id='a-" + numBoxes + "' href='#' box-id='" + numBoxes + "'><span class='glyphicon glyphicon-plus'></span></a>\n    </div>\n</div>";
   root.session.foo = "foo";
   $("#boxes").append(defaultContent);
   $("#box-" + numBoxes).draggable({
