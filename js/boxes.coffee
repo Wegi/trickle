@@ -46,13 +46,18 @@ fs.readdir modpath, (err, files) ->
 
 # List all modules
 list = (boxid) ->
-    content = "<ul>"
+    content = "<h3>Choose your modules</h3>"
+
+    content += "<ul>"
     for module in modules
         content += "<li><a class='module-single' href='#' name='#{module}'>#{module}</a></li>"
     content += "</ul>"
 
+    # Open Config Dialogue
+    $(configDialogue).lightbox_me();
+
     # Print content
-    $(boxid).html content
+    $(configDialogue).html content
 
     # Add listener
     $(".module-single").click ->
@@ -70,9 +75,6 @@ load_module = (modname, boxid) ->
 
         # Take hook and require it. This should be in a different function
         mod = require("./" + path.join(moddir, path.basename(config.hook, path.extname(config.hook))))
-
-        # Show config dialogue
-        $(configDialogue).lightbox_me();
 
         # Load module
         mod boxid, configDialogue, session

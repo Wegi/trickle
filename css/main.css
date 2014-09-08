@@ -13,6 +13,10 @@ html, body {
     padding: 1em;
     border: 1px solid #aaa;
 }
+    #config-dialogue ul {
+        list-style-type: none;
+        padding: 0;
+    }
 
 /* Let's get this party started */
 ::-webkit-scrollbar {

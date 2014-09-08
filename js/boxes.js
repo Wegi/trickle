@@ -47,13 +47,15 @@ fs.readdir(modpath, function(err, files) {
 
 list = function(boxid) {
   var content, module, _i, _len;
-  content = "<ul>";
+  content = "<h3>Choose your modules</h3>";
+  content += "<ul>";
   for (_i = 0, _len = modules.length; _i < _len; _i++) {
     module = modules[_i];
     content += "<li><a class='module-single' href='#' name='" + module + "'>" + module + "</a></li>";
   }
   content += "</ul>";
-  $(boxid).html(content);
+  $(configDialogue).lightbox_me();
+  $(configDialogue).html(content);
   return $(".module-single").click(function() {
     return load_module($(this).attr("name"), boxid);
   });
@@ -70,7 +72,6 @@ load_module = function(modname, boxid) {
     }
     config = JSON.parse(config);
     mod = require("./" + path.join(moddir, path.basename(config.hook, path.extname(config.hook))));
-    $(configDialogue).lightbox_me();
     return mod(boxid, configDialogue, session);
   });
 };
