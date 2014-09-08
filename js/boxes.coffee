@@ -70,10 +70,15 @@ load_module = (modname, boxid) ->
 
         # Take hook and require it. This should be in a different function
         mod = require("./" + path.join(moddir, path.basename(config.hook, path.extname(config.hook))))
+
+        # Show config dialogue
+        $(configDialogue).lightbox_me();
+
+        # Load module
         mod boxid, configDialogue, session
 
 
-# Center boxes, use it with $("path").center()
+# Center boxes in window, use it with $("path").center()
 jQuery.fn.center = ->
     @css "position", "absolute"
     @css "top", Math.max(0, (($(window).height() - $(this).outerHeight()) / 2) + $(window).scrollTop()) + "px"
