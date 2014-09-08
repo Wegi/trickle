@@ -2,7 +2,8 @@
 div#boxes div.box-content {
     position: relative;
     height: 100%;
-    overflow: auto;
+    overflow-x: hidden;
+    overflow-y: auto;
 }
     div#boxes div.box-content ul {
         list-style-type: none;

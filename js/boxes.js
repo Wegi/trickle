@@ -70,6 +70,7 @@ load_module = function(modname, boxid) {
     }
     config = JSON.parse(config);
     mod = require("./" + path.join(moddir, path.basename(config.hook, path.extname(config.hook))));
+    $(configDialogue).lightbox_me();
     return mod(boxid, configDialogue, session);
   });
 };
