@@ -88,7 +88,7 @@ module.exports = function(div_id, session) {
   print_tweets = function(err, result) {
     var tweet, tweet_entry, _i, _len, _ref, _results;
     if (err) {
-      return console.log(err);
+      return $(div_id).html(err);
     } else {
       $(div_id).html(" ");
       console.log("##Result.tweets: " + result.tweets);
