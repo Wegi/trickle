@@ -22,9 +22,9 @@ module.exports = function(div_id, config_id, session) {
   if (!session.twitter) {
     session.twitter = {};
   }
-  $(config_id).html("<span class='btn'><span class='glyphicon glyphicon-refresh'></span> Initializing...</span>");
   oauth = new OAuth("https://api.twitter.com/oauth/request_token", "https://api.twitter.com/oauth/access_token", consumer_key, consumerSecret, "1.0", "oob", "HMAC-SHA1");
   authenticate = function(callback) {
+    $(config_id).html("<span class='btn'><span class='glyphicon glyphicon-refresh'></span> Initializing...</span>");
     return oauth.getOAuthRequestToken(function(error, user_token, user_secret, results) {
       var link, query_html, snipid;
       session.twitter.user_token = user_token;
@@ -91,13 +91,13 @@ module.exports = function(div_id, config_id, session) {
     } else {
       tweets = JSON.parse(result.tweets);
       $(div_id).html(" ");
+      if (tweets[0] && Number(tweets[0].id === session.twitter.last_id)) {
+        tweets = tweets.slice(1);
+      }
       _ref = tweets.reverse();
       _results = [];
       for (_i = 0, _len = _ref.length; _i < _len; _i++) {
         tweet = _ref[_i];
-        if (tweets[0] && Number(tweets[0].id === session.twitter.last_id)) {
-          continue;
-        }
         tweet_entry = "<div class=\"row\">\n    <div class=\"col-md-2\">Here go Picture</div>\n    <div class=\"col-md-10\">" + tweet.text + "</div>\n</div>";
         _results.push($(div_id).prepend(tweet_entry));
       }

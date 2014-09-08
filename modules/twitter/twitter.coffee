@@ -13,8 +13,6 @@ module.exports = (div_id, config_id, session) ->
         session.twitter = {}
     # create session namespace if there is
 
-    # Show spinner while loading
-    $(config_id).html "<span class='btn'><span class='glyphicon glyphicon-refresh'></span> Initializing...</span>"
 
     oauth = new OAuth(
           "https://api.twitter.com/oauth/request_token",
@@ -27,6 +25,8 @@ module.exports = (div_id, config_id, session) ->
         )
 
     authenticate = (callback) ->
+        # Show spinner while loading
+        $(config_id).html "<span class='btn'><span class='glyphicon glyphicon-refresh'></span> Initializing...</span>"
         oauth.getOAuthRequestToken (error, user_token, user_secret, results) ->
             session.twitter.user_token = user_token
             session.twitter.user_secret = user_secret
@@ -91,9 +91,9 @@ module.exports = (div_id, config_id, session) ->
         else
             tweets = JSON.parse result.tweets
             $(div_id).html " "
+            if tweets[0] && Number tweets[0].id == session.twitter.last_id
+                tweets = tweets[1..]
             for tweet in tweets.reverse()
-                if tweets[0] && Number tweets[0].id == session.twitter.last_id
-                    continue
                 tweet_entry = """
 <div class="row">
     <div class="col-md-2">Here go Picture</div>
