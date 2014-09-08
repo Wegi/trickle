@@ -20,9 +20,7 @@ $("#new-box").click(function() {
     grid: 10
   });
   $("#box-" + numBoxes).center();
-  $("div#box-content-" + numBoxes + " a#a-" + numBoxes).click(function() {
-    return list("#box-content-" + $(this).attr("box-id"));
-  });
+  list("#box-content-" + $(this).attr("box-id"));
   sidemenu.close();
   return numBoxes++;
 });

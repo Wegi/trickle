@@ -4,6 +4,7 @@
   "window": {
     "toolbar": true,
     "width": 1280,
-    "height": 700
+    "height": 700,
+    "kiosk": false
   }
 }
