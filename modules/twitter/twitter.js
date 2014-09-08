@@ -76,7 +76,8 @@ module.exports = function(div_id, session) {
     }, function(err, res, body) {
       var result;
       result = JSON.parse(body);
-      if (result[0] === void 0) {
+      console.log("res: %j", res);
+      if (result.length < 1) {
         return callback(null, {
           tweets: false
         });
@@ -92,7 +93,8 @@ module.exports = function(div_id, session) {
       return err;
     } else {
       $(div_id).html(" ");
-      if (result.tweets) {
+      console.log("##Result.tweets: " + result.tweets);
+      if (result.tweets === !false) {
         console.log((JSON.parse(result.tweets)).length);
         _ref = (JSON.parse(result.tweets)).reverse();
         _results = [];

@@ -79,7 +79,8 @@ module.exports = (div_id, session) ->
         treq.request 'statuses/home_timeline', query: query,
                      (err, res, body) ->
                         result = JSON.parse body
-                        if result[0] is undefined
+                        console.log "res: %j", res
+                        if result.length < 1
                             callback null, tweets: false
                         else
                             session.twitter.last_id = (Number result[0].id)+1
@@ -90,7 +91,8 @@ module.exports = (div_id, session) ->
             return err
         else
             $(div_id).html " "
-            if result.tweets
+            console.log "##Result.tweets: "+result.tweets
+            if result.tweets is not false
                 console.log (JSON.parse result.tweets).length
                 for tweet in (JSON.parse result.tweets).reverse()
                     tweet_entry = """
