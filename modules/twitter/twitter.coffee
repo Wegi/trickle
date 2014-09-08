@@ -78,24 +78,28 @@ module.exports = (div_id, session) ->
         console.log query
         treq.request 'statuses/home_timeline', query: query,
                      (err, res, body) ->
-                        session.twitter.last_id = (Number (JSON.parse body)[0].id)+1
-                        callback null, body
+                        if body is undefined
+                            callback null, tweets: {}
+                        else
+                            session.twitter.last_id = (Number (JSON.parse body)[0].id)+1
+                            callback null, body
 
     print_tweets = (err, result) ->
         if err
             return err
         else
             $(div_id).html " "
-            console.log (JSON.parse result.tweets).length
-            for tweet in (JSON.parse result.tweets).reverse()
-                tweet_entry = """
+            if result.tweets
+                console.log (JSON.parse result.tweets).length
+                for tweet in (JSON.parse result.tweets).reverse()
+                    tweet_entry = """
 <div class="row">
     <div class="col-md-2">Here go Picture</div>
     <div class="col-md-10">#{tweet.text}</div>
 </div>
 """
-                $(div_id).prepend tweet_entry
-            #set last retrieved tweet
+                    $(div_id).prepend tweet_entry
+                    #set last retrieved tweet
 
     if not session.twitter.access_token || not session.twitter.access_secret
         async.series {auth: authenticate, tweets: get_stream}, print_tweets
