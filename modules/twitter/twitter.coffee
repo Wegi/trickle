@@ -8,13 +8,13 @@ async = require 'async'
 $ = require 'jquery'
 gui = window.require 'nw.gui'
 
-module.exports = (div_id, session) ->
+module.exports = (div_id, config_id, session) ->
     if not session.twitter
         session.twitter = {}
     # create session namespace if there is
 
     # Show spinner while loading
-    $(div_id).html "<span class='btn'><span class='glyphicon glyphicon-refresh'></span> Initializing...</span>"
+    $(config_id).html "<span class='btn'><span class='glyphicon glyphicon-refresh'></span> Initializing...</span>"
 
     oauth = new OAuth(
           "https://api.twitter.com/oauth/request_token",
@@ -31,7 +31,7 @@ module.exports = (div_id, session) ->
             session.twitter.user_token = user_token
             session.twitter.user_secret = user_secret
             link = 'https://twitter.com/oauth/authenticate?oauth_token='+user_token
-            snipid = div_id[1..]
+            snipid = config_id[1..]
             query_html = """
 <div class="form-group">
     <label>Please visit the following Link and enter the PIN.<br>
@@ -40,22 +40,22 @@ module.exports = (div_id, session) ->
 </div>
 <button class="btn btn-default" id="twitter-pin-#{snipid}">Submit</button>
 """
-            $(div_id).html query_html
+            $(config_id).html query_html
             $("#twitter-link-#{snipid}").click ->
                 gui.Shell.openExternal link
             $("#twitter-pin-#{snipid}").click ->
                 PIN = $("#twitter-input-#{snipid}").val()
 
                 # Show spinner while loading
-                $(div_id).html "<span class='btn'><span class='glyphicon glyphicon-refresh'></span> Validating PIN...</span>"
+                $(config_id).html "<span class='btn'><span class='glyphicon glyphicon-refresh'></span> Validating PIN...</span>"
 
                 oauth.getOAuthAccessToken user_token, user_secret, PIN ,
                 (error, oauth_access_token, oauth_access_token_secret, results) ->
                     if error
-                        $(div_id).html "<span class='btn'><span class='glyphicon glyphicon-remove'></span> An error occured.</span>"
+                        $(config_id).html "<span class='btn'><span class='glyphicon glyphicon-remove'></span> An error occured.</span>"
                         console.log(error)
                     else
-                        $(div_id).html "<span class='btn'><span class='glyphicon glyphicon-refresh'></span> Loading tweets...</span>"
+                        $(config_id).html "<span class='btn'><span class='glyphicon glyphicon-ok'></span> Everything worked</span>"
                         session.twitter.access_token = oauth_access_token;
                         session.twitter.access_secret = oauth_access_token_secret;
                         callback null, oauth_access_token
@@ -79,21 +79,21 @@ module.exports = (div_id, session) ->
         treq.request 'statuses/home_timeline', query: query,
                      (err, res, body) ->
                         result = JSON.parse body
-                        console.log "res: %j", res
                         if result.length < 1
                             callback "No new tweets"
                         else
-                            session.twitter.last_id = (Number result[0].id)+1
+                            session.twitter.last_id = (Number result[0].id)
                             callback null, body
 
     print_tweets = (err, result) ->
         if err
-            $(div_id).html err
+            console.log err
         else
+            tweets = JSON.parse result.tweets
             $(div_id).html " "
-            console.log "##Result.tweets: "+result.tweets
-            console.log (JSON.parse result.tweets).length
-            for tweet in (JSON.parse result.tweets).reverse()
+            for tweet in tweets.reverse()
+                if tweets[0] && Number tweets[0].id == session.twitter.last_id
+                    continue
                 tweet_entry = """
 <div class="row">
     <div class="col-md-2">Here go Picture</div>
