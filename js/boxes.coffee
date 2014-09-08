@@ -20,8 +20,8 @@ $("#new-box").click ->
     $("#box-#{numBoxes}").center()
 
     # Show list of Modules
-    $("div#box-content-#{numBoxes} a#a-#{numBoxes}").click ->
-        list "#box-content-" + $(this).attr("box-id")
+    #$("div#box-content-#{numBoxes} a#a-#{numBoxes}").click ->
+    list "#box-content-" + $(this).attr("box-id")
 
     # Close Sidebar and prepare for next box to add
     sidemenu.close()
