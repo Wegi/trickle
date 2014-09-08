@@ -81,7 +81,7 @@ module.exports = (div_id, session) ->
                         result = JSON.parse body
                         console.log "res: %j", res
                         if result.length < 1
-                            callback null, tweets: false
+                            callback "No new tweets Error"
                         else
                             session.twitter.last_id = (Number result[0].id)+1
                             callback null, body
@@ -92,16 +92,15 @@ module.exports = (div_id, session) ->
         else
             $(div_id).html " "
             console.log "##Result.tweets: "+result.tweets
-            if result.tweets is not false
-                console.log (JSON.parse result.tweets).length
-                for tweet in (JSON.parse result.tweets).reverse()
-                    tweet_entry = """
+            console.log (JSON.parse result.tweets).length
+            for tweet in (JSON.parse result.tweets).reverse()
+                tweet_entry = """
 <div class="row">
     <div class="col-md-2">Here go Picture</div>
     <div class="col-md-10">#{tweet.text}</div>
 </div>
 """
-                    $(div_id).prepend tweet_entry
+                $(div_id).prepend tweet_entry
                     #set last retrieved tweet
 
     if not session.twitter.access_token || not session.twitter.access_secret
