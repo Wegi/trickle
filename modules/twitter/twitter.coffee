@@ -78,10 +78,11 @@ module.exports = (div_id, session) ->
         console.log query
         treq.request 'statuses/home_timeline', query: query,
                      (err, res, body) ->
-                        if body is undefined
-                            callback null, tweets: {}
+                        result = JSON.parse body
+                        if result[0] is undefined
+                            callback null, tweets: false
                         else
-                            session.twitter.last_id = (Number (JSON.parse body)[0].id)+1
+                            session.twitter.last_id = (Number result[0].id)+1
                             callback null, body
 
     print_tweets = (err, result) ->
