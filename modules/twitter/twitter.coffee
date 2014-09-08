@@ -9,10 +9,12 @@ $ = require 'jquery'
 gui = window.require 'nw.gui'
 
 module.exports = (div_id, config_id, session) ->
+    # create session namespace if there isn't one
     if not session.twitter
         session.twitter = {}
-    # create session namespace if there is
-
+    # create window specific session namespace
+    if not session.twitter[div_id]
+        session.twitter[div_id] = {}
 
     oauth = new OAuth(
           "https://api.twitter.com/oauth/request_token",
@@ -71,10 +73,10 @@ module.exports = (div_id, config_id, session) ->
 
         treq = new twitter_req(readyoauth)
         #only get twees since last pull
-        if not session.twitter.last_id
-            session.twitter.last_id = 1
+        if not session.twitter[div_id].last_id
+            session.twitter[div_id].last_id = 1
         query =
-            since_id: session.twitter.last_id,
+            since_id: session.twitter[div_id].last_id,
             count: 100
         console.log query
         treq.request 'statuses/home_timeline', query: query,
@@ -92,10 +94,10 @@ module.exports = (div_id, config_id, session) ->
             tweets = JSON.parse result.tweets
             $(div_id).html " "
             # kill the duplicate tweet
-            if Number tweets[tweets.length-1].id == session.twitter.last_id
+            if Number tweets[tweets.length-1].id == session.twitter[div_id].last_id
                 tweets.pop()
             if tweets[0]
-                session.twitter.last_id = (Number tweets[0].id)
+                session.twitter[div_id].last_id = (Number tweets[0].id)
 
             for tweet in tweets.reverse()
                 user_img = tweet.user.profile_image_url

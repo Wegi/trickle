@@ -22,6 +22,9 @@ module.exports = function(div_id, config_id, session) {
   if (!session.twitter) {
     session.twitter = {};
   }
+  if (!session.twitter[div_id]) {
+    session.twitter[div_id] = {};
+  }
   oauth = new OAuth("https://api.twitter.com/oauth/request_token", "https://api.twitter.com/oauth/access_token", consumer_key, consumerSecret, "1.0", "oob", "HMAC-SHA1");
   authenticate = function(callback) {
     $(config_id).html("<span class='btn'><span class='glyphicon glyphicon-refresh'></span> Initializing...</span>");
@@ -64,11 +67,11 @@ module.exports = function(div_id, config_id, session) {
       token_secret: session.twitter.access_secret
     };
     treq = new twitter_req(readyoauth);
-    if (!session.twitter.last_id) {
-      session.twitter.last_id = 1;
+    if (!session.twitter[div_id].last_id) {
+      session.twitter[div_id].last_id = 1;
     }
     query = {
-      since_id: session.twitter.last_id,
+      since_id: session.twitter[div_id].last_id,
       count: 100
     };
     console.log(query);
@@ -91,11 +94,11 @@ module.exports = function(div_id, config_id, session) {
     } else {
       tweets = JSON.parse(result.tweets);
       $(div_id).html(" ");
-      if (Number(tweets[tweets.length - 1].id === session.twitter.last_id)) {
+      if (Number(tweets[tweets.length - 1].id === session.twitter[div_id].last_id)) {
         tweets.pop();
       }
       if (tweets[0]) {
-        session.twitter.last_id = Number(tweets[0].id);
+        session.twitter[div_id].last_id = Number(tweets[0].id);
       }
       _ref = tweets.reverse();
       _results = [];
