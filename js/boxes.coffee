@@ -21,7 +21,7 @@ $("#new-box").click ->
 
     # Show list of Modules
     #$("div#box-content-#{numBoxes} a#a-#{numBoxes}").click ->
-    list "#box-content-" + $(this).attr("box-id")
+    list "#box-content-#{numBoxes}"
 
     # Close Sidebar and prepare for next box to add
     sidemenu.close()
