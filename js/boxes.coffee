@@ -1,6 +1,7 @@
 baseZIndex = 50
 numBoxes = 0
 session = {}
+configDialogue = "#config-dialogue"
 
 # Make boxes draggable and resizable and snap them to other boxes
 $("#new-box").click ->
@@ -69,7 +70,7 @@ load_module = (modname, boxid) ->
 
         # Take hook and require it. This should be in a different function
         mod = require("./" + path.join(moddir, path.basename(config.hook, path.extname(config.hook))))
-        mod boxid, session
+        mod boxid, configDialogue, session
 
 
 # Center boxes, use it with $("path").center()
