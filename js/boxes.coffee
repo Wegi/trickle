@@ -20,18 +20,27 @@ $("#new-box").click ->
     """
 
     $("#boxes").append defaultContent
-    $("#box-#{numBoxes}").draggable(grid: [10, 10]).resizable(grid: 10).center()
+    box = $("#box-#{numBoxes}").draggable(grid: [10, 10]).resizable(grid: 10).center()
 
     # Show list of Modules
     list "#box-content-#{numBoxes}", "#box-#{numBoxes}"
     $("div#box-content-#{numBoxes} a#a-#{numBoxes}").click ->
         list "#box-content-" + $(this).attr("box-id")
 
+    # Make text selectable
+    $(".box-content", box).mousedown((ev) ->
+        box.draggable "disable"
+    ).mouseup (ev) ->
+        box.draggable "enable"
+
+    # Configure mouseclick event on Preference button in box
+    $("div.box-control span.box-control-button").click ->
+        console.log $(this)
+
     numBoxes++
 
 
 ### Show all modules ###
-# TODO move this into modules.coffee and load it properly
 path = require "path"
 fs = require "fs"
 

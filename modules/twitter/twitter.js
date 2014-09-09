@@ -59,7 +59,7 @@ module.exports = function(div_id, config_id, session) {
   };
   get_stream = function(callback) {
     var query, readyoauth, treq;
-    $(config_id).html("<span class='btn'><span class='glyphicon glyphicon-ok'></span>Everything worked. You can close the config now.</span>");
+    $(config_id).html("<span class='btn'><span class='glyphicon glyphicon-ok'></span> Everything worked. You can close the config now.</span>");
     readyoauth = {
       consumer_key: consumer_key,
       consumer_secret: consumerSecret,

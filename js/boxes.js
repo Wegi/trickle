@@ -12,10 +12,10 @@ loaded_modules = {};
 global.loaded_modules = loaded_modules;
 
 $("#new-box").click(function() {
-  var defaultContent;
+  var box, defaultContent;
   defaultContent = "<div class='draggable ui-widget-content box box-modules' id='box-" + numBoxes + "' style='z-index: " + (baseZIndex + numBoxes) + "'>\n    <div class='box-control'>\n        <span class='glyphicon glyphicon-cog box-control-button'></span>\n    </div>\n    <div class='box-content' id='box-content-" + numBoxes + "'>\n        I am a new Box!<br><br>\n        Go and add some modules.<br><br>\n        <a id='a-" + numBoxes + "' href='#' box-id='" + numBoxes + "'><span class='glyphicon glyphicon-plus'></span></a>\n    </div>\n</div>";
   $("#boxes").append(defaultContent);
-  $("#box-" + numBoxes).draggable({
+  box = $("#box-" + numBoxes).draggable({
     grid: [10, 10]
   }).resizable({
     grid: 10
@@ -23,6 +23,14 @@ $("#new-box").click(function() {
   list("#box-content-" + numBoxes, "#box-" + numBoxes);
   $("div#box-content-" + numBoxes + " a#a-" + numBoxes).click(function() {
     return list("#box-content-" + $(this).attr("box-id"));
+  });
+  $(".box-content", box).mousedown(function(ev) {
+    return box.draggable("disable");
+  }).mouseup(function(ev) {
+    return box.draggable("enable");
+  });
+  $("div.box-control span.box-control-button").click(function() {
+    return console.log($(this));
   });
   return numBoxes++;
 });
