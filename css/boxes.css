@@ -6,6 +6,19 @@ div#boxes div.box-content {
     overflow-y: auto;
 }
 
+.module-entry{
+    margin:10px;
+}
+.module-single{
+    padding: 5px;
+    font-size: 150%;
+    width: 100px;
+}
+
+.icon{
+    height: 1em;
+}
+
 /* Style draggable */
 .draggable {
     width: 250px;
