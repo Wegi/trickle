@@ -13,7 +13,7 @@ global.loaded_modules = loaded_modules;
 
 $("#new-box").click(function() {
   var box, defaultContent;
-  defaultContent = "<div class='draggable ui-widget-content box box-modules' id='box-" + numBoxes + "' style='z-index: " + (baseZIndex + numBoxes) + "'>\n    <div class='box-control'>\n        <span class='glyphicon glyphicon-cog box-control-button'></span>\n    </div>\n    <div class='box-content' id='box-content-" + numBoxes + "'>\n        I am a new Box!<br><br>\n        Go and add some modules.<br><br>\n        <a id='a-" + numBoxes + "' href='#' box-id='" + numBoxes + "'><span class='glyphicon glyphicon-plus'></span></a>\n    </div>\n</div>";
+  defaultContent = "<div class='draggable ui-widget-content box box-modules' id='box-" + numBoxes + "' style='z-index: " + (baseZIndex + numBoxes) + "'>\n    <div class='box-control'>\n        <span id='box-control-button-" + numBoxes + "' class='glyphicon glyphicon-cog glyphicon-fade box-control-button'></span>\n    </div>\n    <div class='box-content' id='box-content-" + numBoxes + "'>\n        I am a new Box!<br><br>\n        Go and add some modules.<br><br>\n        <a id='a-" + numBoxes + "' href='#' box-id='" + numBoxes + "'><span class='glyphicon glyphicon-plus'></span></a>\n    </div>\n</div>";
   $("#boxes").append(defaultContent);
   box = $("#box-" + numBoxes).draggable({
     grid: [10, 10]
@@ -24,13 +24,18 @@ $("#new-box").click(function() {
   $("div#box-content-" + numBoxes + " a#a-" + numBoxes).click(function() {
     return list("#box-content-" + $(this).attr("box-id"));
   });
-  $(".box-content", box).mousedown(function(ev) {
-    return box.draggable("disable");
-  }).mouseup(function(ev) {
-    return box.draggable("enable");
-  });
-  $("div.box-control span.box-control-button").click(function() {
-    return console.log($(this));
+  $("div.box-control span#box-control-button-" + numBoxes).click(function() {
+    if ($(".control-hidden").css("display") === "inline") {
+      $(this).parent().parent().css("border", "1px solid #aaa");
+      return $(".control-hidden").hide("slide", {
+        direction: "right"
+      });
+    } else {
+      $(this).parent().parent().css("border", "1px solid red");
+      return $(".control-hidden").show("slide", {
+        direction: "right"
+      });
+    }
   });
   return numBoxes++;
 });

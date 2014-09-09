@@ -9,7 +9,7 @@ $("#new-box").click ->
     defaultContent = """
         <div class='draggable ui-widget-content box box-modules' id='box-#{numBoxes}' style='z-index: #{baseZIndex + numBoxes}'>
             <div class='box-control'>
-                <span class='glyphicon glyphicon-cog box-control-button'></span>
+                <span id='box-control-button-#{numBoxes}' class='glyphicon glyphicon-cog glyphicon-fade box-control-button'></span>
             </div>
             <div class='box-content' id='box-content-#{numBoxes}'>
                 I am a new Box!<br><br>
@@ -27,15 +27,14 @@ $("#new-box").click ->
     $("div#box-content-#{numBoxes} a#a-#{numBoxes}").click ->
         list "#box-content-" + $(this).attr("box-id")
 
-    # Make text selectable
-    $(".box-content", box).mousedown((ev) ->
-        box.draggable "disable"
-    ).mouseup (ev) ->
-        box.draggable "enable"
-
     # Configure mouseclick event on Preference button in box
-    $("div.box-control span.box-control-button").click ->
-        console.log $(this)
+    $("div.box-control span#box-control-button-#{numBoxes}").click ->
+        if $(".control-hidden").css("display") == "inline"
+            $(this).parent().parent().css "border", "1px solid #aaa"
+            $(".control-hidden").hide "slide", direction: "right"
+        else
+            $(this).parent().parent().css "border", "1px solid red"
+            $(".control-hidden").show "slide", direction: "right"
 
     numBoxes++
 
