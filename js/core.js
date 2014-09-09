@@ -52,6 +52,10 @@ win.on("close", function() {
   var jsonified;
   this.hide();
   jsonified = JSON.stringify(root.session, null, 2);
-  fs.writeFileSync(home_path + '/.trickle/session.json', jsonified, 'utf8');
-  return gui.App.quit();
+  return fs.writeFile(home_path + '/.trickle/session.json', jsonified, 'utf8', function(err) {
+    if (err) {
+      console.error(err);
+    }
+    return gui.App.quit();
+  });
 });

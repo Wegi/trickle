@@ -1,6 +1,5 @@
 baseZIndex = 50
 numBoxes = 0
-session = {}
 configDialogue = "#config-dialogue"
 
 # Make boxes draggable and resizable and snap them to other boxes
