@@ -13,19 +13,17 @@ global.loaded_modules = loaded_modules;
 
 $("#new-box").click(function() {
   var defaultContent;
-  defaultContent = "<div class='draggable ui-widget-content box-modules' id='box-" + numBoxes + "' style='z-index: " + (baseZIndex + numBoxes) + "'>\n    <div class='box-content' id='box-content-" + numBoxes + "'>\n        I am a new Box!<br><br>\n        Go and add some modules.<br><br>\n        <a id='a-" + numBoxes + "' href='#' box-id='" + numBoxes + "'><span class='glyphicon glyphicon-plus'></span></a>\n    </div>\n</div>";
+  defaultContent = "<div class='draggable ui-widget-content box box-modules' id='box-" + numBoxes + "' style='z-index: " + (baseZIndex + numBoxes) + "'>\n    <div class='box-content' id='box-content-" + numBoxes + "'>\n        I am a new Box!<br><br>\n        Go and add some modules.<br><br>\n        <a id='a-" + numBoxes + "' href='#' box-id='" + numBoxes + "'><span class='glyphicon glyphicon-plus'></span></a>\n    </div>\n</div>";
   $("#boxes").append(defaultContent);
   $("#box-" + numBoxes).draggable({
     grid: [10, 10]
   }).resizable({
     grid: 10
-  });
-  $("#box-" + numBoxes).center();
+  }).center();
   list("#box-content-" + numBoxes, "#box-" + numBoxes);
   $("div#box-content-" + numBoxes + " a#a-" + numBoxes).click(function() {
     return list("#box-content-" + $(this).attr("box-id"));
   });
-  sidemenu.close();
   return numBoxes++;
 });
 
@@ -48,35 +46,35 @@ fs.readdir(modpath, function(err, files) {
 });
 
 list = function(boxid, outer_id) {
-  var bcolor, config, content, e, icon, module, name, _i, _len;
+  var bcolor, config, content, icon, module, name, _i, _len;
   content = "<h3 style='padding-bottom: 1em;'>Choose your module</h3>";
   content += "<ul>";
   for (_i = 0, _len = modules.length; _i < _len; _i++) {
     module = modules[_i];
     if ((module.charAt(0)) !== '.') {
-      try {
-        config = load_conf(path.join(modpath, module));
+      config = load_conf(path.join(modpath, module));
+      content += "<li class='module-entry'><a class='module-single' href='#' name='" + module + "'";
+      if (config) {
         name = config.name;
         bcolor = config.color;
         icon = path.join(modpath, module, config.icon);
-      } catch (_error) {
-        e = _error;
-        console.error(e);
       }
-      content += "<li class='module-entry'><a class='module-single' href='#' name='" + module + "' ";
-      if (bcolor !== "") {
-        content += "style='background-color: " + bcolor + ";'";
+      if (bcolor !== "" && bcolor) {
+        content += " style='background-color: " + bcolor + ";'";
       }
       content += ">";
       if (icon) {
-        content += "<img class='icon' src='" + icon + "' alt=''> ";
+        content += "<img class='icon' src='" + icon + "' alt='" + module + "'> ";
       }
-      content += "" + module + "</a></li>";
+      if (name !== "" && name) {
+        content += "" + name + "</a></li>";
+      } else {
+        content += "" + module + "</a></li>";
+      }
     }
   }
   content += "</ul>";
-  $(configDialogue).lightbox_me();
-  $(configDialogue).html(content);
+  $(configDialogue).lightbox_me().html(content);
   return $(".module-single").click(function() {
     return load_module($(this).attr("name"), boxid, outer_id);
   });
@@ -90,13 +88,20 @@ load_module = function(modname, boxid, outer_id) {
     loaded_modules[outer_id] = [];
   }
   loaded_modules[outer_id].push(modname);
-  mod = require("./" + path.join(moddir, path.basename(config.hook, path.extname(config.hook))));
-  return mod(boxid, configDialogue, session);
+  if (config) {
+    mod = require("./" + path.join(moddir, path.basename(config.hook, path.extname(config.hook))));
+    return mod(boxid, configDialogue, session);
+  }
 };
 
 load_conf = function(moddir) {
-  var config;
-  config = fs.readFileSync(path.join(moddir, "config.json"), "utf8");
+  var config, e;
+  try {
+    config = fs.readFileSync(path.join(moddir, "config.json"), "utf8");
+  } catch (_error) {
+    e = _error;
+    config = null;
+  }
   return JSON.parse(config);
 };
 

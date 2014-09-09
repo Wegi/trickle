@@ -18,6 +18,15 @@ html, body {
         padding: 0;
     }
 
+.button-add-box {
+    position: absolute;
+    top: 0;
+    right: 0;
+    padding: 0.5em;
+    z-index: 99999;
+    font-size: 2em;
+}
+
 /* Let's get this party started */
 ::-webkit-scrollbar {
     width: 5px;

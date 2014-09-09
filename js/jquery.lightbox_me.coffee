@@ -72,7 +72,6 @@ $ ->
           marginLeft: ($self.outerWidth() / 2) * -1
           zIndex: (opts.zIndex + 3)
 
-
         # we have to get a little fancy when dealing with height, because lightbox_me
         #                    is just so fancy.
         #
@@ -190,9 +189,9 @@ $ ->
     zIndex: 999
     centered: false
     modalCSS:
-      width: "50%",
+      width: "80%",
       top: "10%"
 
     overlayCSS:
       background: "black"
-      opacity: .6
+      opacity: .8
