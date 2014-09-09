@@ -65,13 +65,17 @@ list = (boxid) ->
 
             content += "<li class='module-entry'><a class='module-single' href='#' name='#{module}' "
 
-            if bcolor != "" then content += "style='background-color: #{bcolor};'"
+            if bcolor != "" && bcolor
+                content += "style='background-color: #{bcolor};'"
 
             content += ">"
 
             if icon then content += "<img class='icon' src='#{icon}' alt=''> "
 
-            content += "#{module}</a></li>"
+            if name != "" && name
+                content += "#{name}</a></li>"
+            else
+                content += "#{module}</a></li>"
 
     content += "</ul>"
 
