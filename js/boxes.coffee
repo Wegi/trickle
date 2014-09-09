@@ -54,23 +54,22 @@ list = (boxid) ->
     for module in modules
         if (module.charAt 0) != '.'
 
-            #assign values from the correlated config.json
-            try
-                config = load_conf path.join(modpath, module)
+            # Assign values from the correlated config.json
+            config = load_conf path.join(modpath, module)
+
+            content += "<li class='module-entry'><a class='module-single' href='#' name='#{module}' "
+
+            if config
                 name   = config.name
                 bcolor = config.color
                 icon   = path.join modpath, module, config.icon
-            catch e
-                console.error e
-
-            content += "<li class='module-entry'><a class='module-single' href='#' name='#{module}' "
 
             if bcolor != "" && bcolor
                 content += "style='background-color: #{bcolor};'"
 
             content += ">"
 
-            if icon then content += "<img class='icon' src='#{icon}' alt=''> "
+            if icon then content += "<img class='icon' src='#{icon}' alt='#{module}'> "
 
             if name != "" && name
                 content += "#{name}</a></li>"
@@ -95,17 +94,21 @@ load_module = (modname, boxid) ->
     moddir = path.join(modpath, modname)
     config = load_conf moddir
 
-    # Take hook and require it. This should be in a different function
-    mod = require("./" + path.join(moddir, path.basename(config.hook, path.extname(config.hook))))
+    if config
+        # Take hook and require it. This should be in a different function
+        mod = require("./" + path.join(moddir, path.basename(config.hook, path.extname(config.hook))))
 
-    # Load module
-    mod boxid, configDialogue, session
+        # Load module
+        mod boxid, configDialogue, session
 
 
 # Load config of given module
 load_conf = (moddir) ->
-    config = fs.readFileSync path.join(moddir, "config.json"), "utf8"
-    return JSON.parse config
+    try
+        config = fs.readFileSync path.join(moddir, "config.json"), "utf8"
+    catch e
+        config = null
+    return JSON.parse(config)
 
 
 # Center boxes in window, use it with $("path").center()

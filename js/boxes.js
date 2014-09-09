@@ -46,28 +46,25 @@ fs.readdir(modpath, function(err, files) {
 });
 
 list = function(boxid) {
-  var bcolor, config, content, e, icon, module, name, _i, _len;
+  var bcolor, config, content, icon, module, name, _i, _len;
   content = "<h3 style='padding-bottom: 1em;'>Choose your module</h3>";
   content += "<ul>";
   for (_i = 0, _len = modules.length; _i < _len; _i++) {
     module = modules[_i];
     if ((module.charAt(0)) !== '.') {
-      try {
-        config = load_conf(path.join(modpath, module));
+      config = load_conf(path.join(modpath, module));
+      content += "<li class='module-entry'><a class='module-single' href='#' name='" + module + "' ";
+      if (config) {
         name = config.name;
         bcolor = config.color;
         icon = path.join(modpath, module, config.icon);
-      } catch (_error) {
-        e = _error;
-        console.error(e);
       }
-      content += "<li class='module-entry'><a class='module-single' href='#' name='" + module + "' ";
       if (bcolor !== "" && bcolor) {
         content += "style='background-color: " + bcolor + ";'";
       }
       content += ">";
       if (icon) {
-        content += "<img class='icon' src='" + icon + "' alt=''> ";
+        content += "<img class='icon' src='" + icon + "' alt='" + module + "'> ";
       }
       if (name !== "" && name) {
         content += "" + name + "</a></li>";
@@ -88,13 +85,20 @@ load_module = function(modname, boxid) {
   var config, mod, moddir;
   moddir = path.join(modpath, modname);
   config = load_conf(moddir);
-  mod = require("./" + path.join(moddir, path.basename(config.hook, path.extname(config.hook))));
-  return mod(boxid, configDialogue, session);
+  if (config) {
+    mod = require("./" + path.join(moddir, path.basename(config.hook, path.extname(config.hook))));
+    return mod(boxid, configDialogue, session);
+  }
 };
 
 load_conf = function(moddir) {
-  var config;
-  config = fs.readFileSync(path.join(moddir, "config.json"), "utf8");
+  var config, e;
+  try {
+    config = fs.readFileSync(path.join(moddir, "config.json"), "utf8");
+  } catch (_error) {
+    e = _error;
+    config = null;
+  }
   return JSON.parse(config);
 };
 
