@@ -20,7 +20,7 @@ html, body {
 
 .button-add-box {
     position: absolute;
-    bottom: 0;
+    top: 0;
     right: 0;
     padding: 0.5em;
     z-index: 99999;
