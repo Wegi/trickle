@@ -13,7 +13,7 @@ global.loaded_modules = loaded_modules;
 
 $("#new-box").click(function() {
   var defaultContent;
-  defaultContent = "<div class='draggable ui-widget-content box box-modules' id='box-" + numBoxes + "' style='z-index: " + (baseZIndex + numBoxes) + "'>\n    <div class='box-content' id='box-content-" + numBoxes + "'>\n        I am a new Box!<br><br>\n        Go and add some modules.<br><br>\n        <a id='a-" + numBoxes + "' href='#' box-id='" + numBoxes + "'><span class='glyphicon glyphicon-plus'></span></a>\n    </div>\n</div>";
+  defaultContent = "<div class='draggable ui-widget-content box box-modules' id='box-" + numBoxes + "' style='z-index: " + (baseZIndex + numBoxes) + "'>\n    <div class='box-control'>\n        <span class='glyphicon glyphicon-cog box-control-button'></span>\n    </div>\n    <div class='box-content' id='box-content-" + numBoxes + "'>\n        I am a new Box!<br><br>\n        Go and add some modules.<br><br>\n        <a id='a-" + numBoxes + "' href='#' box-id='" + numBoxes + "'><span class='glyphicon glyphicon-plus'></span></a>\n    </div>\n</div>";
   $("#boxes").append(defaultContent);
   $("#box-" + numBoxes).draggable({
     grid: [10, 10]

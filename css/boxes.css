@@ -23,6 +23,21 @@ div#boxes div.box-content {
     background: rgba(30,30,30,0.7);
 }
 
+.box-control-button {
+    position: absolute;
+    top: 0;
+    right: 0;
+    padding: 2px;
+    opacity: 0.2;
+    z-index: 1;
+    transition: opacity .25s ease-in-out;
+    -moz-transition: opacity .25s ease-in-out;
+    -webkit-transition: opacity .25s ease-in-out;
+}
+    .box-control-button:hover {
+        opacity: 1;
+    }
+
 /* Style draggable */
 .draggable {
     width: 250px;
