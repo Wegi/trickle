@@ -72,10 +72,6 @@ win.on("close", function() {
   });
   root.session.present_boxes = present_boxes;
   jsonified = JSON.stringify(root.session, null, 4);
-  return fs.writeFile(home_path + '/.trickle/session.json', jsonified, 'utf8', function(err) {
-    if (err) {
-      console.error(err);
-    }
-    return gui.App.quit();
-  });
+  fs.writeFileSync(home_path + '/.trickle/session.json', jsonified, 'utf8');
+  return gui.App.quit();
 });

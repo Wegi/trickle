@@ -59,7 +59,5 @@ win.on "close", ->
 
     # Write session to file
     jsonified = JSON.stringify(root.session, null, 4)
-    fs.writeFile home_path+'/.trickle/session.json', jsonified, 'utf8', (err) ->
-        if err
-            console.error err
-        gui.App.quit()
+    fs.writeFileSync home_path+'/.trickle/session.json', jsonified, 'utf8'
+    gui.App.quit()

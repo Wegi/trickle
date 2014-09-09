@@ -16,6 +16,9 @@ incrementNum = (num) ->
 $("#new-box").click ->
     defaultContent = """
         <div class='draggable ui-widget-content box box-modules' id='box-#{numBoxes}' style='z-index: #{baseZIndex + numBoxes}'>
+            <div class='box-control'>
+                <span class='glyphicon glyphicon-cog box-control-button'></span>
+            </div>
             <div class='box-content' id='box-content-#{numBoxes}'>
                 I am a new Box!<br><br>
                 Go and add some modules.<br><br>
@@ -30,7 +33,7 @@ $("#new-box").click ->
     # Show list of Modules
     list "#box-content-#{numBoxes}", "#box-#{numBoxes}"
     $("div#box-content-#{numBoxes} a#a-#{numBoxes}").click ->
-         list "#box-content-" + $(this).attr("box-id")
+        list "#box-content-" + $(this).attr("box-id")
 
     numBoxes = incrementNum numBoxes
 
