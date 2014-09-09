@@ -46,11 +46,30 @@ fs.readdir modpath, (err, files) ->
 
 # List all modules
 list = (boxid) ->
-    content = "<h3>Choose your modules</h3>"
+    # Header
+    content = "<h3 style=\"padding-bottom: 20px;\">Choose your module</h3>"
 
     content += "<ul>"
     for module in modules
-        content += "<li><a class='module-single' href='#' name='#{module}'>#{module}</a></li>"
+        if (module.charAt 0) != '.'
+
+            #default values
+            bcolor = "#00000000"
+            name = module
+
+            #assign values from the correlated config.json
+            try
+                config = load_conf( path.join( modpath, module ) )
+                name   = config.name
+                bcolor = config.color
+                icon   = path.join(modpath, module, config.icon)
+            catch e
+
+            content += "<li class='module-entry'><a class='module-single' href='#' name='#{module}' style=\"background-color: #{bcolor}; \">"
+            if icon then content += "<img class='icon' src='#{icon}' alt=''> "
+
+            content += "#{name}</a></li>"
+
     content += "</ul>"
 
     # Open Config Dialogue
