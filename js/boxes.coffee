@@ -1,11 +1,13 @@
 baseZIndex = 50
 numBoxes = 0
 configDialogue = "#config-dialogue"
+loaded_modules = { }
+global.loaded_modules = loaded_modules
 
 # Make boxes draggable and resizable and snap them to other boxes
 $("#new-box").click ->
     defaultContent = """
-        <div class='draggable ui-widget-content' id='box-#{numBoxes}' style='z-index: #{baseZIndex + numBoxes}'>
+        <div class='draggable ui-widget-content box-modules' id='box-#{numBoxes}' style='z-index: #{baseZIndex + numBoxes}'>
             <div class='box-content' id='box-content-#{numBoxes}'>
                 I am a new Box!<br><br>
                 Go and add some modules.<br><br>
@@ -19,7 +21,7 @@ $("#new-box").click ->
     $("#box-#{numBoxes}").center()
 
     # Show list of Modules
-    list "#box-content-#{numBoxes}"
+    list "#box-content-#{numBoxes}", "#box-#{numBoxes}"
     $("div#box-content-#{numBoxes} a#a-#{numBoxes}").click ->
          list "#box-content-" + $(this).attr("box-id")
 
@@ -45,7 +47,7 @@ fs.readdir modpath, (err, files) ->
 
 
 # List all modules
-list = (boxid) ->
+list = (boxid, outer_id) ->
     # Header
     content = "<h3 style='padding-bottom: 1em;'>Choose your module</h3>"
 
@@ -82,13 +84,18 @@ list = (boxid) ->
 
     # Add listener
     $(".module-single").click ->
-        load_module $(this).attr("name"), boxid
+        load_module $(this).attr("name"), boxid, outer_id
 
 
 # Get into the module and look for config.json
-load_module = (modname, boxid) ->
+load_module = (modname, boxid, outer_id) ->
     moddir = path.join(modpath, modname)
     config = load_conf moddir
+
+    #tell core that you loaded module
+    if not loaded_modules[outer_id]
+        loaded_modules[outer_id] = [ ]
+    loaded_modules[outer_id].push modname
 
     # Take hook and require it. This should be in a different function
     mod = require("./" + path.join(moddir, path.basename(config.hook, path.extname(config.hook))))

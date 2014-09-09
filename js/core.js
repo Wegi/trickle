@@ -51,7 +51,26 @@ try {
 win.on("close", function() {
   var jsonified;
   this.hide();
-  jsonified = JSON.stringify(root.session, null, 2);
+  if (!root.session.boxes) {
+    root.session["boxes"] = {};
+  }
+  $(".box-modules").each(function(index) {
+    var id;
+    id = '#' + this.id;
+    if (!root.session.boxes["" + id]) {
+      root.session.boxes["" + id] = {};
+    }
+    root.session.boxes["" + id].position = $(id).offset();
+    root.session.boxes["" + id].content = $(id).html();
+    root.session.boxes["" + id].size = {
+      "height": $(id).height(),
+      "width": $(id).width()
+    };
+    if (loaded_modules[id]) {
+      return root.session.boxes[id].loaded_modules = loaded_modules[id];
+    }
+  });
+  jsonified = JSON.stringify(root.session, null, 4);
   return fs.writeFile(home_path + '/.trickle/session.json', jsonified, 'utf8', function(err) {
     if (err) {
       console.error(err);
