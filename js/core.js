@@ -70,6 +70,7 @@ win.on("close", function() {
       return root.session.boxes[id].loaded_modules = loaded_modules[id];
     }
   });
+  root.session.present_boxes = present_boxes;
   jsonified = JSON.stringify(root.session, null, 4);
   return fs.writeFile(home_path + '/.trickle/session.json', jsonified, 'utf8', function(err) {
     if (err) {

@@ -55,6 +55,7 @@ win.on "close", ->
             "width": $(id).width()
         if loaded_modules[id]
             root.session.boxes[id].loaded_modules = loaded_modules[id]
+    root.session.present_boxes = present_boxes
 
     # Write session to file
     jsonified = JSON.stringify(root.session, null, 4)
