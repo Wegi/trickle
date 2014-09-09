@@ -18,6 +18,11 @@ div#boxes div.box-content {
     height: 1em;
 }
 
+/* General styles for boxes and overlays */
+.box {
+    background: rgba(30,30,30,0.7);
+}
+
 /* Style draggable */
 .draggable {
     width: 250px;
@@ -25,7 +30,6 @@ div#boxes div.box-content {
     padding: 1em;
     float: left;
     font-size: 1em;
-    background: rgba(30,30,30,0.7);
     border: black;
 }
 .ui-widget-header p, .ui-widget-content p {

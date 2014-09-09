@@ -6,7 +6,7 @@ configDialogue = "#config-dialogue"
 # Make boxes draggable and resizable and snap them to other boxes
 $("#new-box").click ->
     defaultContent = """
-        <div class='draggable ui-widget-content' id='box-#{numBoxes}' style='z-index: #{baseZIndex + numBoxes}'>
+        <div class='draggable ui-widget-content box' id='box-#{numBoxes}' style='z-index: #{baseZIndex + numBoxes}'>
             <div class='box-content' id='box-content-#{numBoxes}'>
                 I am a new Box!<br><br>
                 Go and add some modules.<br><br>
@@ -16,8 +16,7 @@ $("#new-box").click ->
     """
 
     $("#boxes").append defaultContent
-    $("#box-#{numBoxes}").draggable(grid: [10, 10]).resizable(grid: 10)
-    $("#box-#{numBoxes}").center()
+    $("#box-#{numBoxes}").draggable(grid: [10, 10]).resizable(grid: 10).center()
 
     # Show list of Modules
     list "#box-content-#{numBoxes}"
@@ -78,11 +77,9 @@ list = (boxid) ->
 
     content += "</ul>"
 
-    # Open Config Dialogue
-    $(configDialogue).lightbox_me();
-
-    # Print content
-    $(configDialogue).html content
+    # Open Config Dialogue with content
+    $(configDialogue).lightbox_me().html content
+    #$(configDialogue).center()
 
     # Add listener
     $(".module-single").click ->

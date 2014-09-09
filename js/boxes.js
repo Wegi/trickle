@@ -11,14 +11,13 @@ configDialogue = "#config-dialogue";
 
 $("#new-box").click(function() {
   var defaultContent;
-  defaultContent = "<div class='draggable ui-widget-content' id='box-" + numBoxes + "' style='z-index: " + (baseZIndex + numBoxes) + "'>\n    <div class='box-content' id='box-content-" + numBoxes + "'>\n        I am a new Box!<br><br>\n        Go and add some modules.<br><br>\n        <a id='a-" + numBoxes + "' href='#' box-id='" + numBoxes + "'><span class='glyphicon glyphicon-plus'></span></a>\n    </div>\n</div>";
+  defaultContent = "<div class='draggable ui-widget-content box' id='box-" + numBoxes + "' style='z-index: " + (baseZIndex + numBoxes) + "'>\n    <div class='box-content' id='box-content-" + numBoxes + "'>\n        I am a new Box!<br><br>\n        Go and add some modules.<br><br>\n        <a id='a-" + numBoxes + "' href='#' box-id='" + numBoxes + "'><span class='glyphicon glyphicon-plus'></span></a>\n    </div>\n</div>";
   $("#boxes").append(defaultContent);
   $("#box-" + numBoxes).draggable({
     grid: [10, 10]
   }).resizable({
     grid: 10
-  });
-  $("#box-" + numBoxes).center();
+  }).center();
   list("#box-content-" + numBoxes);
   $("div#box-content-" + numBoxes + " a#a-" + numBoxes).click(function() {
     return list("#box-content-" + $(this).attr("box-id"));
@@ -74,8 +73,7 @@ list = function(boxid) {
     }
   }
   content += "</ul>";
-  $(configDialogue).lightbox_me();
-  $(configDialogue).html(content);
+  $(configDialogue).lightbox_me().html(content);
   return $(".module-single").click(function() {
     return load_module($(this).attr("name"), boxid);
   });

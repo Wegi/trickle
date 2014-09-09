@@ -190,9 +190,9 @@ $ ->
     zIndex: 999
     centered: false
     modalCSS:
-      width: "50%",
+      width: "80%",
       top: "10%"
 
     overlayCSS:
       background: "black"
-      opacity: .6
+      opacity: .8
