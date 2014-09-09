@@ -23,8 +23,6 @@ $("#new-box").click ->
     $("div#box-content-#{numBoxes} a#a-#{numBoxes}").click ->
          list "#box-content-" + $(this).attr("box-id")
 
-    # Close Sidebar and prepare for next box to add
-    sidemenu.close()
     numBoxes++
 
 
@@ -56,7 +54,7 @@ list = (boxid) ->
             # Assign values from the correlated config.json
             config = load_conf path.join(modpath, module)
 
-            content += "<li class='module-entry'><a class='module-single' href='#' name='#{module}' "
+            content += "<li class='module-entry'><a class='module-single' href='#' name='#{module}'"
 
             if config
                 name   = config.name
@@ -64,7 +62,7 @@ list = (boxid) ->
                 icon   = path.join modpath, module, config.icon
 
             if bcolor != "" && bcolor
-                content += "style='background-color: #{bcolor};'"
+                content += " style='background-color: #{bcolor};'"
 
             content += ">"
 
@@ -79,7 +77,6 @@ list = (boxid) ->
 
     # Open Config Dialogue with content
     $(configDialogue).lightbox_me().html content
-    #$(configDialogue).center()
 
     # Add listener
     $(".module-single").click ->

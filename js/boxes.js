@@ -22,7 +22,6 @@ $("#new-box").click(function() {
   $("div#box-content-" + numBoxes + " a#a-" + numBoxes).click(function() {
     return list("#box-content-" + $(this).attr("box-id"));
   });
-  sidemenu.close();
   return numBoxes++;
 });
 
@@ -52,14 +51,14 @@ list = function(boxid) {
     module = modules[_i];
     if ((module.charAt(0)) !== '.') {
       config = load_conf(path.join(modpath, module));
-      content += "<li class='module-entry'><a class='module-single' href='#' name='" + module + "' ";
+      content += "<li class='module-entry'><a class='module-single' href='#' name='" + module + "'";
       if (config) {
         name = config.name;
         bcolor = config.color;
         icon = path.join(modpath, module, config.icon);
       }
       if (bcolor !== "" && bcolor) {
-        content += "style='background-color: " + bcolor + ";'";
+        content += " style='background-color: " + bcolor + ";'";
       }
       content += ">";
       if (icon) {
