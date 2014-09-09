@@ -14,14 +14,15 @@ $("#new-box").click ->
             </div>
         </div>
     """
-    root.session.foo = "foo"
+
     $("#boxes").append defaultContent
     $("#box-#{numBoxes}").draggable(grid: [10, 10]).resizable(grid: 10)
     $("#box-#{numBoxes}").center()
 
     # Show list of Modules
-    #$("div#box-content-#{numBoxes} a#a-#{numBoxes}").click ->
     list "#box-content-#{numBoxes}"
+    $("div#box-content-#{numBoxes} a#a-#{numBoxes}").click ->
+         list "#box-content-" + $(this).attr("box-id")
 
     # Close Sidebar and prepare for next box to add
     sidemenu.close()
@@ -47,28 +48,30 @@ fs.readdir modpath, (err, files) ->
 # List all modules
 list = (boxid) ->
     # Header
-    content = "<h3 style=\"padding-bottom: 20px;\">Choose your module</h3>"
+    content = "<h3 style='padding-bottom: 1em;'>Choose your module</h3>"
 
     content += "<ul>"
     for module in modules
         if (module.charAt 0) != '.'
 
-            #default values
-            bcolor = "#00000000"
-            name = module
-
             #assign values from the correlated config.json
             try
-                config = load_conf( path.join( modpath, module ) )
+                config = load_conf path.join(modpath, module)
                 name   = config.name
                 bcolor = config.color
-                icon   = path.join(modpath, module, config.icon)
+                icon   = path.join modpath, module, config.icon
             catch e
+                console.error e
 
-            content += "<li class='module-entry'><a class='module-single' href='#' name='#{module}' style=\"background-color: #{bcolor}; \">"
+            content += "<li class='module-entry'><a class='module-single' href='#' name='#{module}' "
+
+            if bcolor != "" then content += "style='background-color: #{bcolor};'"
+
+            content += ">"
+
             if icon then content += "<img class='icon' src='#{icon}' alt=''> "
 
-            content += "#{name}</a></li>"
+            content += "#{module}</a></li>"
 
     content += "</ul>"
 

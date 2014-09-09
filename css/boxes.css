@@ -6,13 +6,12 @@ div#boxes div.box-content {
     overflow-y: auto;
 }
 
-.module-entry{
-    margin:10px;
+.module-entry {
+    margin: 1em;
 }
-.module-single{
-    padding: 5px;
-    font-size: 150%;
-    width: 100px;
+.module-single {
+    padding: 0.5em;
+    min-width: 200px;
 }
 
 .icon{
