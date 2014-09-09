@@ -43,7 +43,5 @@ win.on "close", ->
     @hide() # Pretend to be closed already
     # Write session to file
     jsonified = JSON.stringify(root.session, null, 2)
-    fs.writeFile home_path+'/.trickle/session.json', jsonified, 'utf8', (err) ->
-        if err
-            console.error err
-        gui.App.quit()
+    fs.writeFileSync home_path+'/.trickle/session.json', jsonified, 'utf8'
+    gui.App.quit()
