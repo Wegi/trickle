@@ -27,26 +27,29 @@ html, body {
     .glyphicon-fade:hover {
         opacity: 1;
     }
+.glyphicon-large {
+    font-size: 2em;
+    padding-left: 0.5em;
+}
+.glyphicon-medium {
+    font-size: 1.5em;
+}
 
 #control-wrapper {
     position: absolute;
     display: inline-block;
     padding: 1em;
-    top: 0;
+    line-height: 2em;
+    bottom: 0;
     right: 0;
     z-index: 99999;
 }
     #control-wrapper .glyphicon {
-        font-size: 2em;
-        padding-bottom: 0.5em;
+        /*font-size: 2em;*/
     }
-    #control-wrapper .control-hidden {
-        font-size: 1.5em;
-    }
-    #control-wrapper ul {
-        list-style: none;
-        position: relative;
-    }
+#control-edit-box {
+    display: none;
+}
 
 .control-hidden {
     display: none;

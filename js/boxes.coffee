@@ -3,6 +3,7 @@ numBoxes = 0
 configDialogue = "#config-dialogue"
 loaded_modules = { }
 global.loaded_modules = loaded_modules
+selectedBox = ""
 
 # Make boxes draggable and resizable and snap them to other boxes
 $("#new-box").click ->
@@ -25,16 +26,21 @@ $("#new-box").click ->
     # Show list of Modules
     list "#box-content-#{numBoxes}", "#box-#{numBoxes}"
     $("div#box-content-#{numBoxes} a#a-#{numBoxes}").click ->
-        list "#box-content-" + $(this).attr("box-id")
+        list "#box-content-" + $(this).attr "box-id"
 
     # Configure mouseclick event on Preference button in box
     $("div.box-control span#box-control-button-#{numBoxes}").click ->
-        if $(".control-hidden").css("display") == "inline"
-            $(this).parent().parent().css "border", "1px solid #aaa"
-            $(".control-hidden").hide "slide", direction: "right"
+        # Set selected Box
+        selectedBox = "#" + $(this).parent().parent().prop "id"
+        console.log selectedBox
+        if $("#control-edit-box").css("display") == "block"
+            $(selectedBox).css "border", "1px solid #aaa"
+            $("#control-edit-box").hide "slide", direction: "down", ->
+                $("#control-standard").show "slide", direction: "down"
         else
-            $(this).parent().parent().css "border", "1px solid red"
-            $(".control-hidden").show "slide", direction: "right"
+            $(selectedBox).css "border", "1px solid red"
+            $("#control-standard").hide "slide", direction: "down", ->
+                $("#control-edit-box").show "slide", direction: "down"
 
     numBoxes++
 
