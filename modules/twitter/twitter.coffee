@@ -92,10 +92,10 @@ module.exports = (div_id, config_id, session) ->
             console.log err
         else
             tweets = JSON.parse result.tweets
-            $(div_id).html " "
             # kill the duplicate tweet
-            if Number tweets[tweets.length-1].id == session.twitter[div_id].last_id
-                tweets.pop()
+            if tweets[tweets.length-1]
+                if Number tweets[tweets.length-1].id == session.twitter[div_id].last_id
+                    tweets.pop()
             if tweets[0]
                 session.twitter[div_id].last_id = (Number tweets[0].id)
 

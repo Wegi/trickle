@@ -8,6 +8,9 @@ gui = require "nw.gui"
 path = require "path"
 
 ### Core Logic Preparations ###
+#Set Startup-Parameters
+init_done = false
+
 #Get Home PATH
 home_path = process.env.HOME || process.env.HOMEPATH || process.env.USERPROFILE
 
@@ -29,7 +32,6 @@ catch
 baseZIndex = 50
 configDialogue = "#config-dialogue"
 loaded_modules = { }
-global.loaded_modules = loaded_modules
 if not session.present_boxes
     session.present_boxes = [ ]
 
@@ -39,8 +41,7 @@ getNextNum = () ->
     num
 
 # Make boxes draggable and resizable and snap them to other boxes
-createBox = (num) ->
-    numBoxes = getNextNum()
+createBox = (numBoxes) ->
     defaultContent = """
         <div class='draggable ui-widget-content box box-modules' id='box-#{numBoxes}' style='z-index: #{baseZIndex + numBoxes}'>
             <div class='box-control'>
@@ -57,14 +58,21 @@ createBox = (num) ->
     $("#boxes").append defaultContent
     $("#box-#{numBoxes}").draggable(grid: [10, 10]).resizable(grid: 10).center()
 
-    # Show list of Modules
-    list "#box-content-#{numBoxes}", "#box-#{numBoxes}"
-    $("div#box-content-#{numBoxes} a#a-#{numBoxes}").click ->
-        list "#box-content-" + $(this).attr("box-id")
+    # Show list of Modules (Only do if init is done)
+    if init_done
+        list "#box-content-#{numBoxes}", "#box-#{numBoxes}"
+        $("div#box-content-#{numBoxes} a#a-#{numBoxes}").click ->
+            list "#box-content-" + $(this).attr("box-id")
 
-    session.present_boxes.push numBoxes
+    if numBoxes not in session.present_boxes
+        session.present_boxes.push numBoxes
+
+    #return conten_id and outer_id
+    return ["#box-content-#{numBoxes}", "#box-#{numBoxes}"]
+
 
 $("#new-box").click ->
+    console.log "someone is doing bad thangs ############"
     num = getNextNum()
     createBox num
 
@@ -121,13 +129,15 @@ list = (boxid, outer_id) ->
 
 # Get into the module and look for config.json
 load_module = (modname, boxid, outer_id) ->
+    console.log "loading #{modname} on #{boxid} inside of #{outer_id}"
     moddir = path.join(modpath, modname)
     config = load_conf moddir
 
     #tell core that you loaded module
     if not loaded_modules[outer_id]
         loaded_modules[outer_id] = [ ]
-    loaded_modules[outer_id].push modname
+    if modname not in loaded_modules[outer_id]
+        loaded_modules[outer_id].push modname
 
     if config
         # Take hook and require it. This should be in a different function
@@ -155,6 +165,29 @@ $.fn.center = ->
 
 ### Core Logic (Startup and Close) ###
 
+getNumFromName = (name) ->
+    pattern = /^#.*-(\d+)$/
+    Number name.match(pattern)[1]
+
+#restore all old windows
+for boxName, value of session.boxes
+    #console.log boxName
+    num = getNumFromName boxName
+    [content_id, outer_id] = createBox num
+    $(boxName).offset(value.position)
+    $(boxName).html value.content
+    $(boxName).height value.size.height
+    $(boxName).width value.size.width
+    loaded_modules[boxName] = value.loaded_modules
+    console.log value.loaded_modules
+    console.log loaded_modules[boxName]
+    if loaded_modules[boxName] #check for empty windows
+        console.log "inside da loop"
+        for module in loaded_modules[boxName]
+            load_module module, content_id, outer_id
+
+init_done = true  #set when all session startup is done
+
 # Get the current window
 win = gui.Window.get()
 
@@ -178,6 +211,6 @@ win.on "close", ->
             session.boxes[id].loaded_modules = loaded_modules[id]
 
     # Write session to file
-    jsonified = JSON.stringify(root.session, null, 4)
+    jsonified = JSON.stringify(session, null, 4)
     fs.writeFileSync home_path+'/.trickle/session.json', jsonified, 'utf8'
     gui.App.quit()
