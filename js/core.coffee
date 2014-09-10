@@ -39,7 +39,7 @@ getNextNum = () ->
     num
 
 # Make boxes draggable and resizable and snap them to other boxes
-$("#new-box").click ->
+createBox = (num) ->
     numBoxes = getNextNum()
     defaultContent = """
         <div class='draggable ui-widget-content box box-modules' id='box-#{numBoxes}' style='z-index: #{baseZIndex + numBoxes}'>
@@ -63,6 +63,10 @@ $("#new-box").click ->
         list "#box-content-" + $(this).attr("box-id")
 
     session.present_boxes.push numBoxes
+
+$("#new-box").click ->
+    num = getNextNum()
+    createBox num
 
 # Path to the trickle-modules
 modpath = "./modules"
