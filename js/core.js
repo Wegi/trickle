@@ -3,7 +3,7 @@
 /*
     Trickle Core
  */
-var fs, gui, home_path, root, win;
+var data, fs, gui, home_path, root, win;
 
 root = typeof exports !== "undefined" && exports !== null ? exports : this;
 
@@ -32,20 +32,15 @@ if (!fs.existsSync(home_path + '/.trickle/session.json')) {
 }
 
 try {
-  fs.readFile(home_path + '/.trickle/session.json', "utf8", function(err, data) {
-    if (err) {
-      return console.error(err);
-    } else {
-      try {
-        return root.session = JSON.parse(data);
-      } catch (_error) {
-        return console.log("close call");
-      }
-    }
-  });
+  data = fs.readFileSync(home_path + '/.trickle/session.json', "utf8");
+  root.session = JSON.parse(data);
 } catch (_error) {
   console.log("gotcha buddy");
   root.session = {};
+}
+
+if (!root.session.present_boxes) {
+  root.session.present_boxes = [];
 }
 
 win.on("close", function() {
@@ -70,7 +65,6 @@ win.on("close", function() {
       return root.session.boxes[id].loaded_modules = loaded_modules[id];
     }
   });
-  root.session.present_boxes = present_boxes;
   jsonified = JSON.stringify(root.session, null, 4);
   fs.writeFileSync(home_path + '/.trickle/session.json', jsonified, 'utf8');
   return gui.App.quit();

@@ -1,19 +1,16 @@
 baseZIndex = 50
-numBoxes = 0
 configDialogue = "#config-dialogue"
-present_boxes = [ ]
-global.present_boxes = present_boxes
 loaded_modules = { }
 global.loaded_modules = loaded_modules
 
-incrementNum = (num) ->
-    present_boxes.push num
+getNextNum = () ->
     num = 0
-    num++ while num in present_boxes
+    num++ while num in session.present_boxes
     num
 
 # Make boxes draggable and resizable and snap them to other boxes
 $("#new-box").click ->
+    numBoxes = getNextNum()
     defaultContent = """
         <div class='draggable ui-widget-content box box-modules' id='box-#{numBoxes}' style='z-index: #{baseZIndex + numBoxes}'>
             <div class='box-control'>
@@ -35,7 +32,7 @@ $("#new-box").click ->
     $("div#box-content-#{numBoxes} a#a-#{numBoxes}").click ->
         list "#box-content-" + $(this).attr("box-id")
 
-    numBoxes = incrementNum numBoxes
+    session.present_boxes.push numBoxes
 
 
 ### Show all modules ###

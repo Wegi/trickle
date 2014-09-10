@@ -26,17 +26,15 @@ if not fs.existsSync(home_path+'/.trickle/session.json')
 
 # Read session and parse it to the variable
 try
-    fs.readFile home_path+'/.trickle/session.json', "utf8", (err, data) ->
-        if err
-            console.error err
-        else
-            try
-                root.session = JSON.parse(data)  # Parse file to session
-            catch
-                console.log "close call"
+    data = fs.readFileSync home_path+'/.trickle/session.json', "utf8"
+    root.session = JSON.parse(data)  # Parse file to session
 catch
     console.log "gotcha buddy"
     root.session = { }
+
+##Preset all needed variables
+if not root.session.present_boxes
+    root.session.present_boxes = [ ]
 
 # Before closing window, write session to file
 win.on "close", ->
@@ -55,7 +53,6 @@ win.on "close", ->
             "width": $(id).width()
         if loaded_modules[id]
             root.session.boxes[id].loaded_modules = loaded_modules[id]
-    root.session.present_boxes = present_boxes
 
     # Write session to file
     jsonified = JSON.stringify(root.session, null, 4)
