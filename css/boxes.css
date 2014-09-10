@@ -28,20 +28,20 @@ div#boxes div.box-content {
     top: 0;
     right: 0;
     padding: 2px;
-    opacity: 0.2;
     z-index: 1;
-    transition: opacity .25s ease-in-out;
-    -moz-transition: opacity .25s ease-in-out;
-    -webkit-transition: opacity .25s ease-in-out;
 }
-    .box-control-button:hover {
-        opacity: 1;
-    }
+
+.box-control-menu {
+    display: none;
+    position: relative;
+    top: 0;
+    right: 0;
+}
 
 /* Style draggable */
 .draggable {
-    width: 250px;
-    height: 250px;
+    width: 400px;
+    height: 300px;
     padding: 1em;
     float: left;
     font-size: 1em;

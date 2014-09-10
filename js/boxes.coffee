@@ -5,6 +5,7 @@ present_boxes = [ ]
 global.present_boxes = present_boxes
 loaded_modules = { }
 global.loaded_modules = loaded_modules
+selectedBox = ""
 
 incrementNum = (num) ->
     present_boxes.push num
@@ -17,7 +18,7 @@ $("#new-box").click ->
     defaultContent = """
         <div class='draggable ui-widget-content box box-modules' id='box-#{numBoxes}' style='z-index: #{baseZIndex + numBoxes}'>
             <div class='box-control'>
-                <span class='glyphicon glyphicon-cog box-control-button'></span>
+                <span id='box-control-button-#{numBoxes}' class='glyphicon glyphicon-cog glyphicon-fade box-control-button'></span>
             </div>
             <div class='box-content' id='box-content-#{numBoxes}'>
                 I am a new Box!<br><br>
@@ -28,18 +29,31 @@ $("#new-box").click ->
     """
 
     $("#boxes").append defaultContent
-    $("#box-#{numBoxes}").draggable(grid: [10, 10]).resizable(grid: 10).center()
+    box = $("#box-#{numBoxes}").draggable(grid: [10, 10]).resizable(grid: 10).center()
 
     # Show list of Modules
     list "#box-content-#{numBoxes}", "#box-#{numBoxes}"
     $("div#box-content-#{numBoxes} a#a-#{numBoxes}").click ->
-        list "#box-content-" + $(this).attr("box-id")
+        list "#box-content-" + $(this).attr "box-id"
+
+    # Configure mouseclick event on Preference button in box
+    $("div.box-control span#box-control-button-#{numBoxes}").click ->
+        # Set selected Box
+        selectedBox = "#" + $(this).parent().parent().prop "id"
+        console.log selectedBox
+        if $("#control-edit-box").css("display") == "block"
+            $(selectedBox).css "border", "1px solid #aaa"
+            $("#control-edit-box").hide "slide", direction: "down", ->
+                $("#control-standard").show "slide", direction: "down"
+        else
+            $(selectedBox).css "border", "1px solid red"
+            $("#control-standard").hide "slide", direction: "down", ->
+                $("#control-edit-box").show "slide", direction: "down"
 
     numBoxes = incrementNum numBoxes
 
 
 ### Show all modules ###
-# TODO move this into modules.coffee and load it properly
 path = require "path"
 fs = require "fs"
 

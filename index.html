@@ -14,7 +14,6 @@
 
   <!-- Custom styles for this template -->
   <link href="css/bootstrap.cover.css" rel="stylesheet">
-  <link href="css/sidemenu.css" rel="stylesheet">
   <link href="css/boxes.css" rel="stylesheet">
   <link href="css/main.css" rel="stylesheet">
   <link href="css/modules.css" rel="stylesheet">
@@ -29,7 +28,17 @@
   </div>
 
   <!-- Plus button -->
-  <span id="new-box" class="glyphicon glyphicon-plus button-add-box"></span>
+  <div id="control-wrapper">
+    <div id="control-standard">
+      <span id="new-box" class="glyphicon glyphicon-plus glyphicon-fade glyphicon-large button-add-box"></span>
+    </div>
+    <div id="control-edit-box">
+      <span id="control-menu-add" class="glyphicon glyphicon-plus glyphicon-medium"></span>
+      <span id="control-menu-remove" class="glyphicon glyphicon-minus glyphicon-medium"></span>
+      <span id="control-menu-delete" class="glyphicon glyphicon-trash glyphicon-medium"></span>
+      <span class="glyphicon glyphicon-cog glyphicon-fade glyphicon-large"></span>
+    </div>
+  </div>
 
   <div class="site-wrapper">
 
@@ -54,7 +63,6 @@
   <script type="text/javascript" src="js/jquery-ui.min.js"></script>
   <script type="text/javascript" src="js/jquery.lightbox_me.js"></script>
   <script type="text/javascript" src="js/core.js"></script>
-  <script type="text/javascript" src="js/sidemenu.js"></script>
   <script type="text/javascript" src="js/modules.js"></script>
   <script type="text/javascript" src="js/boxes.js"></script>
 </body>

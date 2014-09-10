@@ -18,13 +18,41 @@ html, body {
         padding: 0;
     }
 
-.button-add-box {
-    position: absolute;
-    top: 0;
-    right: 0;
-    padding: 0.5em;
-    z-index: 99999;
+.glyphicon-fade {
+    opacity: 0.3;
+    transition: opacity .25s ease-in-out;
+    -moz-transition: opacity .25s ease-in-out;
+    -webkit-transition: opacity .25s ease-in-out;
+}
+    .glyphicon-fade:hover {
+        opacity: 1;
+    }
+.glyphicon-large {
     font-size: 2em;
+    padding-left: 0.5em;
+}
+.glyphicon-medium {
+    font-size: 1.5em;
+}
+
+#control-wrapper {
+    position: absolute;
+    display: inline-block;
+    padding: 1em;
+    line-height: 2em;
+    bottom: 0;
+    right: 0;
+    z-index: 99999;
+}
+    #control-wrapper .glyphicon {
+        /*font-size: 2em;*/
+    }
+#control-edit-box {
+    display: none;
+}
+
+.control-hidden {
+    display: none;
 }
 
 /* Let's get this party started */

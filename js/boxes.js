@@ -2,6 +2,7 @@
 var baseZIndex, configDialogue, fs, incrementNum, list, load_conf, load_module, loaded_modules, modpath, modules, numBoxes, path, present_boxes,
   __indexOf = [].indexOf || function(item) { for (var i = 0, l = this.length; i < l; i++) { if (i in this && this[i] === item) return i; } return -1; };
 
+
 baseZIndex = 50;
 
 numBoxes = 0;
@@ -16,6 +17,7 @@ loaded_modules = {};
 
 global.loaded_modules = loaded_modules;
 
+<<<<<<< HEAD
 incrementNum = function(num) {
   present_boxes.push(num);
   num = 0;
@@ -24,12 +26,15 @@ incrementNum = function(num) {
   }
   return num;
 };
+=======
+selectedBox = "";
+>>>>>>> 363961b974a93317c3be3be7ca4e20cf8710307f
 
 $("#new-box").click(function() {
-  var defaultContent;
-  defaultContent = "<div class='draggable ui-widget-content box box-modules' id='box-" + numBoxes + "' style='z-index: " + (baseZIndex + numBoxes) + "'>\n    <div class='box-control'>\n        <span class='glyphicon glyphicon-cog box-control-button'></span>\n    </div>\n    <div class='box-content' id='box-content-" + numBoxes + "'>\n        I am a new Box!<br><br>\n        Go and add some modules.<br><br>\n        <a id='a-" + numBoxes + "' href='#' box-id='" + numBoxes + "'><span class='glyphicon glyphicon-plus'></span></a>\n    </div>\n</div>";
+  var box, defaultContent;
+  defaultContent = "<div class='draggable ui-widget-content box box-modules' id='box-" + numBoxes + "' style='z-index: " + (baseZIndex + numBoxes) + "'>\n    <div class='box-control'>\n        <span id='box-control-button-" + numBoxes + "' class='glyphicon glyphicon-cog glyphicon-fade box-control-button'></span>\n    </div>\n    <div class='box-content' id='box-content-" + numBoxes + "'>\n        I am a new Box!<br><br>\n        Go and add some modules.<br><br>\n        <a id='a-" + numBoxes + "' href='#' box-id='" + numBoxes + "'><span class='glyphicon glyphicon-plus'></span></a>\n    </div>\n</div>";
   $("#boxes").append(defaultContent);
-  $("#box-" + numBoxes).draggable({
+  box = $("#box-" + numBoxes).draggable({
     grid: [10, 10]
   }).resizable({
     grid: 10
@@ -38,7 +43,34 @@ $("#new-box").click(function() {
   $("div#box-content-" + numBoxes + " a#a-" + numBoxes).click(function() {
     return list("#box-content-" + $(this).attr("box-id"));
   });
+<<<<<<< HEAD
   return numBoxes = incrementNum(numBoxes);
+=======
+  $("div.box-control span#box-control-button-" + numBoxes).click(function() {
+    selectedBox = "#" + $(this).parent().parent().prop("id");
+    console.log(selectedBox);
+    if ($("#control-edit-box").css("display") === "block") {
+      $(selectedBox).css("border", "1px solid #aaa");
+      return $("#control-edit-box").hide("slide", {
+        direction: "down"
+      }, function() {
+        return $("#control-standard").show("slide", {
+          direction: "down"
+        });
+      });
+    } else {
+      $(selectedBox).css("border", "1px solid red");
+      return $("#control-standard").hide("slide", {
+        direction: "down"
+      }, function() {
+        return $("#control-edit-box").show("slide", {
+          direction: "down"
+        });
+      });
+    }
+  });
+  return numBoxes++;
+>>>>>>> 363961b974a93317c3be3be7ca4e20cf8710307f
 });
 
 
