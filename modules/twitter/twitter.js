@@ -79,11 +79,15 @@ module.exports = function(div_id, config_id, session) {
       query: query
     }, function(err, res, body) {
       var result;
-      result = JSON.parse(body);
-      if (result.length < 1) {
-        return callback("No new tweets");
+      if (err) {
+        return console.log("Error: " + err);
       } else {
-        return callback(null, body);
+        result = JSON.parse(body);
+        if (result.length < 1) {
+          return callback("No new tweets");
+        } else {
+          return callback(null, body);
+        }
       }
     });
   };
@@ -94,7 +98,7 @@ module.exports = function(div_id, config_id, session) {
     } else {
       tweets = JSON.parse(result.tweets);
       if (tweets[tweets.length - 1]) {
-        if (Number(tweets[tweets.length - 1].id === session.twitter[div_id].last_id)) {
+        if (tweets[tweets.length - 1].id === session.twitter[div_id].last_id) {
           tweets.pop();
         }
       }

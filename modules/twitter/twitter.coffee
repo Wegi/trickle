@@ -81,11 +81,14 @@ module.exports = (div_id, config_id, session) ->
         console.log query
         treq.request 'statuses/home_timeline', query: query,
                      (err, res, body) ->
-                        result = JSON.parse body
-                        if result.length < 1
-                            callback "No new tweets"
+                        if err
+                            console.log "Error: "+err
                         else
-                            callback null, body
+                            result = JSON.parse body
+                            if result.length < 1
+                                callback "No new tweets"
+                            else
+                                callback null, body
 
     print_tweets = (err, result) ->
         if err
@@ -94,11 +97,12 @@ module.exports = (div_id, config_id, session) ->
             tweets = JSON.parse result.tweets
             # kill the duplicate tweet
             if tweets[tweets.length-1]
-                if Number tweets[tweets.length-1].id == session.twitter[div_id].last_id
+                if tweets[tweets.length-1].id == session.twitter[div_id].last_id
                     tweets.pop()
             if tweets[0]
                 session.twitter[div_id].last_id = (Number tweets[0].id)
 
+            # reverse array because we prepend and thus the oldest tweet goes first
             for tweet in tweets.reverse()
                 user_img = tweet.user.profile_image_url
                 tweet_entry = """
