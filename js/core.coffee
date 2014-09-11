@@ -184,8 +184,8 @@ for boxName, value of session.boxes
     createBox num
     $(parent_id).offset(value.position)
     $(boxName).html value.content
-    #$(boxName).css 'heigth', value.size.height
-    #$(boxName).css 'width', value.size.width
+    $(parent_id).css 'heigth', value.size.height
+    $(parent_id).css 'width', value.size.width
     #$(boxName).draggable(grid: [10, 10]).resizable(grid: 10)
     loaded_modules[parent_id] = value.loaded_modules
     if loaded_modules[parent_id] #check for empty windows

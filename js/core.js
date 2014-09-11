@@ -203,6 +203,8 @@ for (boxName in _ref) {
   createBox(num);
   $(parent_id).offset(value.position);
   $(boxName).html(value.content);
+  $(parent_id).css('heigth', value.size.height);
+  $(parent_id).css('width', value.size.width);
   loaded_modules[parent_id] = value.loaded_modules;
   if (loaded_modules[parent_id]) {
     _ref1 = loaded_modules[parent_id];
