@@ -141,23 +141,28 @@ list = (boxid, outer_id) ->
     for module in modules
         if (module.charAt 0) != '.'
 
-            # Assign values from the correlated config.json
             config = load_conf path.join(modpath, module)
 
-            content += "<li class='module-entry'><a class='module-single' href='#' name='#{module}'"
+            content += "<li class='module-entry'><a class='module-single opacity-trans' href='#' id='#{module}' name='#{module}'"
 
+            # Assign values from the correlated config.json
             if config
                 name   = config.name
                 bcolor = config.color
                 icon   = path.join modpath, module, config.icon
+                icon_fa = config.icon_fa
 
+            # assign the color to the background
             if bcolor != "" && bcolor
                 content += " style='background-color: #{bcolor};'"
 
             content += ">"
 
-            if icon then content += "<img class='icon' src='#{icon}' alt='#{module}'> "
+            # decide which icon has to be showed
+            if icon_fa then content += "<span class='fa #{icon_fa}'></span>&nbsp;"
+            else if icon then content += "<img class='icon' src='#{icon}' alt='#{module}'>&nbsp;"
 
+            # decide which name has to be showed
             if name != "" && name
                 content += "#{name}</a></li>"
             else

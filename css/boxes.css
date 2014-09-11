@@ -9,9 +9,25 @@ div#boxes div.box-content {
 .module-entry {
     margin: 1em;
 }
-.module-single {
+
+.module-single{
     padding: 0.5em;
-    min-width: 200px;
+    max-width: 100%;
+    opacity: 1;
+}
+.module-single:hover{
+    text-decoration: none;
+
+    /*not tested with light backgrounds!*/
+    opacity: 0.7;
+}
+
+/*opacity transition*/
+.opacity-trans{
+    -webkit-transition:opacity 300ms ease-out;
+    -moz-transition:opacity 300ms ease-out;
+    -o-transition:opacity 300ms ease-out;
+    transition:opacity 300 ease-out;
 }
 
 .icon{

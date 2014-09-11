@@ -6,6 +6,7 @@
     "hook": "twitter.js",
     "version": 0.1,
     "color":"#55ACEE",
-    "icon" :"/img/icon.png"
+    "icon" :"/img/icon.png",
+    "icon_fa" : "fa-twitter"
 
 }
