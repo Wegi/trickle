@@ -96,9 +96,9 @@ $("#control-menu-add").click(function() {
 
 $("#control-menu-remove").click(function() {});
 
-$("#control-menu-delete").click(function() {});
-
 $("#control-menu-config").click(function() {});
+
+$("#control-menu-delete").click(function() {});
 
 
 /* END Define Listeners */

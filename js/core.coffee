@@ -74,15 +74,19 @@ $("#new-box").click ->
     num = getNextNum()
     createBox num
 
+# Add new Module to Box
 $("#control-menu-add").click ->
     contentDiv = "#" + $(selectedBox).children("div.box-content").prop "id"
     list contentDiv, selectedBox
 
+# Show list of Modules, remove selected ones
 $("#control-menu-remove").click ->
 
-$("#control-menu-delete").click ->
-
+# Open configuration of Box containing all Modules to config
 $("#control-menu-config").click ->
+
+# Delete complete Box
+$("#control-menu-delete").click ->
 
 
 ### END Define Listeners ###
