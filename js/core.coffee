@@ -44,7 +44,7 @@ getNextNum = () ->
 # Make boxes draggable and resizable and snap them to other boxes
 createBox = (numBoxes) ->
     defaultContent = """
-        <div class='draggable ui-widget-content box box-modules' id='box-#{numBoxes}' style='z-index: #{baseZIndex + numBoxes}'>
+        <div class='draggable ui-widget-content box' id='box-#{numBoxes}' style='z-index: #{baseZIndex + numBoxes}'>
             <div class='box-control'>
                 <span id='box-control-button-#{numBoxes}' class='glyphicon glyphicon-cog glyphicon-fade box-control-button'></span>
             </div>
@@ -62,8 +62,8 @@ createBox = (numBoxes) ->
     # Show list of Modules (Only do if init is done)
     if init_done
         list "#box-content-#{numBoxes}", "#box-#{numBoxes}"
-        $("div#box-content-#{numBoxes} a#a-#{numBoxes}").click ->
-            list "#box-content-" + $(this).attr "box-id"
+    $("div#box-content-#{numBoxes} a#a-#{numBoxes}").click ->
+        list "#box-content-" + $(this).attr "box-id", "#box-" + $(this).attr "box-id"
 
     # Configure mouseclick event on Preference button in box
     $("div.box-control span#box-control-button-#{numBoxes}").click ->
@@ -82,12 +82,8 @@ createBox = (numBoxes) ->
     if numBoxes not in session.present_boxes
         session.present_boxes.push numBoxes
 
-    #return conten_id and outer_id
-    return ["#box-content-#{numBoxes}", "#box-#{numBoxes}"]
-
 
 $("#new-box").click ->
-    console.log "someone is doing bad thangs ############"
     num = getNextNum()
     createBox num
 
@@ -187,19 +183,20 @@ getNumFromName = (name) ->
 #restore all old windows
 for boxName, value of session.boxes
     #console.log boxName
-    num = getNumFromName boxName
-    [content_id, outer_id] = createBox num
-    $(boxName).offset(value.position)
+    console.log parent_id
+    parent_id = value.parent_id
+    num = getNumFromName parent_id
+    console.log "passing num: "+num
+    createBox num
+    $(parent_id).offset(value.position)
     $(boxName).html value.content
-    $(boxName).height value.size.height
-    $(boxName).width value.size.width
-    loaded_modules[boxName] = value.loaded_modules
-    console.log value.loaded_modules
-    console.log loaded_modules[boxName]
-    if loaded_modules[boxName] #check for empty windows
-        console.log "inside da loop"
-        for module in loaded_modules[boxName]
-            load_module module, content_id, outer_id
+    #$(boxName).css 'heigth', value.size.height
+    #$(boxName).css 'width', value.size.width
+    #$(boxName).draggable(grid: [10, 10]).resizable(grid: 10)
+    loaded_modules[parent_id] = value.loaded_modules
+    if loaded_modules[parent_id] #check for empty windows
+        for module in loaded_modules[parent_id]
+            load_module module, boxName, parent_id
 
 init_done = true  #set when all session startup is done
 
@@ -213,17 +210,19 @@ win.on "close", ->
     #Collect data about windows
     if not session.boxes
         session["boxes"] = { }
-    $(".box-modules").each (index) ->
-        id = '#'+this.id
+    $(".box-content").each (index) ->
+        id = '#'+$(this).prop "id"
+        parent_id = '#'+$(id).parent().prop "id"
         if not session.boxes["#{id}"]
             session.boxes["#{id}"] = { }
-        session.boxes["#{id}"].position = $(id).offset()
+        session.boxes["#{id}"].parent_id = parent_id
+        session.boxes["#{id}"].position = $(parent_id).offset()
         session.boxes["#{id}"].content = $(id).html()
         session.boxes["#{id}"].size =
-            "height": $(id).height()
-            "width": $(id).width()
-        if loaded_modules[id]
-            session.boxes[id].loaded_modules = loaded_modules[id]
+            "height": $(parent_id).height()
+            "width": $(parent_id).width()
+        if loaded_modules[parent_id]
+            session.boxes[id].loaded_modules = loaded_modules[parent_id]
 
     # Write session to file
     jsonified = JSON.stringify(session, null, 4)
