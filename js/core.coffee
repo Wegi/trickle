@@ -63,26 +63,7 @@ createBox = (numBoxes) ->
     $("div.box-control span#box-control-button-#{numBoxes}").click ->
         # Set selected Box
         thisBox = "#" + $(this).parent().parent().prop "id"
-
-        # if no box is selected
-        if not selectedBox
-            selectedBox = thisBox
-            $(selectedBox).css "border", "1px solid red"
-            $("#control-standard").hide "slide", direction: "down", ->
-                $("#control-edit-box").show "slide", direction: "down"
-
-        # if you click on the same box as before
-        else if selectedBox is thisBox
-            $(selectedBox).css "border", "1px solid #aaa"
-            $("#control-edit-box").hide "slide", direction: "down", ->
-                $("#control-standard").show "slide", direction: "down"
-            selectedBox = null
-
-        # if one box is already highlighted, but another config is selected
-        else
-            $(selectedBox).css "border", "1px solid #aaa"
-            $(thisBox).css "border", "1px solid red"
-            selectedBox = thisBox
+        toggle_highlighted_boxes(thisBox)
 
 
     if numBoxes not in session.present_boxes
@@ -102,6 +83,32 @@ modules = []
 fs.readdir modpath, (err, files) ->
     throw err if err
     modules = files
+
+# Toggle highlighted box if selecting config
+toggle_highlighted_boxes = (thisBox) ->
+    normalBorder = "1px solid #aaa"
+    highlightedBorder = "1px solid red"
+    animationDirection =  "down"
+
+    # if no box is selected
+    if not selectedBox
+        selectedBox = thisBox
+        $(selectedBox).css "border", highlightedBorder
+        $("#control-standard").hide "slide", direction: animationDirection, ->
+            $("#control-edit-box").show "slide", direction: animationDirection
+
+    # if you click on the same box as before
+    else if selectedBox is thisBox
+        $(selectedBox).css "border", normalBorder
+        $("#control-edit-box").hide "slide", direction: animationDirection, ->
+            $("#control-standard").show "slide", direction: animationDirection
+        selectedBox = null
+
+    # if one box is already highlighted, but another config is selected
+    else
+        $(selectedBox).css "border", normalBorder
+        $(thisBox).css "border", highlightedBorder
+        selectedBox = thisBox
 
 
 # List all modules
