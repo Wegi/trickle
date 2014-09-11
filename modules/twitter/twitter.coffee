@@ -14,7 +14,7 @@ loopObject = { }   #may be wrong with multiple twitter boxes, check in future
 
 exports.destroy = (div_id, config_id, session) ->
     clearInterval loopObject
-    $(div_id)
+    $(div_id).children('.trickle-twitter').remove()
 
 exports.init = (div_id, config_id, session) ->
     awaiting_config = false

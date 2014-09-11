@@ -23,7 +23,7 @@ loopObject = {};
 
 exports.destroy = function(div_id, config_id, session) {
   clearInterval(loopObject);
-  return $(div_id);
+  return $(div_id).children('.trickle-twitter').remove();
 };
 
 exports.init = function(div_id, config_id, session) {
