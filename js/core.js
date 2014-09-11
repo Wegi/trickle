@@ -196,10 +196,8 @@ getNumFromName = function(name) {
 _ref = session.boxes;
 for (boxName in _ref) {
   value = _ref[boxName];
-  console.log(parent_id);
   parent_id = value.parent_id;
   num = getNumFromName(parent_id);
-  console.log("passing num: " + num);
   createBox(num);
   $(parent_id).offset(value.position);
   $(boxName).html(value.content);

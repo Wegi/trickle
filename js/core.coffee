@@ -176,17 +176,13 @@ getNumFromName = (name) ->
 
 #restore all old windows
 for boxName, value of session.boxes
-    #console.log boxName
-    console.log parent_id
     parent_id = value.parent_id
     num = getNumFromName parent_id
-    console.log "passing num: "+num
     createBox num
     $(parent_id).offset(value.position)
     $(boxName).html value.content
     $(parent_id).css 'heigth', value.size.height
     $(parent_id).css 'width', value.size.width
-    #$(boxName).draggable(grid: [10, 10]).resizable(grid: 10)
     loaded_modules[parent_id] = value.loaded_modules
     if loaded_modules[parent_id] #check for empty windows
         for module in loaded_modules[parent_id]
