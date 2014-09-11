@@ -165,9 +165,9 @@ list = (boxid, outer_id) ->
 
 # Get into the module and look for config.json
 load_module = (modname, boxid, outer_id) ->
-    if modname in loaded_modules[outer_id]
-        return # do not add modules that are already loaded
-    console.log "loading #{modname} on #{boxid} inside of #{outer_id}"
+    if outer_id in loaded_modules
+        if modname in loaded_modules[outer_id]
+            return # do not add modules that are already loaded
     moddir = path.join(modpath, modname)
     config = load_conf moddir
 
@@ -176,7 +176,7 @@ load_module = (modname, boxid, outer_id) ->
         mod = require("./" + path.join(moddir, path.basename(config.hook, path.extname(config.hook))))
 
         # Load module
-        mod boxid, configDialogue, session
+        mod.init boxid, configDialogue, session
 
         #tell core that you loaded module
         if not loaded_modules[outer_id]

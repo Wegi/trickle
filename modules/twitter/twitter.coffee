@@ -1,3 +1,5 @@
+exports = module.exports = { }
+
 ab64 = 'QWJHZkNEOWJxWXBLcDBtYmtqTVF2QTJRWWxnWlZlUGNuZHcwMkxvOHBYSmdpVDk2WHk='
 consumer_key = '8CMdYgIYpDM6uknWRAfWEhGEj'
 consumerSecret = new Buffer(ab64, 'base64').toString 'utf8'
@@ -7,8 +9,14 @@ twitter_req = require 'twitter-request'
 async = require 'async'
 $ = require 'jquery'
 gui = window.require 'nw.gui'
+loopObject = { }   #may be wrong with multiple twitter boxes, check in future
 
-module.exports = (div_id, config_id, session) ->
+
+exports.destroy = (div_id, config_id, session) ->
+    clearInterval loopObject
+    $(div_id)
+
+exports.init = (div_id, config_id, session) ->
     awaiting_config = false
     # create session namespace if there isn't one
     if not session.twitter
@@ -107,17 +115,20 @@ module.exports = (div_id, config_id, session) ->
                 session.twitter[div_id].last_id = (Number tweets[0].id)
 
             # reverse array because we prepend and thus the oldest tweet goes first
-            for tweet in tweets.reverse()
-                user_img = tweet.user.profile_image_url
-                tweet_entry = """
-<div class="row">
+            try
+                for tweet in tweets.reverse()
+                    user_img = tweet.user.profile_image_url
+                    tweet_entry = """
+<div class="row trickle-twitter">
     <div class="col-md-2"><img class="img-rounded "src="#{user_img}" height="55" width="55"></div>
     <div class="col-md-10">#{tweet.text}</div>
     <div class="col-md-12"><hr></div>
 </div>
 """
-                $(div_id).prepend tweet_entry
+                    $(div_id).prepend tweet_entry
                     #set last retrieved tweet
+            catch
+                console.log "Error loading new tweets"
 
 
     if not session.twitter.access_token || not session.twitter.access_secret
@@ -130,4 +141,4 @@ module.exports = (div_id, config_id, session) ->
             async.series {tweets: get_stream}, print_tweets
 
     #do the tweet all way long
-    setInterval(mainFunc, 10*1000)
+    loopObject = setInterval(mainFunc, 10*1000)
