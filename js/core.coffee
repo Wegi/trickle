@@ -62,16 +62,28 @@ createBox = (numBoxes) ->
     # Configure mouseclick event on Preference button in box
     $("div.box-control span#box-control-button-#{numBoxes}").click ->
         # Set selected Box
-        selectedBox = "#" + $(this).parent().parent().prop "id"
-        console.log selectedBox
-        if $("#control-edit-box").css("display") == "block"
-            $(selectedBox).css "border", "1px solid #aaa"
-            $("#control-edit-box").hide "slide", direction: "down", ->
-                $("#control-standard").show "slide", direction: "down"
-        else
+        thisBox = "#" + $(this).parent().parent().prop "id"
+
+        # if no box is selected
+        if not selectedBox
+            selectedBox = thisBox
             $(selectedBox).css "border", "1px solid red"
             $("#control-standard").hide "slide", direction: "down", ->
                 $("#control-edit-box").show "slide", direction: "down"
+
+        # if you click on the same box as before
+        else if selectedBox is thisBox
+            $(selectedBox).css "border", "1px solid #aaa"
+            $("#control-edit-box").hide "slide", direction: "down", ->
+                $("#control-standard").show "slide", direction: "down"
+            selectedBox = null
+
+        # if one box is already highlighted, but another config is selected
+        else
+            $(selectedBox).css "border", "1px solid #aaa"
+            $(thisBox).css "border", "1px solid red"
+            selectedBox = thisBox
+
 
     if numBoxes not in session.present_boxes
         session.present_boxes.push numBoxes

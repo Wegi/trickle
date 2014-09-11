@@ -70,18 +70,10 @@ createBox = function(numBoxes) {
     list("#box-content-" + numBoxes, "#box-" + numBoxes);
   }
   $("div.box-control span#box-control-button-" + numBoxes).click(function() {
-    selectedBox = "#" + $(this).parent().parent().prop("id");
-    console.log(selectedBox);
-    if ($("#control-edit-box").css("display") === "block") {
-      $(selectedBox).css("border", "1px solid #aaa");
-      return $("#control-edit-box").hide("slide", {
-        direction: "down"
-      }, function() {
-        return $("#control-standard").show("slide", {
-          direction: "down"
-        });
-      });
-    } else {
+    var thisBox;
+    thisBox = "#" + $(this).parent().parent().prop("id");
+    if (!selectedBox) {
+      selectedBox = thisBox;
       $(selectedBox).css("border", "1px solid red");
       return $("#control-standard").hide("slide", {
         direction: "down"
@@ -90,6 +82,20 @@ createBox = function(numBoxes) {
           direction: "down"
         });
       });
+    } else if (selectedBox === thisBox) {
+      $(selectedBox).css("border", "1px solid #aaa");
+      $("#control-edit-box").hide("slide", {
+        direction: "down"
+      }, function() {
+        return $("#control-standard").show("slide", {
+          direction: "down"
+        });
+      });
+      return selectedBox = null;
+    } else {
+      $(selectedBox).css("border", "1px solid #aaa");
+      $(thisBox).css("border", "1px solid red");
+      return selectedBox = thisBox;
     }
   });
   if (__indexOf.call(session.present_boxes, numBoxes) < 0) {
