@@ -175,7 +175,7 @@
         if (icon_fa) {
           content += "<span class='fa " + icon_fa + "'></span>&nbsp;";
         } else if (icon) {
-          content += "<img class='icon' src='" + icon + "' alt='" + module + "'>&nbsp;";
+          content += "<img class='icon' src='" + icon + "' alt='" + module + "' onerror='this.remove()'>";
         }
         if (name !== "" && name) {
           content += "" + name + "</a></li>";

@@ -32,6 +32,7 @@ div#boxes div.box-content {
 
 .icon{
     height: 1em;
+    margin-right: 0.5em;
 }
 
 /* General styles for boxes and overlays */

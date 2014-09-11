@@ -160,7 +160,7 @@ list = (boxid, outer_id) ->
 
             # decide which icon has to be showed
             if icon_fa then content += "<span class='fa #{icon_fa}'></span>&nbsp;"
-            else if icon then content += "<img class='icon' src='#{icon}' alt='#{module}'>&nbsp;"
+            else if icon then content += "<img class='icon' src='#{icon}' alt='#{module}' onerror='this.remove()'>"
 
             # decide which name has to be showed
             if name != "" && name
