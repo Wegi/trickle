@@ -22,8 +22,14 @@ gui = window.require('nw.gui');
 loopObject = {};
 
 exports.destroy = function(div_id, config_id, session) {
+  var i;
   clearInterval(loopObject);
-  return $(div_id);
+  $(div_id).children('.trickle-twitter').remove();
+  i = session.boxes[div_id].loaded_modules.indexOf("twitter");
+  if (i !== -1) {
+    session.boxes[div_id].loaded_modules.splice(i, 1);
+  }
+  return delete session.twitter[div_id];
 };
 
 exports.init = function(div_id, config_id, session) {

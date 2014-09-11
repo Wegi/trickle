@@ -26,12 +26,12 @@ try
     session = JSON.parse(data)  # Parse file to session
 catch
     console.log "gotcha buddy"
-    session = { }
+    session =
+        boxes: { }
 
 ### Boxes Logic ###
 baseZIndex = 50
 configDialogue = "#config-dialogue"
-loaded_modules = { }
 selectedBox = ""
 if not session.present_boxes
     session.present_boxes = [ ]
@@ -43,6 +43,10 @@ getNextNum = () ->
 
 # Make boxes draggable and resizable
 createBox = (numBoxes) ->
+    if not session.boxes
+        session.boxes = { }
+    if not session.boxes["#box-#{numBoxes}"]
+        session.boxes["#box-#{numBoxes}"] = { }
     defaultContent = """
         <div class='draggable ui-widget-content box' id='box-#{numBoxes}' style='z-index: #{baseZIndex + numBoxes}'>
             <div class='box-control'>
@@ -170,8 +174,8 @@ list = (boxid, outer_id) ->
 
 # Get into the module and look for config.json
 load_module = (modname, boxid, outer_id) ->
-    if outer_id in loaded_modules
-        if modname in loaded_modules[outer_id]
+    if session.boxes[outer_id].loaded_modules
+        if modname in session.boxes[outer_id].loaded_modules
             return # do not add modules that are already loaded
     moddir = path.join(modpath, modname)
     config = load_conf moddir
@@ -184,10 +188,10 @@ load_module = (modname, boxid, outer_id) ->
         mod.init boxid, configDialogue, session
 
         #tell core that you loaded module
-        if not loaded_modules[outer_id]
-            loaded_modules[outer_id] = [ ]
-        if modname not in loaded_modules[outer_id]
-            loaded_modules[outer_id].push modname
+        if not session.boxes[outer_id].loaded_modules
+            session.boxes[outer_id].loaded_modules = [ ]
+        if modname not in session.boxes[outer_id].loaded_modules
+            session.boxes[outer_id].loaded_modules.push modname
 
 
 # Load config of given module
@@ -214,17 +218,16 @@ getNumFromName = (name) ->
 
 #restore all old windows
 for boxName, value of session.boxes
-    parent_id = value.parent_id
-    num = getNumFromName parent_id
+    child_content = value.content_child
+    num = getNumFromName boxName
     createBox num
-    $(parent_id).offset(value.position)
-    $(boxName).html value.content
-    $(parent_id).css 'heigth', value.size.height
-    $(parent_id).css 'width', value.size.width
-    loaded_modules[parent_id] = value.loaded_modules
-    if loaded_modules[parent_id] #check for empty windows
-        for module in loaded_modules[parent_id]
-            load_module module, boxName, parent_id
+    $(boxName).offset(value.position)
+    $(child_content).html value.content
+    $(boxName).css 'heigth', value.size.height
+    $(boxName).css 'width', value.size.width
+    if value.loaded_modules #check for empty windows
+        for module in value.loaded_modules
+            load_module module, child_content, boxName
 
 init_done = true  #set when all session startup is done
 
@@ -241,16 +244,14 @@ win.on "close", ->
     $(".box-content").each (index) ->
         id = '#'+$(this).prop "id"
         parent_id = '#'+$(id).parent().prop "id"
-        if not session.boxes["#{id}"]
-            session.boxes["#{id}"] = { }
-        session.boxes["#{id}"].parent_id = parent_id
-        session.boxes["#{id}"].position = $(parent_id).offset()
-        session.boxes["#{id}"].content = $(id).html()
-        session.boxes["#{id}"].size =
+        if not session.boxes[parent_id]
+            session.boxes[parent_id] = { }
+        session.boxes[parent_id].content_child = id
+        session.boxes[parent_id].position = $(parent_id).offset()
+        session.boxes[parent_id].content = $(id).html()
+        session.boxes[parent_id].size =
             "height": $(parent_id).height()
             "width": $(parent_id).width()
-        if loaded_modules[parent_id]
-            session.boxes[id].loaded_modules = loaded_modules[parent_id]
 
     # Write session to file
     jsonified = JSON.stringify(session, null, 4)
