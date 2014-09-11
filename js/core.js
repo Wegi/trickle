@@ -89,7 +89,9 @@ $("#new-box").click(function() {
 });
 
 $("#control-menu-add").click(function() {
-  return list(selectedBox, $(selectedBox).parent());
+  var contentDiv;
+  contentDiv = "#" + $(selectedBox).children("div.box-content").prop("id");
+  return list(contentDiv, selectedBox);
 });
 
 $("#control-menu-remove").click(function() {});
