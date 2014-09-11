@@ -9,8 +9,8 @@ $ = require 'jquery'
 gui = window.require 'nw.gui'
 
 module.exports = (div_id, config_id, session) ->
+    awaiting_config = false
     # create session namespace if there isn't one
-    console.log "getting "+div_id+' '+config_id+' '+session
     if not session.twitter
         session.twitter = {}
     # create window specific session namespace
@@ -28,6 +28,7 @@ module.exports = (div_id, config_id, session) ->
         )
 
     authenticate = (callback) ->
+        awaiting_config = true
         # Show spinner while loading
         $(config_id).html "<span class='btn'><span class='glyphicon glyphicon-refresh'></span> Initializing...</span>"
         oauth.getOAuthRequestToken (error, user_token, user_secret, results) ->
@@ -57,10 +58,12 @@ module.exports = (div_id, config_id, session) ->
                     if error
                         $(config_id).html "<span class='btn'><span class='glyphicon glyphicon-remove'></span> An error occured.</span>"
                         console.log(error)
+                        awaiting_config = false
                     else
                         $(config_id).html "<span class='btn'><span class='glyphicon glyphicon-refresh'></span> Loading Tweets...</span>"
                         session.twitter.access_token = oauth_access_token;
                         session.twitter.access_secret = oauth_access_token_secret;
+                        awaiting_config = false
                         callback null, oauth_access_token
 
 
@@ -116,7 +119,15 @@ module.exports = (div_id, config_id, session) ->
                 $(div_id).prepend tweet_entry
                     #set last retrieved tweet
 
+
     if not session.twitter.access_token || not session.twitter.access_secret
         async.series {auth: authenticate, tweets: get_stream}, print_tweets
     else
         async.series {tweets: get_stream}, print_tweets
+
+    mainFunc = () ->
+        if session.twitter.access_token &&  session.twitter.access_secret
+            async.series {tweets: get_stream}, print_tweets
+
+    #do the tweet all way long
+    setInterval(mainFunc, 10*1000)

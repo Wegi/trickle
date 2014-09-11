@@ -168,15 +168,15 @@ load_module = function(modname, boxid, outer_id) {
   console.log("loading " + modname + " on " + boxid + " inside of " + outer_id);
   moddir = path.join(modpath, modname);
   config = load_conf(moddir);
-  if (!loaded_modules[outer_id]) {
-    loaded_modules[outer_id] = [];
-  }
-  if (__indexOf.call(loaded_modules[outer_id], modname) < 0) {
-    loaded_modules[outer_id].push(modname);
-  }
   if (config) {
     mod = require("./" + path.join(moddir, path.basename(config.hook, path.extname(config.hook))));
-    return mod(boxid, configDialogue, session);
+    mod(boxid, configDialogue, session);
+    if (!loaded_modules[outer_id]) {
+      loaded_modules[outer_id] = [];
+    }
+    if (__indexOf.call(loaded_modules[outer_id], modname) < 0) {
+      return loaded_modules[outer_id].push(modname);
+    }
   }
 };
 

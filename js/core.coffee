@@ -157,18 +157,18 @@ load_module = (modname, boxid, outer_id) ->
     moddir = path.join(modpath, modname)
     config = load_conf moddir
 
-    #tell core that you loaded module
-    if not loaded_modules[outer_id]
-        loaded_modules[outer_id] = [ ]
-    if modname not in loaded_modules[outer_id]
-        loaded_modules[outer_id].push modname
-
     if config
         # Take hook and require it. This should be in a different function
         mod = require("./" + path.join(moddir, path.basename(config.hook, path.extname(config.hook))))
 
         # Load module
         mod boxid, configDialogue, session
+
+        #tell core that you loaded module
+        if not loaded_modules[outer_id]
+            loaded_modules[outer_id] = [ ]
+        if modname not in loaded_modules[outer_id]
+            loaded_modules[outer_id].push modname
 
 
 # Load config of given module
