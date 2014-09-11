@@ -59,7 +59,7 @@ getNextNum = function() {
 
 createBox = function(numBoxes) {
   var box, defaultContent;
-  defaultContent = "<div class='draggable ui-widget-content box' id='box-" + numBoxes + "' style='z-index: " + (baseZIndex + numBoxes) + "'>\n    <div class='box-control'>\n        <span id='box-control-button-" + numBoxes + "' class='glyphicon glyphicon-cog glyphicon-fade box-control-button'></span>\n    </div>\n    <div class='box-content' id='box-content-" + numBoxes + "'>\n        I am a new Box!<br><br>\n        Go and add some modules.<br><br>\n        <a id='a-" + numBoxes + "' href='#' box-id='" + numBoxes + "'><span class='glyphicon glyphicon-plus'></span></a>\n    </div>\n</div>";
+  defaultContent = "<div class='draggable ui-widget-content box' id='box-" + numBoxes + "' style='z-index: " + (baseZIndex + numBoxes) + "'>\n    <div class='box-control'>\n        <span id='box-control-button-" + numBoxes + "' class='glyphicon glyphicon-cog glyphicon-fade box-control-button'></span>\n    </div>\n    <div class='box-content' id='box-content-" + numBoxes + "'></div>\n</div>";
   $("#boxes").append(defaultContent);
   box = $("#box-" + numBoxes).draggable({
     grid: [10, 10]
@@ -69,9 +69,6 @@ createBox = function(numBoxes) {
   if (init_done) {
     list("#box-content-" + numBoxes, "#box-" + numBoxes);
   }
-  $("div#box-content-" + numBoxes + " a#a-" + numBoxes).click(function() {
-    return list("#box-content-" + $(this).attr("box-id", "#box-" + $(this).attr("box-id")));
-  });
   $("div.box-control span#box-control-button-" + numBoxes).click(function() {
     selectedBox = "#" + $(this).parent().parent().prop("id");
     console.log(selectedBox);

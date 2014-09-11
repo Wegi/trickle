@@ -48,11 +48,7 @@ createBox = (numBoxes) ->
             <div class='box-control'>
                 <span id='box-control-button-#{numBoxes}' class='glyphicon glyphicon-cog glyphicon-fade box-control-button'></span>
             </div>
-            <div class='box-content' id='box-content-#{numBoxes}'>
-                I am a new Box!<br><br>
-                Go and add some modules.<br><br>
-                <a id='a-#{numBoxes}' href='#' box-id='#{numBoxes}'><span class='glyphicon glyphicon-plus'></span></a>
-            </div>
+            <div class='box-content' id='box-content-#{numBoxes}'></div>
         </div>
     """
 
@@ -62,8 +58,6 @@ createBox = (numBoxes) ->
     # Show list of Modules (Only do if init is done)
     if init_done
         list "#box-content-#{numBoxes}", "#box-#{numBoxes}"
-    $("div#box-content-#{numBoxes} a#a-#{numBoxes}").click ->
-        list "#box-content-" + $(this).attr "box-id", "#box-" + $(this).attr "box-id"
 
     # Configure mouseclick event on Preference button in box
     $("div.box-control span#box-control-button-#{numBoxes}").click ->
