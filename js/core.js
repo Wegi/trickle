@@ -181,6 +181,9 @@ list = function(boxid, outer_id) {
 
 load_module = function(modname, boxid, outer_id) {
   var config, mod, moddir;
+  if (__indexOf.call(loaded_modules[outer_id], modname) >= 0) {
+    return;
+  }
   console.log("loading " + modname + " on " + boxid + " inside of " + outer_id);
   moddir = path.join(modpath, modname);
   config = load_conf(moddir);

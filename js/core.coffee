@@ -165,6 +165,8 @@ list = (boxid, outer_id) ->
 
 # Get into the module and look for config.json
 load_module = (modname, boxid, outer_id) ->
+    if modname in loaded_modules[outer_id]
+        return # do not add modules that are already loaded
     console.log "loading #{modname} on #{boxid} inside of #{outer_id}"
     moddir = path.join(modpath, modname)
     config = load_conf moddir
