@@ -18,8 +18,8 @@ $ = require('jquery');
 gui = window.require('nw.gui');
 
 module.exports = function(div_id, config_id, session) {
-  var authenticate, get_stream, oauth, print_tweets;
-  console.log("getting " + div_id + ' ' + config_id + ' ' + session);
+  var authenticate, awaiting_config, get_stream, mainFunc, oauth, print_tweets;
+  awaiting_config = false;
   if (!session.twitter) {
     session.twitter = {};
   }
@@ -28,6 +28,7 @@ module.exports = function(div_id, config_id, session) {
   }
   oauth = new OAuth("https://api.twitter.com/oauth/request_token", "https://api.twitter.com/oauth/access_token", consumer_key, consumerSecret, "1.0", "oob", "HMAC-SHA1");
   authenticate = function(callback) {
+    awaiting_config = true;
     $(config_id).html("<span class='btn'><span class='glyphicon glyphicon-refresh'></span> Initializing...</span>");
     return oauth.getOAuthRequestToken(function(error, user_token, user_secret, results) {
       var link, query_html, snipid;
@@ -47,11 +48,13 @@ module.exports = function(div_id, config_id, session) {
         return oauth.getOAuthAccessToken(user_token, user_secret, PIN, function(error, oauth_access_token, oauth_access_token_secret, results) {
           if (error) {
             $(config_id).html("<span class='btn'><span class='glyphicon glyphicon-remove'></span> An error occured.</span>");
-            return console.log(error);
+            console.log(error);
+            return awaiting_config = false;
           } else {
             $(config_id).html("<span class='btn'><span class='glyphicon glyphicon-refresh'></span> Loading Tweets...</span>");
             session.twitter.access_token = oauth_access_token;
             session.twitter.access_secret = oauth_access_token_secret;
+            awaiting_config = false;
             return callback(null, oauth_access_token);
           }
         });
@@ -118,13 +121,21 @@ module.exports = function(div_id, config_id, session) {
     }
   };
   if (!session.twitter.access_token || !session.twitter.access_secret) {
-    return async.series({
+    async.series({
       auth: authenticate,
       tweets: get_stream
     }, print_tweets);
   } else {
-    return async.series({
+    async.series({
       tweets: get_stream
     }, print_tweets);
   }
+  mainFunc = function() {
+    if (session.twitter.access_token && session.twitter.access_secret) {
+      return async.series({
+        tweets: get_stream
+      }, print_tweets);
+    }
+  };
+  return setInterval(mainFunc, 10 * 1000);
 };

@@ -169,18 +169,18 @@ load_module = (modname, boxid, outer_id) ->
     moddir = path.join(modpath, modname)
     config = load_conf moddir
 
-    #tell core that you loaded module
-    if not loaded_modules[outer_id]
-        loaded_modules[outer_id] = [ ]
-    if modname not in loaded_modules[outer_id]
-        loaded_modules[outer_id].push modname
-
     if config
         # Take hook and require it. This should be in a different function
         mod = require("./" + path.join(moddir, path.basename(config.hook, path.extname(config.hook))))
 
         # Load module
         mod boxid, configDialogue, session
+
+        #tell core that you loaded module
+        if not loaded_modules[outer_id]
+            loaded_modules[outer_id] = [ ]
+        if modname not in loaded_modules[outer_id]
+            loaded_modules[outer_id].push modname
 
 
 # Load config of given module
@@ -207,17 +207,13 @@ getNumFromName = (name) ->
 
 #restore all old windows
 for boxName, value of session.boxes
-    #console.log boxName
-    console.log parent_id
     parent_id = value.parent_id
     num = getNumFromName parent_id
-    console.log "passing num: "+num
     createBox num
     $(parent_id).offset(value.position)
     $(boxName).html value.content
-    #$(boxName).css 'heigth', value.size.height
-    #$(boxName).css 'width', value.size.width
-    #$(boxName).draggable(grid: [10, 10]).resizable(grid: 10)
+    $(parent_id).css 'heigth', value.size.height
+    $(parent_id).css 'width', value.size.width
     loaded_modules[parent_id] = value.loaded_modules
     if loaded_modules[parent_id] #check for empty windows
         for module in loaded_modules[parent_id]

@@ -184,15 +184,15 @@ load_module = function(modname, boxid, outer_id) {
   console.log("loading " + modname + " on " + boxid + " inside of " + outer_id);
   moddir = path.join(modpath, modname);
   config = load_conf(moddir);
-  if (!loaded_modules[outer_id]) {
-    loaded_modules[outer_id] = [];
-  }
-  if (__indexOf.call(loaded_modules[outer_id], modname) < 0) {
-    loaded_modules[outer_id].push(modname);
-  }
   if (config) {
     mod = require("./" + path.join(moddir, path.basename(config.hook, path.extname(config.hook))));
-    return mod(boxid, configDialogue, session);
+    mod(boxid, configDialogue, session);
+    if (!loaded_modules[outer_id]) {
+      loaded_modules[outer_id] = [];
+    }
+    if (__indexOf.call(loaded_modules[outer_id], modname) < 0) {
+      return loaded_modules[outer_id].push(modname);
+    }
   }
 };
 
@@ -226,13 +226,13 @@ getNumFromName = function(name) {
 _ref = session.boxes;
 for (boxName in _ref) {
   value = _ref[boxName];
-  console.log(parent_id);
   parent_id = value.parent_id;
   num = getNumFromName(parent_id);
-  console.log("passing num: " + num);
   createBox(num);
   $(parent_id).offset(value.position);
   $(boxName).html(value.content);
+  $(parent_id).css('heigth', value.size.height);
+  $(parent_id).css('width', value.size.width);
   loaded_modules[parent_id] = value.loaded_modules;
   if (loaded_modules[parent_id]) {
     _ref1 = loaded_modules[parent_id];
