@@ -19,6 +19,7 @@ gui = window.require('nw.gui');
 
 module.exports = function(div_id, config_id, session) {
   var authenticate, get_stream, oauth, print_tweets;
+  console.log("getting " + div_id + ' ' + config_id + ' ' + session);
   if (!session.twitter) {
     session.twitter = {};
   }

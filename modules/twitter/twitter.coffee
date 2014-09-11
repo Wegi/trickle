@@ -10,6 +10,7 @@ gui = window.require 'nw.gui'
 
 module.exports = (div_id, config_id, session) ->
     # create session namespace if there isn't one
+    console.log "getting "+div_id+' '+config_id+' '+session
     if not session.twitter
         session.twitter = {}
     # create window specific session namespace
