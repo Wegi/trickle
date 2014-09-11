@@ -13,8 +13,16 @@ loopObject = { }   #may be wrong with multiple twitter boxes, check in future
 
 
 exports.destroy = (div_id, config_id, session) ->
+    # stop updates
     clearInterval loopObject
+    # kill all your posts
     $(div_id).children('.trickle-twitter').remove()
+    # remove from loaded modules
+    i = session.boxes[div_id].loaded_modules.indexOf "twitter"
+    if i != -1
+        session.boxes[div_id].loaded_modules.splice i, 1
+    # delete your data
+    delete session.twitter[div_id]
 
 exports.init = (div_id, config_id, session) ->
     awaiting_config = false
