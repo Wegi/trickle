@@ -79,11 +79,27 @@ createBox = function(numBoxes) {
   }
 };
 
+
+/* Define Listeners */
+
 $("#new-box").click(function() {
   var num;
   num = getNextNum();
   return createBox(num);
 });
+
+$("#control-menu-add").click(function() {
+  return list(selectedBox, $(selectedBox).parent());
+});
+
+$("#control-menu-remove").click(function() {});
+
+$("#control-menu-delete").click(function() {});
+
+$("#control-menu-config").click(function() {});
+
+
+/* END Define Listeners */
 
 modpath = "./modules";
 

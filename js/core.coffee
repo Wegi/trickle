@@ -8,13 +8,13 @@ gui = require "nw.gui"
 path = require "path"
 
 ### Core Logic Preparations ###
-#Set Startup-Parameters
+# Set Startup-Parameters
 init_done = false
 
-#Get Home PATH
+# Get Home PATH
 home_path = process.env.HOME || process.env.HOMEPATH || process.env.USERPROFILE
 
-#Check if folder and file are existent and create them if not
+# Check if folder and file are existent and create them if not
 if not fs.existsSync(home_path+'/.trickle')
     fs.mkdirSync home_path+'/.trickle'
 if not fs.existsSync(home_path+'/.trickle/session.json')
@@ -41,7 +41,7 @@ getNextNum = () ->
     num++ while num in session.present_boxes
     num
 
-# Make boxes draggable and resizable and snap them to other boxes
+# Make boxes draggable and resizable
 createBox = (numBoxes) ->
     defaultContent = """
         <div class='draggable ui-widget-content box' id='box-#{numBoxes}' style='z-index: #{baseZIndex + numBoxes}'>
@@ -65,14 +65,26 @@ createBox = (numBoxes) ->
         thisBox = "#" + $(this).parent().parent().prop "id"
         toggle_highlighted_boxes(thisBox)
 
-
     if numBoxes not in session.present_boxes
         session.present_boxes.push numBoxes
 
 
+### Define Listeners ###
 $("#new-box").click ->
     num = getNextNum()
     createBox num
+
+$("#control-menu-add").click ->
+    list selectedBox, $(selectedBox).parent()
+
+$("#control-menu-remove").click ->
+
+$("#control-menu-delete").click ->
+
+$("#control-menu-config").click ->
+
+
+### END Define Listeners ###
 
 # Path to the trickle-modules
 modpath = "./modules"
