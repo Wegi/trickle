@@ -75,7 +75,8 @@ $("#new-box").click ->
     createBox num
 
 $("#control-menu-add").click ->
-    list selectedBox, $(selectedBox).parent()
+    contentDiv = "#" + $(selectedBox).children("div.box-content").prop "id"
+    list contentDiv, selectedBox
 
 $("#control-menu-remove").click ->
 
