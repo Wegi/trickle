@@ -154,7 +154,7 @@ toggle_highlighted_boxes = function(thisBox) {
 
 list = function(boxid, outer_id) {
   var bcolor, config, content, icon, icon_fa, module, name, _i, _len;
-  content = "<h3 class='module-chooser' style='margin-bottom: 1em;'>Choose your module</h3>";
+  content = "<h3 class='module-chooser'>Choose your module</h3>";
   content += "<ul>";
   for (_i = 0, _len = modules.length; _i < _len; _i++) {
     module = modules[_i];

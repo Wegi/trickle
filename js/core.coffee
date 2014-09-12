@@ -135,7 +135,7 @@ toggle_highlighted_boxes = (thisBox) ->
 # List all modules
 list = (boxid, outer_id) ->
     # Header
-    content = "<h3 class='module-chooser' style='margin-bottom: 1em;'>Choose your module</h3>"
+    content = "<h3 class='module-chooser'>Choose your module</h3>"
 
     content += "<ul>"
     for module in modules
