@@ -298,7 +298,7 @@ destroy_module = function(modname, boxContentId, boxOuterId) {
   config = load_conf(moddir);
   if (config) {
     mod = require("./" + path.join(moddir, path.basename(config.hook, path.extname(config.hook))));
-    return mod.destroy(boxOuterId, "#config-box", session);
+    return mod.destroy(boxOuterId, boxContentId, session);
   }
 };
 

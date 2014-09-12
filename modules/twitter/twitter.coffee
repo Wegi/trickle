@@ -12,7 +12,7 @@ gui = window.require 'nw.gui'
 loopObject = { }   #may be wrong with multiple twitter boxes, check in future
 
 
-exports.destroy = (boxOuterId, config_id, session) ->
+exports.destroy = (boxOuterId, boxContentID, session) ->
     # stop updates
     clearInterval loopObject
     # kill all your posts
@@ -22,16 +22,16 @@ exports.destroy = (boxOuterId, config_id, session) ->
     if i != -1
         session.boxes[boxOuterId].loaded_modules.splice i, 1
     # delete your data
-    delete session.twitter[boxOuterId]
+    delete session.twitter[boxContentID]
 
-exports.init = (boxOuterId, config_id, session) ->
+exports.init = (content_id, config_id, session) ->
     awaiting_config = false
     # create session namespace if there isn't one
     if not session.twitter
         session.twitter = {}
     # create window specific session namespace
-    if not session.twitter[boxOuterId]
-        session.twitter[boxOuterId] = {}
+    if not session.twitter[content_id]
+        session.twitter[content_id] = {}
 
     oauth = new OAuth(
           "https://api.twitter.com/oauth/request_token",
@@ -93,10 +93,10 @@ exports.init = (boxOuterId, config_id, session) ->
 
         treq = new twitter_req(readyoauth)
         #only get twees since last pull
-        if not session.twitter[boxOuterId].last_id
-            session.twitter[boxOuterId].last_id = 1
+        if not session.twitter[content_id].last_id
+            session.twitter[content_id].last_id = 1
         query =
-            since_id: session.twitter[boxOuterId].last_id,
+            since_id: session.twitter[content_id].last_id,
             count: 100
         console.log query
         treq.request 'statuses/home_timeline', query: query,
@@ -109,6 +109,8 @@ exports.init = (boxOuterId, config_id, session) ->
                                 callback "No new tweets"
                             else
                                 callback null, body
+                                # credentials should be ready now, create stream
+                                createTweetStream()
 
     print_tweets = (err, result) ->
         if err
@@ -117,10 +119,10 @@ exports.init = (boxOuterId, config_id, session) ->
             tweets = JSON.parse result.tweets
             # kill the duplicate tweet
             if tweets[tweets.length-1]
-                if tweets[tweets.length-1].id == session.twitter[boxOuterId].last_id
+                if tweets[tweets.length-1].id == session.twitter[content_id].last_id
                     tweets.pop()
             if tweets[0]
-                session.twitter[boxOuterId].last_id = (Number tweets[0].id)
+                session.twitter[content_id].last_id = (Number tweets[0].id)
 
             # reverse array because we prepend and thus the oldest tweet goes first
             try
@@ -133,20 +135,40 @@ exports.init = (boxOuterId, config_id, session) ->
     <div class="col-md-12" style="padding-top: 0.5em; border-bottom: 1px solid #ccc;"></div>
 </div>
 """
-                    $(boxOuterId).prepend tweet_entry
+                    $(content_id).prepend tweet_entry
                     #set last retrieved tweet
             catch
-                console.log "Error loading new tweets"
+                console.log "Tweet unreadable (probably Limit exceeded)"
 
+    streamBuffer = ""
+    createTweetStream = () ->
+        readyoauth =
+            consumer_key: consumer_key
+            consumer_secret: consumerSecret
+            token: session.twitter.access_token
+            token_secret: session.twitter.access_secret
+
+        treq = new twitter_req(readyoauth)
+        query =
+            'with': 'followings'
+        home_stream = treq.request 'user', body: query
+        home_stream.on 'data', (data) ->
+            end = data.toString()[-2..]
+            streamBuffer += data.toString()
+            if end == '\r\n'
+                #console.log streamBuffer
+                try
+                    tweet = JSON.parse streamBuffer
+                    if tweet.text
+                        result =
+                            tweets: "[#{streamBuffer}]"
+                        print_tweets null, result
+                streamBuffer = ""
 
     if not session.twitter.access_token || not session.twitter.access_secret
         async.series {auth: authenticate, tweets: get_stream}, print_tweets
     else
         async.series {tweets: get_stream}, print_tweets
 
-    mainFunc = () ->
-        if session.twitter.access_token &&  session.twitter.access_secret
-            async.series {tweets: get_stream}, print_tweets
 
-    #do the tweet all way long
-    loopObject = setInterval(mainFunc, 10*1000)
+
