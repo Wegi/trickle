@@ -36,7 +36,7 @@ selectedBox = ""
 if not session.present_boxes
     session.present_boxes = [ ]
 
-getNextNum = () ->
+getNextNum = ->
     num = 0
     num++ while num in session.present_boxes
     num
@@ -100,7 +100,8 @@ $("#control-menu-config").click ->
 
 # Delete complete Box
 $("#control-menu-delete").click ->
-
+    boxContentId = "#" + $(selectedBox).children("div.box-content").prop "id"
+    config_dialogue_box_remove boxContentId, selectedBox
 ### END Define Listeners ###
 
 
@@ -166,11 +167,11 @@ config_dialogue_module_add = (boxContentId, boxOuterId) ->
 # Destroy modules from a box
 config_dialogue_module_removal = (boxContentId, boxOuterId) ->
     configBox = "#config-box"
-    modules = session.boxes[selectedBox].loaded_modules
+    boxModules = session.boxes[selectedBox].loaded_modules
     content = "<h3>Remove modules from box</h3>"
     content += "<div><ul id='config-box-list-modules'>"
 
-    for module in modules
+    for module in boxModules
         content += create_module_list_items module
     content += "</ul></div>"
 
@@ -185,6 +186,36 @@ config_dialogue_module_removal = (boxContentId, boxOuterId) ->
         $(configBox).html "<span class='btn'><span class='glyphicon glyphicon-ok'></span> Module successfully removed.</span>"
         closeConfigDialogue = -> $(configBox).trigger "close"
         setTimeout closeConfigDialogue, 2000
+
+
+# Remove box and destroy all assigned modules
+config_dialogue_box_remove = (boxContentId, boxOuterId) ->
+    configBox = "#config-box"
+
+    if session.boxes[selectedBox].loaded_modules
+        boxModules = session.boxes[selectedBox].loaded_modules
+    else
+        boxModules = {}
+
+    content = "<h3>Do you really want to delete this box?</h3>"
+    content += "<button class='btn btn-default' id='box-remove-yes' style='padding-right: 1em;'>Yes</button>"
+    content += "<button class='btn btn-default' id='box-remove-no'>No</button>"
+
+    # Open Config Dialogue with content
+    $(configBox).lightbox_me().html content
+
+    $("#box-remove-yes").click ->
+        for module in boxModules
+            destroy_module module, boxContentId, boxOuterId
+        delete session.boxes[selectedBox]
+        $(selectedBox).remove()
+        toggle_highlighted_boxes selectedBox
+        $(configBox).html "<span class='btn'><span class='glyphicon glyphicon-ok'></span> Box successfully removed.</span>"
+        closeConfigDialogue = -> $(configBox).trigger "close"
+        setTimeout closeConfigDialogue, 2000
+
+    $("#box-remove-no").click ->
+        $(configBox).trigger "close"
 
 
 # Creates colorized list items with corresponding icons from module's config.json
