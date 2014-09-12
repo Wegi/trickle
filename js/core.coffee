@@ -210,6 +210,7 @@ config_dialogue_box_remove = (boxContentId, boxOuterId) ->
         delete session.boxes[selectedBox]
         $(selectedBox).remove()
         toggle_highlighted_boxes selectedBox
+        selectedBox = undefined
         $(configBox).html "<span class='btn'><span class='glyphicon glyphicon-ok'></span> Box successfully removed.</span>"
         closeConfigDialogue = -> $(configBox).trigger "close"
         setTimeout closeConfigDialogue, 2000

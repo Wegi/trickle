@@ -232,6 +232,7 @@ config_dialogue_box_remove = function(boxContentId, boxOuterId) {
     delete session.boxes[selectedBox];
     $(selectedBox).remove();
     toggle_highlighted_boxes(selectedBox);
+    selectedBox = void 0;
     $(configBox).html("<span class='btn'><span class='glyphicon glyphicon-ok'></span> Box successfully removed.</span>");
     closeConfigDialogue = function() {
       return $(configBox).trigger("close");
