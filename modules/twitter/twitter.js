@@ -101,11 +101,11 @@ exports.init = function(content_id, config_id, session) {
       } else {
         result = JSON.parse(body);
         if (result.length < 1) {
-          return callback("No new tweets");
+          callback("No new tweets");
         } else {
           callback(null, body);
-          return createTweetStream();
         }
+        return createTweetStream();
       }
     });
   };

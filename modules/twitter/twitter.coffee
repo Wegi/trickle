@@ -109,7 +109,7 @@ exports.init = (content_id, config_id, session) ->
                             else
                                 callback null, body
                                 # credentials should be ready now, create stream
-                                createTweetStream()
+                            createTweetStream()
 
     print_tweets = (err, result) ->
         if err
