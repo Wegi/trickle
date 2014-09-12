@@ -168,7 +168,7 @@ config_dialogue_module_add = (boxContentId, boxOuterId) ->
     # Add listener
     $(".module-single").click ->
         if session.boxes[boxOuterId].loaded_modules
-            if modname in session.boxes[boxOuterId].loaded_modules
+            if $(this).attr("name") in session.boxes[boxOuterId].loaded_modules
                 return # do not add modules that are already loaded
         load_module $(this).attr("name"), boxContentId, boxOuterId
 

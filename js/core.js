@@ -188,8 +188,9 @@ config_dialogue_module_add = function(boxContentId, boxOuterId) {
   content += "</ul>";
   $(configDialogue).lightbox_me().html(content);
   return $(".module-single").click(function() {
+    var _ref;
     if (session.boxes[boxOuterId].loaded_modules) {
-      if (__indexOf.call(session.boxes[boxOuterId].loaded_modules, modname) >= 0) {
+      if (_ref = $(this).attr("name"), __indexOf.call(session.boxes[boxOuterId].loaded_modules, _ref) >= 0) {
         return;
       }
     }
