@@ -10,34 +10,30 @@ div#boxes div.box-content {
     margin: 1em;
 }
 
-.module-single{
+.module-single {
     padding: 0.5em;
     max-width: 100%;
-    opacity: 1;
+    outline:none;
+    transition: all 0.25s ease-in-out;
+    -webkit-transition: all 0.25s ease-in-out;
+    -moz-transition: all 0.25s ease-in-out;
 }
-.module-single:hover{
+.module-single:hover {
     text-decoration: none;
-
-    /*not tested with light backgrounds!*/
-    opacity: 0.7;
+    box-shadow: 0 0 5px rgba(255, 255, 255, 1);
+    -webkit-box-shadow: 0 0 5px rgba(255, 255, 255, 1);
+    -moz-box-shadow: 0 0 5px rgba(255, 255, 255, 1);
+    border:1px solid rgba(255, 255, 255, 0.8);
 }
 
-/*opacity transition*/
-.opacity-trans{
-    -webkit-transition:opacity 300ms ease-out;
-    -moz-transition:opacity 300ms ease-out;
-    -o-transition:opacity 300ms ease-out;
-    transition:opacity 300 ease-out;
-}
-
-.icon{
+.icon {
     height: 1em;
     margin-right: 0.5em;
 }
 
 /* General styles for boxes and overlays */
 .box {
-    background: rgba(30,30,30,0.7);
+    background: rgba(30, 30, 30, 0.7);
 }
 
 .box-control-button {

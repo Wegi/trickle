@@ -1,11 +1,11 @@
 {
-    "name" : "Twitter",
-    "description" : "Display your Twitter Stream inside trickle. Needs you to authorize the App to Twitter",
-    "type" : "stream",
-    "options" : ["Twitter-Name"],
-    "hook" : "twitter.js",
-    "version" : 0.1,
+    "name": "Twitter",
+    "description": "Display your Twitter Stream inside trickle. Needs you to authorize the App to Twitter",
+    "type": "stream",
+    "options": ["Twitter-Name"],
+    "hook": "twitter.js",
+    "version": 0.1,
     "color": "#55ACEE",
-    "icon" : "/img/icon.pn",
-    "icon_fa" : "fa-twitter"
+    "icon": "/img/icon.png",
+    "icon_fa": "fa-twitter"
 }
