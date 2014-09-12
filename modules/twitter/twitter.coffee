@@ -16,7 +16,7 @@ exports.destroy = (boxOuterId, boxContentID, session) ->
     # stop updates
     clearInterval loopObject
     # kill all your posts
-    $(boxOuterId).children("div.box-content").children('.trickle-twitter').remove()
+    $(boxContentID).children('.trickle-twitter').remove()
     # remove from loaded modules
     i = session.boxes[boxOuterId].loaded_modules.indexOf "twitter"
     if i != -1
