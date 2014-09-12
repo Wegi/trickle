@@ -121,6 +121,11 @@ $("#control-menu-delete").click(function() {
   return config_dialogue_box_remove(boxContentId, selectedBox);
 });
 
+$("#control-menu-close").click(function() {
+  $("#config-box").trigger("close");
+  return toggle_highlighted_boxes(selectedBox);
+});
+
 
 /* END Define Listeners */
 
@@ -220,7 +225,7 @@ config_dialogue_box_remove = function(boxContentId, boxOuterId) {
     boxModules = {};
   }
   content = "<h3>Do you really want to delete this box?</h3>";
-  content += "<button class='btn btn-default' id='box-remove-yes' style='padding-right: 1em;'>Yes</button>";
+  content += "<button class='btn btn-default' id='box-remove-yes'>Yes</button>&nbsp;";
   content += "<button class='btn btn-default' id='box-remove-no'>No</button>";
   $(configBox).lightbox_me().html(content);
   $("#box-remove-yes").click(function() {
