@@ -186,17 +186,17 @@ list = function(boxid, outer_id) {
   content += "</ul>";
   $(configDialogue).lightbox_me().html(content);
   return $(".module-single").click(function() {
+    if (session.boxes[outer_id].loaded_modules) {
+      if (__indexOf.call(session.boxes[outer_id].loaded_modules, modname) >= 0) {
+        return;
+      }
+    }
     return load_module($(this).attr("name"), boxid, outer_id);
   });
 };
 
 load_module = function(modname, boxid, outer_id) {
   var config, mod, moddir;
-  if (session.boxes[outer_id].loaded_modules) {
-    if (__indexOf.call(session.boxes[outer_id].loaded_modules, modname) >= 0) {
-      return;
-    }
-  }
   moddir = path.join(modpath, modname);
   config = load_conf(moddir);
   if (config) {

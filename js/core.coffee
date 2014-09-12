@@ -177,13 +177,13 @@ list = (boxid, outer_id) ->
 
     # Add listener
     $(".module-single").click ->
+        if session.boxes[outer_id].loaded_modules
+            if modname in session.boxes[outer_id].loaded_modules
+                return # do not add modules that are already loaded
         load_module $(this).attr("name"), boxid, outer_id
 
 # Get into the module and look for config.json
 load_module = (modname, boxid, outer_id) ->
-    if session.boxes[outer_id].loaded_modules
-        if modname in session.boxes[outer_id].loaded_modules
-            return # do not add modules that are already loaded
     moddir = path.join(modpath, modname)
     config = load_conf moddir
 
