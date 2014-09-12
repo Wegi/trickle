@@ -127,10 +127,10 @@ exports.init = (div_id, config_id, session) ->
                 for tweet in tweets.reverse()
                     user_img = tweet.user.profile_image_url
                     tweet_entry = """
-<div class="row trickle-twitter">
+<div class="row trickle-twitter" style="margin-bottom: 0.5em;">
     <div class="col-md-2"><img class="img-rounded "src="#{user_img}" height="55" width="55"></div>
     <div class="col-md-10">#{tweet.text}</div>
-    <div class="col-md-12"><hr></div>
+    <div class="col-md-12" style="padding-top: 0.5em; border-bottom: 1px solid #333;"></div>
 </div>
 """
                     $(div_id).prepend tweet_entry
