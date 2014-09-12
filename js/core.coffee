@@ -135,29 +135,34 @@ toggle_highlighted_boxes = (thisBox) ->
 # List all modules
 list = (boxid, outer_id) ->
     # Header
-    content = "<h3 style='padding-bottom: 1em;'>Choose your module</h3>"
+    content = "<h3 style='margin-bottom: 1em;'>Choose your module</h3>"
 
     content += "<ul>"
     for module in modules
         if (module.charAt 0) != '.'
 
-            # Assign values from the correlated config.json
             config = load_conf path.join(modpath, module)
 
-            content += "<li class='module-entry'><a class='module-single' href='#' name='#{module}'"
+            content += "<li class='module-entry'><a class='module-single opacity-trans' href='#' id='#{module}' name='#{module}'"
 
+            # Assign values from the correlated config.json
             if config
                 name   = config.name
                 bcolor = config.color
                 icon   = path.join modpath, module, config.icon
+                icon_fa = config.icon_fa
 
+            # assign the color to the background
             if bcolor != "" && bcolor
                 content += " style='background-color: #{bcolor};'"
 
             content += ">"
 
-            if icon then content += "<img class='icon' src='#{icon}' alt='#{module}'> "
+            # decide which icon has to be showed
+            if icon_fa then content += "<span class='fa #{icon_fa}'></span>&nbsp;"
+            else if icon then content += "<img class='icon' src='#{icon}' alt='#{module}' onerror='this.remove()'>"
 
+            # decide which name has to be showed
             if name != "" && name
                 content += "#{name}</a></li>"
             else
