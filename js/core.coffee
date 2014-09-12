@@ -102,6 +102,12 @@ $("#control-menu-config").click ->
 $("#control-menu-delete").click ->
     boxContentId = "#" + $(selectedBox).children("div.box-content").prop "id"
     config_dialogue_box_remove boxContentId, selectedBox
+
+# Clicking on preferences icon closes menu
+$("#control-menu-close").click ->
+    $("#config-box").trigger "close"
+    toggle_highlighted_boxes selectedBox
+
 ### END Define Listeners ###
 
 
@@ -198,7 +204,7 @@ config_dialogue_box_remove = (boxContentId, boxOuterId) ->
         boxModules = {}
 
     content = "<h3>Do you really want to delete this box?</h3>"
-    content += "<button class='btn btn-default' id='box-remove-yes' style='padding-right: 1em;'>Yes</button>"
+    content += "<button class='btn btn-default' id='box-remove-yes'>Yes</button>&nbsp;"
     content += "<button class='btn btn-default' id='box-remove-no'>No</button>"
 
     # Open Config Dialogue with content
@@ -210,6 +216,7 @@ config_dialogue_box_remove = (boxContentId, boxOuterId) ->
         delete session.boxes[selectedBox]
         $(selectedBox).remove()
         toggle_highlighted_boxes selectedBox
+        selectedBox = undefined
         $(configBox).html "<span class='btn'><span class='glyphicon glyphicon-ok'></span> Box successfully removed.</span>"
         closeConfigDialogue = -> $(configBox).trigger "close"
         setTimeout closeConfigDialogue, 2000

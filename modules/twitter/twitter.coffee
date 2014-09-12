@@ -15,7 +15,7 @@ exports.destroy = (boxOuterId, boxContentId, session) ->
     # stop updates
     session.twitter[boxContentId].update_stream.removeAllListeners 'data'
     # kill all your posts
-    $(boxOuterId).children('.trickle-twitter').remove()
+    $(boxContentId).children('.trickle-twitter').remove()
     # remove from loaded modules
     i = session.boxes[boxOuterId].loaded_modules.indexOf "twitter"
     if i != -1
