@@ -21,25 +21,25 @@ gui = window.require('nw.gui');
 
 loopObject = {};
 
-exports.destroy = function(div_id, config_id, session) {
+exports.destroy = function(boxOuterId, config_id, session) {
   var i;
   clearInterval(loopObject);
-  $(div_id).children('.trickle-twitter').remove();
-  i = session.boxes[div_id].loaded_modules.indexOf("twitter");
+  $(boxOuterId).children('.trickle-twitter').remove();
+  i = session.boxes[boxOuterId].loaded_modules.indexOf("twitter");
   if (i !== -1) {
-    session.boxes[div_id].loaded_modules.splice(i, 1);
+    session.boxes[boxOuterId].loaded_modules.splice(i, 1);
   }
-  return delete session.twitter[div_id];
+  return delete session.twitter[boxOuterId];
 };
 
-exports.init = function(div_id, config_id, session) {
+exports.init = function(boxOuterId, config_id, session) {
   var authenticate, awaiting_config, get_stream, mainFunc, oauth, print_tweets;
   awaiting_config = false;
   if (!session.twitter) {
     session.twitter = {};
   }
-  if (!session.twitter[div_id]) {
-    session.twitter[div_id] = {};
+  if (!session.twitter[boxOuterId]) {
+    session.twitter[boxOuterId] = {};
   }
   oauth = new OAuth("https://api.twitter.com/oauth/request_token", "https://api.twitter.com/oauth/access_token", consumer_key, consumerSecret, "1.0", "oob", "HMAC-SHA1");
   authenticate = function(callback) {
@@ -86,11 +86,11 @@ exports.init = function(div_id, config_id, session) {
       token_secret: session.twitter.access_secret
     };
     treq = new twitter_req(readyoauth);
-    if (!session.twitter[div_id].last_id) {
-      session.twitter[div_id].last_id = 1;
+    if (!session.twitter[boxOuterId].last_id) {
+      session.twitter[boxOuterId].last_id = 1;
     }
     query = {
-      since_id: session.twitter[div_id].last_id,
+      since_id: session.twitter[boxOuterId].last_id,
       count: 100
     };
     console.log(query);
@@ -117,12 +117,12 @@ exports.init = function(div_id, config_id, session) {
     } else {
       tweets = JSON.parse(result.tweets);
       if (tweets[tweets.length - 1]) {
-        if (tweets[tweets.length - 1].id === session.twitter[div_id].last_id) {
+        if (tweets[tweets.length - 1].id === session.twitter[boxOuterId].last_id) {
           tweets.pop();
         }
       }
       if (tweets[0]) {
-        session.twitter[div_id].last_id = Number(tweets[0].id);
+        session.twitter[boxOuterId].last_id = Number(tweets[0].id);
       }
       try {
         _ref = tweets.reverse();
@@ -131,7 +131,7 @@ exports.init = function(div_id, config_id, session) {
           tweet = _ref[_i];
           user_img = tweet.user.profile_image_url;
           tweet_entry = "<div class=\"row trickle-twitter\" style=\"margin-bottom: 0.5em; margin-right: 0.5em;\">\n    <div class=\"col-md-2\"><img class=\"img-rounded \"src=\"" + user_img + "\" height=\"55\" width=\"55\"></div>\n    <div class=\"col-md-10\">" + tweet.text + "</div>\n    <div class=\"col-md-12\" style=\"padding-top: 0.5em; border-bottom: 1px solid #ccc;\"></div>\n</div>";
-          _results.push($(div_id).prepend(tweet_entry));
+          _results.push($(boxOuterId).prepend(tweet_entry));
         }
         return _results;
       } catch (_error) {

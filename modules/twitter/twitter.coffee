@@ -12,26 +12,26 @@ gui = window.require 'nw.gui'
 loopObject = { }   #may be wrong with multiple twitter boxes, check in future
 
 
-exports.destroy = (div_id, config_id, session) ->
+exports.destroy = (boxOuterId, config_id, session) ->
     # stop updates
     clearInterval loopObject
     # kill all your posts
-    $(div_id).children('.trickle-twitter').remove()
+    $(boxOuterId).children('.trickle-twitter').remove()
     # remove from loaded modules
-    i = session.boxes[div_id].loaded_modules.indexOf "twitter"
+    i = session.boxes[boxOuterId].loaded_modules.indexOf "twitter"
     if i != -1
-        session.boxes[div_id].loaded_modules.splice i, 1
+        session.boxes[boxOuterId].loaded_modules.splice i, 1
     # delete your data
-    delete session.twitter[div_id]
+    delete session.twitter[boxOuterId]
 
-exports.init = (div_id, config_id, session) ->
+exports.init = (boxOuterId, config_id, session) ->
     awaiting_config = false
     # create session namespace if there isn't one
     if not session.twitter
         session.twitter = {}
     # create window specific session namespace
-    if not session.twitter[div_id]
-        session.twitter[div_id] = {}
+    if not session.twitter[boxOuterId]
+        session.twitter[boxOuterId] = {}
 
     oauth = new OAuth(
           "https://api.twitter.com/oauth/request_token",
@@ -93,10 +93,10 @@ exports.init = (div_id, config_id, session) ->
 
         treq = new twitter_req(readyoauth)
         #only get twees since last pull
-        if not session.twitter[div_id].last_id
-            session.twitter[div_id].last_id = 1
+        if not session.twitter[boxOuterId].last_id
+            session.twitter[boxOuterId].last_id = 1
         query =
-            since_id: session.twitter[div_id].last_id,
+            since_id: session.twitter[boxOuterId].last_id,
             count: 100
         console.log query
         treq.request 'statuses/home_timeline', query: query,
@@ -117,10 +117,10 @@ exports.init = (div_id, config_id, session) ->
             tweets = JSON.parse result.tweets
             # kill the duplicate tweet
             if tweets[tweets.length-1]
-                if tweets[tweets.length-1].id == session.twitter[div_id].last_id
+                if tweets[tweets.length-1].id == session.twitter[boxOuterId].last_id
                     tweets.pop()
             if tweets[0]
-                session.twitter[div_id].last_id = (Number tweets[0].id)
+                session.twitter[boxOuterId].last_id = (Number tweets[0].id)
 
             # reverse array because we prepend and thus the oldest tweet goes first
             try
@@ -133,7 +133,7 @@ exports.init = (div_id, config_id, session) ->
     <div class="col-md-12" style="padding-top: 0.5em; border-bottom: 1px solid #ccc;"></div>
 </div>
 """
-                    $(div_id).prepend tweet_entry
+                    $(boxOuterId).prepend tweet_entry
                     #set last retrieved tweet
             catch
                 console.log "Error loading new tweets"

@@ -80,12 +80,13 @@ $("#new-box").click ->
 
 # Add new Module to Box
 $("#control-menu-add").click ->
-    contentDiv = "#" + $(selectedBox).children("div.box-content").prop "id"
-    config_dialogue_module_add contentDiv, selectedBox
+    boxContentId = "#" + $(selectedBox).children("div.box-content").prop "id"
+    config_dialogue_module_add boxContentId, selectedBox
 
 # Show list of Modules, remove selected ones
 $("#control-menu-remove").click ->
-    config_dialogue_module_removal()
+    boxContentId = "#" + $(selectedBox).children("div.box-content").prop "id"
+    config_dialogue_module_removal boxContentId, selectedBox
 
 # Open configuration of Box containing all Modules to config
 $("#control-menu-config").click ->
@@ -137,7 +138,7 @@ toggle_highlighted_boxes = (thisBox) ->
 ### Config Dialogue Logic ###
 
 # List all modules to add them to a box
-config_dialogue_module_add = (boxid, outer_id) ->
+config_dialogue_module_add = (boxContentId, boxOuterId) ->
     # Header
     content = "<h3>Choose your module</h3>"
 
@@ -153,11 +154,11 @@ config_dialogue_module_add = (boxid, outer_id) ->
 
     # Add listener
     $(".module-single").click ->
-        load_module $(this).attr("name"), boxid, outer_id
+        load_module $(this).attr("name"), boxContentId, boxOuterId
 
 
 # Show all modules for removal
-config_dialogue_module_removal = ->
+config_dialogue_module_removal = (boxContentId, boxOuterId) ->
     modules = session.boxes[selectedBox].loaded_modules
     content = "<h3>Remove modules from box</h3>"
     content += "<div><ul id='config-box-list-modules'>"
@@ -173,7 +174,7 @@ config_dialogue_module_removal = ->
 
     # Add listener
     $(".module-single").click ->
-        load_module $(this).attr("name"), boxid, outer_id
+        destroy_module $(this).attr("name"), boxContentId, boxOuterId
 
 
 # Creates colorized list items with corresponding icons from module's config.json
@@ -239,14 +240,17 @@ destroy_module = (modname, boxContentId, boxOuterId) ->
         # Take hook and require it. This should be in a different function
         mod = require("./" + path.join(moddir, path.basename(config.hook, path.extname(config.hook))))
 
-        # Load module
-        mod.destroy boxContentId, "#config-box", session
+        console.log "Before:"
+        console.log session.boxes[boxOuterId].loaded_modules
 
-        # Tell core that you loaded module
-        if not session.boxes[boxOuterId].loaded_modules
-            session.boxes[boxOuterId].loaded_modules = [ ]
-        if modname not in session.boxes[boxOuterId].loaded_modules
-            session.boxes[boxOuterId].loaded_modules.push modname
+        console.log session
+
+        # Destroy module
+        mod.destroy boxOuterId, "#config-box", session
+
+        console.log "After:"
+        console.log session.boxes[boxOuterId].loaded_modules
+
 
 
 # Load config of given module

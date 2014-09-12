@@ -95,13 +95,15 @@ $("#new-box").click(function() {
 });
 
 $("#control-menu-add").click(function() {
-  var contentDiv;
-  contentDiv = "#" + $(selectedBox).children("div.box-content").prop("id");
-  return config_dialogue_module_add(contentDiv, selectedBox);
+  var boxContentId;
+  boxContentId = "#" + $(selectedBox).children("div.box-content").prop("id");
+  return config_dialogue_module_add(boxContentId, selectedBox);
 });
 
 $("#control-menu-remove").click(function() {
-  return config_dialogue_module_removal();
+  var boxContentId;
+  boxContentId = "#" + $(selectedBox).children("div.box-content").prop("id");
+  return config_dialogue_module_removal(boxContentId, selectedBox);
 });
 
 $("#control-menu-config").click(function() {});
@@ -157,7 +159,7 @@ toggle_highlighted_boxes = function(thisBox) {
 
 /* Config Dialogue Logic */
 
-config_dialogue_module_add = function(boxid, outer_id) {
+config_dialogue_module_add = function(boxContentId, boxOuterId) {
   var content, module, _i, _len;
   content = "<h3>Choose your module</h3>";
   content += "<ul>";
@@ -170,11 +172,11 @@ config_dialogue_module_add = function(boxid, outer_id) {
   content += "</ul>";
   $(configDialogue).lightbox_me().html(content);
   return $(".module-single").click(function() {
-    return load_module($(this).attr("name"), boxid, outer_id);
+    return load_module($(this).attr("name"), boxContentId, boxOuterId);
   });
 };
 
-config_dialogue_module_removal = function() {
+config_dialogue_module_removal = function(boxContentId, boxOuterId) {
   var content, module, _i, _len;
   modules = session.boxes[selectedBox].loaded_modules;
   content = "<h3>Remove modules from box</h3>";
@@ -187,7 +189,7 @@ config_dialogue_module_removal = function() {
   $("#config-box-list-modules").selectable();
   $("#config-box").lightbox_me().html(content);
   return $(".module-single").click(function() {
-    return load_module($(this).attr("name"), boxid, outer_id);
+    return destroy_module($(this).attr("name"), boxContentId, boxOuterId);
   });
 };
 
@@ -245,13 +247,12 @@ destroy_module = function(modname, boxContentId, boxOuterId) {
   config = load_conf(moddir);
   if (config) {
     mod = require("./" + path.join(moddir, path.basename(config.hook, path.extname(config.hook))));
-    mod.destroy(boxContentId, "#config-box", session);
-    if (!session.boxes[boxOuterId].loaded_modules) {
-      session.boxes[boxOuterId].loaded_modules = [];
-    }
-    if (__indexOf.call(session.boxes[boxOuterId].loaded_modules, modname) < 0) {
-      return session.boxes[boxOuterId].loaded_modules.push(modname);
-    }
+    console.log("Before:");
+    console.log(session.boxes[boxOuterId].loaded_modules);
+    console.log(session);
+    mod.destroy(boxOuterId, "#config-box", session);
+    console.log("After:");
+    return console.log(session.boxes[boxOuterId].loaded_modules);
   }
 };
 
