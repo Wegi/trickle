@@ -95,6 +95,7 @@ $("#control-menu-delete").click ->
 
 ### END Define Listeners ###
 
+
 # Path to the trickle-modules
 modpath = "./modules"
 modules = []
@@ -133,77 +134,6 @@ toggle_highlighted_boxes = (thisBox) ->
         selectedBox = thisBox
 
 
-# Get into the module and look for config.json
-load_module = (modname, boxid, outer_id) ->
-    if session.boxes[outer_id].loaded_modules
-        if modname in session.boxes[outer_id].loaded_modules
-            return # do not add modules that are already loaded
-    moddir = path.join(modpath, modname)
-    config = load_conf moddir
-
-    if config
-        # Take hook and require it. This should be in a different function
-        mod = require("./" + path.join(moddir, path.basename(config.hook, path.extname(config.hook))))
-
-        # Load module
-        mod.init boxid, configDialogue, session
-
-        #tell core that you loaded module
-        if not session.boxes[outer_id].loaded_modules
-            session.boxes[outer_id].loaded_modules = [ ]
-        if modname not in session.boxes[outer_id].loaded_modules
-            session.boxes[outer_id].loaded_modules.push modname
-
-
-# Load config of given module
-load_conf = (moddir) ->
-    try
-        config = fs.readFileSync path.join(moddir, "config.json"), "utf8"
-    catch e
-        config = null
-    return JSON.parse(config)
-
-
-# Creates colorized list items with corresponding icons from module's config.json
-create_module_list_items = (module) ->
-    config = load_conf path.join(modpath, module)
-    content = "<li class='module-entry'><a class='module-single' href='#' name='#{module}'"
-
-    # Assign values from the correlated config.json
-    if config
-        name   = config.name
-        bcolor = config.color
-        icon   = path.join modpath, module, config.icon
-        icon_fa = config.icon_fa
-
-    # assign the color to the background
-    if bcolor != "" && bcolor
-        content += " style='background-color: #{bcolor};'"
-    content += ">"
-
-    # decide which icon has to be showed
-    if icon_fa
-        content += "<span class='fa #{icon_fa}'></span>&nbsp;"
-    else if icon
-        content += "<img class='icon' src='#{icon}' alt='#{module}' onerror='this.remove()'>"
-
-    # decide which name has to be showed
-    if name != "" && name
-        content += "#{name}</a></li>"
-    else
-        content += "#{module}</a></li>"
-
-    return content
-
-
-# Center boxes in window, use it with $("path").center()
-$.fn.center = ->
-    @css "position", "absolute"
-    @css "top", Math.max(0, (($(window).height() - $(this).outerHeight()) / 2) + $(window).scrollTop()) + "px"
-    @css "left", Math.max(0, (($(window).width() - $(this).outerWidth()) / 2) + $(window).scrollLeft()) + "px"
-    this
-
-
 ### Config Dialogue Logic ###
 
 # List all modules to add them to a box
@@ -240,6 +170,92 @@ config_dialogue_module_removal = ->
 
     # Open Config Dialogue with content
     $("#config-box").lightbox_me().html content
+
+    # Add listener
+    $(".module-single").click ->
+        load_module $(this).attr("name"), boxid, outer_id
+
+
+# Creates colorized list items with corresponding icons from module's config.json
+create_module_list_items = (module) ->
+    config = load_conf path.join(modpath, module)
+    content = "<li class='module-entry'><a class='module-single' href='#' name='#{module}'"
+
+    # Assign values from the correlated config.json
+    if config
+        name   = config.name
+        bcolor = config.color
+        icon   = path.join modpath, module, config.icon
+        icon_fa = config.icon_fa
+
+    # assign the color to the background
+    if bcolor != "" && bcolor
+        content += " style='background-color: #{bcolor};'"
+    content += ">"
+
+    # decide which icon has to be showed
+    if icon_fa
+        content += "<span class='fa #{icon_fa}'></span>&nbsp;"
+    else if icon
+        content += "<img class='icon' src='#{icon}' alt='#{module}' onerror='this.remove()'>"
+
+    # decide which name has to be showed
+    if name != "" && name
+        content += "#{name}</a></li>"
+    else
+        content += "#{module}</a></li>"
+
+    return content
+
+
+# Get into the module and look for config.json
+load_module = (modname, boxid, outer_id) ->
+    if session.boxes[outer_id].loaded_modules
+        if modname in session.boxes[outer_id].loaded_modules
+            return # do not add modules that are already loaded
+    moddir = path.join(modpath, modname)
+    config = load_conf moddir
+
+    if config
+        # Take hook and require it. This should be in a different function
+        mod = require("./" + path.join(moddir, path.basename(config.hook, path.extname(config.hook))))
+
+        # Load module
+        mod.init boxid, configDialogue, session
+
+        #tell core that you loaded module
+        if not session.boxes[outer_id].loaded_modules
+            session.boxes[outer_id].loaded_modules = [ ]
+        if modname not in session.boxes[outer_id].loaded_modules
+            session.boxes[outer_id].loaded_modules.push modname
+
+
+# Get into the module and look for config.json
+destroy_module = (modname, boxid, outer_id) ->
+    moddir = path.join(modpath, modname)
+    config = load_conf moddir
+
+    if config
+        # Take hook and require it. This should be in a different function
+        mod = require("./" + path.join(moddir, path.basename(config.hook, path.extname(config.hook))))
+
+        # Load module
+        mod.destroy boxid, "#config-box", session
+
+        # Tell core that you loaded module
+        if not session.boxes[outer_id].loaded_modules
+            session.boxes[outer_id].loaded_modules = [ ]
+        if modname not in session.boxes[outer_id].loaded_modules
+            session.boxes[outer_id].loaded_modules.push modname
+
+
+# Load config of given module
+load_conf = (moddir) ->
+    try
+        config = fs.readFileSync path.join(moddir, "config.json"), "utf8"
+    catch e
+        config = null
+    return JSON.parse(config)
 
 ### END Config Dialogue Logic ###
 
@@ -292,3 +308,17 @@ win.on "close", ->
     gui.App.quit()
 
 ### END Core Logic (Startup and Close) ###
+
+### Extend Coffeescript Arrays ###
+# Removes one item if found. Example:
+# a = [1,2,3]; a.remove 1;
+# Then a is [2,3]. No need to reassign array
+Array::remove = (e) -> @[t..t] = [] if (t = @indexOf(e)) > -1
+
+### Extend jQuery ###
+# Center boxes in window, use it with $("path").center()
+$.fn.center = ->
+    @css "position", "absolute"
+    @css "top", Math.max(0, (($(window).height() - $(this).outerHeight()) / 2) + $(window).scrollTop()) + "px"
+    @css "left", Math.max(0, (($(window).width() - $(this).outerWidth()) / 2) + $(window).scrollLeft()) + "px"
+    this
