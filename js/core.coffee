@@ -314,7 +314,7 @@ for boxName, value of session.boxes
     createBox num
     $(boxName).offset(value.position)
     $(child_content).html value.content
-    $(boxName).css 'heigth', value.size.height
+    $(boxName).css 'height', value.size.height
     $(boxName).css 'width', value.size.width
     if value.loaded_modules # Check for empty windows
         for module in value.loaded_modules

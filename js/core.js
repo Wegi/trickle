@@ -338,7 +338,7 @@ for (boxName in _ref) {
   createBox(num);
   $(boxName).offset(value.position);
   $(child_content).html(value.content);
-  $(boxName).css('heigth', value.size.height);
+  $(boxName).css('height', value.size.height);
   $(boxName).css('width', value.size.width);
   if (value.loaded_modules) {
     _ref1 = value.loaded_modules;
