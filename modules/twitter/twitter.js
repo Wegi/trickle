@@ -33,7 +33,7 @@ exports.destroy = function(div_id, config_id, session) {
 };
 
 exports.init = function(div_id, config_id, session) {
-  var authenticate, awaiting_config, get_stream, mainFunc, oauth, print_tweets;
+  var authenticate, awaiting_config, createTweetStream, get_stream, oauth, print_tweets, streamBuffer;
   awaiting_config = false;
   if (!session.twitter) {
     session.twitter = {};
@@ -105,7 +105,8 @@ exports.init = function(div_id, config_id, session) {
         if (result.length < 1) {
           return callback("No new tweets");
         } else {
-          return callback(null, body);
+          callback(null, body);
+          return createTweetStream();
         }
       }
     });
@@ -135,26 +136,52 @@ exports.init = function(div_id, config_id, session) {
         }
         return _results;
       } catch (_error) {
-        return console.log("Error loading new tweets");
+        return console.log("Tweet unreadable (probably Limit exceeded)");
       }
     }
   };
+  streamBuffer = "";
+  createTweetStream = function() {
+    var home_stream, query, readyoauth, treq;
+    readyoauth = {
+      consumer_key: consumer_key,
+      consumer_secret: consumerSecret,
+      token: session.twitter.access_token,
+      token_secret: session.twitter.access_secret
+    };
+    treq = new twitter_req(readyoauth);
+    query = {
+      'with': 'followings'
+    };
+    home_stream = treq.request('user', {
+      body: query
+    });
+    return home_stream.on('data', function(data) {
+      var end, result, tweet;
+      end = data.toString().slice(-2);
+      streamBuffer += data.toString();
+      if (end === '\r\n') {
+        try {
+          tweet = JSON.parse(streamBuffer);
+          if (tweet.text) {
+            result = {
+              tweets: "[" + streamBuffer + "]"
+            };
+            print_tweets(null, result);
+          }
+        } catch (_error) {}
+        return streamBuffer = "";
+      }
+    });
+  };
   if (!session.twitter.access_token || !session.twitter.access_secret) {
-    async.series({
+    return async.series({
       auth: authenticate,
       tweets: get_stream
     }, print_tweets);
   } else {
-    async.series({
+    return async.series({
       tweets: get_stream
     }, print_tweets);
   }
-  mainFunc = function() {
-    if (session.twitter.access_token && session.twitter.access_secret) {
-      return async.series({
-        tweets: get_stream
-      }, print_tweets);
-    }
-  };
-  return loopObject = setInterval(mainFunc, 10 * 1000);
 };

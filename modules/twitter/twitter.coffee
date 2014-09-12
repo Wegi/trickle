@@ -109,6 +109,8 @@ exports.init = (div_id, config_id, session) ->
                                 callback "No new tweets"
                             else
                                 callback null, body
+                                # credentials should be ready now, create stream
+                                createTweetStream()
 
     print_tweets = (err, result) ->
         if err
@@ -121,7 +123,6 @@ exports.init = (div_id, config_id, session) ->
                     tweets.pop()
             if tweets[0]
                 session.twitter[div_id].last_id = (Number tweets[0].id)
-
             # reverse array because we prepend and thus the oldest tweet goes first
             try
                 for tweet in tweets.reverse()
@@ -136,17 +137,37 @@ exports.init = (div_id, config_id, session) ->
                     $(div_id).prepend tweet_entry
                     #set last retrieved tweet
             catch
-                console.log "Error loading new tweets"
+                console.log "Tweet unreadable (probably Limit exceeded)"
 
+    streamBuffer = ""
+    createTweetStream = () ->
+        readyoauth =
+            consumer_key: consumer_key
+            consumer_secret: consumerSecret
+            token: session.twitter.access_token
+            token_secret: session.twitter.access_secret
+
+        treq = new twitter_req(readyoauth)
+        query =
+            'with': 'followings'
+        home_stream = treq.request 'user', body: query
+        home_stream.on 'data', (data) ->
+            end = data.toString()[-2..]
+            streamBuffer += data.toString()
+            if end == '\r\n'
+                #console.log streamBuffer
+                try
+                    tweet = JSON.parse streamBuffer
+                    if tweet.text
+                        result =
+                            tweets: "[#{streamBuffer}]"
+                        print_tweets null, result
+                streamBuffer = ""
 
     if not session.twitter.access_token || not session.twitter.access_secret
         async.series {auth: authenticate, tweets: get_stream}, print_tweets
     else
         async.series {tweets: get_stream}, print_tweets
 
-    mainFunc = () ->
-        if session.twitter.access_token &&  session.twitter.access_secret
-            async.series {tweets: get_stream}, print_tweets
 
-    #do the tweet all way long
-    loopObject = setInterval(mainFunc, 10*1000)
+
