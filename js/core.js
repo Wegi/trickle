@@ -188,6 +188,11 @@ config_dialogue_module_add = function(boxContentId, boxOuterId) {
   content += "</ul>";
   $(configDialogue).lightbox_me().html(content);
   return $(".module-single").click(function() {
+    if (session.boxes[boxOuterId].loaded_modules) {
+      if (__indexOf.call(session.boxes[boxOuterId].loaded_modules, modname) >= 0) {
+        return;
+      }
+    }
     return load_module($(this).attr("name"), boxContentId, boxOuterId);
   });
 };
@@ -278,11 +283,6 @@ create_module_list_items = function(module) {
 
 load_module = function(modname, boxContentId, boxOuterId) {
   var config, mod, moddir;
-  if (session.boxes[boxOuterId].loaded_modules) {
-    if (__indexOf.call(session.boxes[boxOuterId].loaded_modules, modname) >= 0) {
-      return;
-    }
-  }
   moddir = path.join(modpath, modname);
   config = load_conf(moddir);
   if (config) {

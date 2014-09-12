@@ -89,7 +89,7 @@ exports.init = (content_id, config_id, session) ->
             consumer_secret: consumerSecret
             token: session.twitter.access_token
             token_secret: session.twitter.access_secret
-
+        console.log "hey dick im where im supposed to be"
         treq = new twitter_req(readyoauth)
         #only get twees since last pull
         if not session.twitter[content_id].last_id
@@ -108,8 +108,8 @@ exports.init = (content_id, config_id, session) ->
                                 callback "No new tweets"
                             else
                                 callback null, body
-                                # credentials should be ready now, create stream
-                            createTweetStream()
+                        # credentials should be ready now, create stream
+                        createTweetStream()
 
     print_tweets = (err, result) ->
         if err
@@ -165,9 +165,12 @@ exports.init = (content_id, config_id, session) ->
                 streamBuffer = ""
         session.twitter[content_id].update_stream = update_stream
 
+    console.log "bottom"
     if not session.twitter.access_token || not session.twitter.access_secret
+        console.log "first"
         async.series {auth: authenticate, tweets: get_stream}, print_tweets
     else
+        console.log "second"
         async.series {tweets: get_stream}, print_tweets
 
 

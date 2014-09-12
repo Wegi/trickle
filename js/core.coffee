@@ -167,6 +167,9 @@ config_dialogue_module_add = (boxContentId, boxOuterId) ->
 
     # Add listener
     $(".module-single").click ->
+        if session.boxes[boxOuterId].loaded_modules
+            if modname in session.boxes[boxOuterId].loaded_modules
+                return # do not add modules that are already loaded
         load_module $(this).attr("name"), boxContentId, boxOuterId
 
 
@@ -259,9 +262,6 @@ create_module_list_items = (module) ->
 
 # Get into the module and look for config.json
 load_module = (modname, boxContentId, boxOuterId) ->
-    if session.boxes[boxOuterId].loaded_modules
-        if modname in session.boxes[boxOuterId].loaded_modules
-            return # do not add modules that are already loaded
     moddir = path.join(modpath, modname)
     config = load_conf moddir
 
