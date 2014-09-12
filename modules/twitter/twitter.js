@@ -21,7 +21,7 @@ gui = window.require('nw.gui');
 
 loopObject = {};
 
-exports.destroy = function(boxOuterId, config_id, session) {
+exports.destroy = function(boxOuterId, boxContentID, session) {
   var i;
   clearInterval(loopObject);
   $(boxOuterId).children('.trickle-twitter').remove();
@@ -29,7 +29,7 @@ exports.destroy = function(boxOuterId, config_id, session) {
   if (i !== -1) {
     session.boxes[boxOuterId].loaded_modules.splice(i, 1);
   }
-  return delete session.twitter[boxOuterId];
+  return delete session.twitter[boxContentID];
 };
 
 exports.init = function(content_id, config_id, session) {

@@ -281,7 +281,7 @@ destroy_module = (modname, boxContentId, boxOuterId) ->
         # Take hook and require it. This should be in a different function
         mod = require("./" + path.join(moddir, path.basename(config.hook, path.extname(config.hook))))
         # Destroy module
-        mod.destroy boxOuterId, "#config-box", session
+        mod.destroy boxOuterId, boxContentId, session
 
 
 # Load config of given module

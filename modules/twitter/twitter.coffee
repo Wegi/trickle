@@ -12,7 +12,7 @@ gui = window.require 'nw.gui'
 loopObject = { }   #may be wrong with multiple twitter boxes, check in future
 
 
-exports.destroy = (boxOuterId, config_id, session) ->
+exports.destroy = (boxOuterId, boxContentID, session) ->
     # stop updates
     clearInterval loopObject
     # kill all your posts
@@ -22,7 +22,7 @@ exports.destroy = (boxOuterId, config_id, session) ->
     if i != -1
         session.boxes[boxOuterId].loaded_modules.splice i, 1
     # delete your data
-    delete session.twitter[boxOuterId]
+    delete session.twitter[boxContentID]
 
 exports.init = (content_id, config_id, session) ->
     awaiting_config = false
