@@ -24,14 +24,14 @@ exports.destroy = (boxOuterId, config_id, session) ->
     # delete your data
     delete session.twitter[boxOuterId]
 
-exports.init = (boxOuterId, config_id, session) ->
+exports.init = (content_id, config_id, session) ->
     awaiting_config = false
     # create session namespace if there isn't one
     if not session.twitter
         session.twitter = {}
     # create window specific session namespace
-    if not session.twitter[boxOuterId]
-        session.twitter[boxOuterId] = {}
+    if not session.twitter[content_id]
+        session.twitter[content_id] = {}
 
     oauth = new OAuth(
           "https://api.twitter.com/oauth/request_token",
@@ -93,10 +93,10 @@ exports.init = (boxOuterId, config_id, session) ->
 
         treq = new twitter_req(readyoauth)
         #only get twees since last pull
-        if not session.twitter[boxOuterId].last_id
-            session.twitter[boxOuterId].last_id = 1
+        if not session.twitter[content_id].last_id
+            session.twitter[content_id].last_id = 1
         query =
-            since_id: session.twitter[boxOuterId].last_id,
+            since_id: session.twitter[content_id].last_id,
             count: 100
         console.log query
         treq.request 'statuses/home_timeline', query: query,
@@ -119,10 +119,10 @@ exports.init = (boxOuterId, config_id, session) ->
             tweets = JSON.parse result.tweets
             # kill the duplicate tweet
             if tweets[tweets.length-1]
-                if tweets[tweets.length-1].id == session.twitter[boxOuterId].last_id
+                if tweets[tweets.length-1].id == session.twitter[content_id].last_id
                     tweets.pop()
             if tweets[0]
-                session.twitter[boxOuterId].last_id = (Number tweets[0].id)
+                session.twitter[content_id].last_id = (Number tweets[0].id)
 
             # reverse array because we prepend and thus the oldest tweet goes first
             try
@@ -135,7 +135,7 @@ exports.init = (boxOuterId, config_id, session) ->
     <div class="col-md-12" style="padding-top: 0.5em; border-bottom: 1px solid #ccc;"></div>
 </div>
 """
-                    $(boxOuterId).prepend tweet_entry
+                    $(content_id).prepend tweet_entry
                     #set last retrieved tweet
             catch
                 console.log "Tweet unreadable (probably Limit exceeded)"

@@ -32,14 +32,14 @@ exports.destroy = function(boxOuterId, config_id, session) {
   return delete session.twitter[boxOuterId];
 };
 
-exports.init = function(boxOuterId, config_id, session) {
+exports.init = function(content_id, config_id, session) {
   var authenticate, awaiting_config, createTweetStream, get_stream, oauth, print_tweets, streamBuffer;
   awaiting_config = false;
   if (!session.twitter) {
     session.twitter = {};
   }
-  if (!session.twitter[boxOuterId]) {
-    session.twitter[boxOuterId] = {};
+  if (!session.twitter[content_id]) {
+    session.twitter[content_id] = {};
   }
   oauth = new OAuth("https://api.twitter.com/oauth/request_token", "https://api.twitter.com/oauth/access_token", consumer_key, consumerSecret, "1.0", "oob", "HMAC-SHA1");
   authenticate = function(callback) {
@@ -86,11 +86,11 @@ exports.init = function(boxOuterId, config_id, session) {
       token_secret: session.twitter.access_secret
     };
     treq = new twitter_req(readyoauth);
-    if (!session.twitter[boxOuterId].last_id) {
-      session.twitter[boxOuterId].last_id = 1;
+    if (!session.twitter[content_id].last_id) {
+      session.twitter[content_id].last_id = 1;
     }
     query = {
-      since_id: session.twitter[boxOuterId].last_id,
+      since_id: session.twitter[content_id].last_id,
       count: 100
     };
     console.log(query);
@@ -118,12 +118,12 @@ exports.init = function(boxOuterId, config_id, session) {
     } else {
       tweets = JSON.parse(result.tweets);
       if (tweets[tweets.length - 1]) {
-        if (tweets[tweets.length - 1].id === session.twitter[boxOuterId].last_id) {
+        if (tweets[tweets.length - 1].id === session.twitter[content_id].last_id) {
           tweets.pop();
         }
       }
       if (tweets[0]) {
-        session.twitter[boxOuterId].last_id = Number(tweets[0].id);
+        session.twitter[content_id].last_id = Number(tweets[0].id);
       }
       try {
         _ref = tweets.reverse();
@@ -132,7 +132,7 @@ exports.init = function(boxOuterId, config_id, session) {
           tweet = _ref[_i];
           user_img = tweet.user.profile_image_url;
           tweet_entry = "<div class=\"row trickle-twitter\" style=\"margin-bottom: 0.5em; margin-right: 0.5em;\">\n    <div class=\"col-md-2\"><img class=\"img-rounded \"src=\"" + user_img + "\" height=\"55\" width=\"55\"></div>\n    <div class=\"col-md-10\">" + tweet.text + "</div>\n    <div class=\"col-md-12\" style=\"padding-top: 0.5em; border-bottom: 1px solid #ccc;\"></div>\n</div>";
-          _results.push($(boxOuterId).prepend(tweet_entry));
+          _results.push($(content_id).prepend(tweet_entry));
         }
         return _results;
       } catch (_error) {
