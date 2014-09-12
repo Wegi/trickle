@@ -26,10 +26,6 @@ div#boxes div.box-content {
     border:1px solid rgba(255, 255, 255, 0.8);
 }
 
-.module-choser {
-    margin-bottom: 1em;
-}
-
 .icon {
     height: 1em;
     margin-right: 0.5em;

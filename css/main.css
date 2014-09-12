@@ -8,14 +8,18 @@ html, body {
 .config-dialogue-wrapper {
 
 }
-#config-dialogue {
+.config-dialogue {
     display: none;
     padding: 1em;
     border: 1px solid #aaa;
 }
-    #config-dialogue ul {
+    .config-dialogue ul {
         list-style-type: none;
         padding: 0;
+    }
+
+    .config-dialogue h3 {
+        padding-bottom: 0.5em;
     }
 
 .glyphicon-fade {

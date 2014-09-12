@@ -85,6 +85,7 @@ $("#control-menu-add").click ->
 
 # Show list of Modules, remove selected ones
 $("#control-menu-remove").click ->
+    list_loaded_modules()
 
 # Open configuration of Box containing all Modules to config
 $("#control-menu-config").click ->
@@ -92,8 +93,22 @@ $("#control-menu-config").click ->
 # Delete complete Box
 $("#control-menu-delete").click ->
 
-
 ### END Define Listeners ###
+
+list_loaded_modules = ->
+    modules = session.boxes[selectedBox].loaded_modules
+    content = "<h3>Remove modules from box</h3>"
+    content += "<div><ul id='config-box-list-modules'>"
+
+    for module in modules
+        content += create_module_list_items module
+    content += "</ul></div>"
+
+    $("#config-box-list-modules").selectable()
+
+    # Open Config Dialogue with content
+    $("#config-box").lightbox_me().html content
+
 
 # Path to the trickle-modules
 modpath = "./modules"
@@ -104,6 +119,7 @@ modules = []
 fs.readdir modpath, (err, files) ->
     throw err if err
     modules = files
+
 
 # Toggle highlighted box if selecting config
 toggle_highlighted_boxes = (thisBox) ->
@@ -135,40 +151,12 @@ toggle_highlighted_boxes = (thisBox) ->
 # List all modules
 list = (boxid, outer_id) ->
     # Header
-    content = "<h3 class='module-chooser'>Choose your module</h3>"
+    content = "<h3>Choose your module</h3>"
 
     content += "<ul>"
     for module in modules
         if (module.charAt 0) != '.'
-
-            config = load_conf path.join(modpath, module)
-
-            content += "<li class='module-entry'><a class='module-single' href='#' id='#{module}' name='#{module}'"
-
-            # Assign values from the correlated config.json
-            if config
-                name   = config.name
-                bcolor = config.color
-                icon   = path.join modpath, module, config.icon
-                icon_fa = config.icon_fa
-
-            # assign the color to the background
-            if bcolor != "" && bcolor
-                content += " style='background-color: #{bcolor};'"
-
-            content += ">"
-
-            # decide which icon has to be showed
-            if icon_fa
-                content += "<span class='fa #{icon_fa}'></span>&nbsp;"
-            else if icon
-                content += "<img class='icon' src='#{icon}' alt='#{module}' onerror='this.remove()'>"
-
-            # decide which name has to be showed
-            if name != "" && name
-                content += "#{name}</a></li>"
-            else
-                content += "#{module}</a></li>"
+            content += create_module_list_items module
 
     content += "</ul>"
 
@@ -178,6 +166,7 @@ list = (boxid, outer_id) ->
     # Add listener
     $(".module-single").click ->
         load_module $(this).attr("name"), boxid, outer_id
+
 
 # Get into the module and look for config.json
 load_module = (modname, boxid, outer_id) ->
@@ -210,12 +199,47 @@ load_conf = (moddir) ->
     return JSON.parse(config)
 
 
+# Creates colorized list items with corresponding icons from module's config.json
+create_module_list_items = (module) ->
+    config = load_conf path.join(modpath, module)
+    content = ""
+
+    content += "<li class='module-entry'><a class='module-single' href='#' name='#{module}'"
+
+    # Assign values from the correlated config.json
+    if config
+        name   = config.name
+        bcolor = config.color
+        icon   = path.join modpath, module, config.icon
+        icon_fa = config.icon_fa
+
+    # assign the color to the background
+    if bcolor != "" && bcolor
+        content += " style='background-color: #{bcolor};'"
+    content += ">"
+
+    # decide which icon has to be showed
+    if icon_fa
+        content += "<span class='fa #{icon_fa}'></span>&nbsp;"
+    else if icon
+        content += "<img class='icon' src='#{icon}' alt='#{module}' onerror='this.remove()'>"
+
+    # decide which name has to be showed
+    if name != "" && name
+        content += "#{name}</a></li>"
+    else
+        content += "#{module}</a></li>"
+
+    return content
+
+
 # Center boxes in window, use it with $("path").center()
 $.fn.center = ->
     @css "position", "absolute"
     @css "top", Math.max(0, (($(window).height() - $(this).outerHeight()) / 2) + $(window).scrollTop()) + "px"
     @css "left", Math.max(0, (($(window).width() - $(this).outerWidth()) / 2) + $(window).scrollLeft()) + "px"
     this
+
 
 ### Core Logic (Startup and Close) ###
 
