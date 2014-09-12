@@ -9,12 +9,11 @@ twitter_req = require 'twitter-request'
 async = require 'async'
 $ = require 'jquery'
 gui = window.require 'nw.gui'
-loopObject = { }   #may be wrong with multiple twitter boxes, check in future
 
 
-exports.destroy = (boxOuterId, boxContentID, session) ->
+exports.destroy = (boxOuterId, boxContentId, session) ->
     # stop updates
-    clearInterval loopObject
+    session.twitter[boxContentId].update_stream.removeAllListeners 'data'
     # kill all your posts
     $(boxOuterId).children('.trickle-twitter').remove()
     # remove from loaded modules
@@ -22,7 +21,7 @@ exports.destroy = (boxOuterId, boxContentID, session) ->
     if i != -1
         session.boxes[boxOuterId].loaded_modules.splice i, 1
     # delete your data
-    delete session.twitter[boxContentID]
+    delete session.twitter[boxContentId]
 
 exports.init = (content_id, config_id, session) ->
     awaiting_config = false
@@ -151,12 +150,12 @@ exports.init = (content_id, config_id, session) ->
         treq = new twitter_req(readyoauth)
         query =
             'with': 'followings'
-        home_stream = treq.request 'user', body: query
-        home_stream.on 'data', (data) ->
+        update_stream = treq.request 'user', body: query
+        update_stream.on 'data', (data) ->
             end = data.toString()[-2..]
             streamBuffer += data.toString()
             if end == '\r\n'
-                #console.log streamBuffer
+                console.log streamBuffer
                 try
                     tweet = JSON.parse streamBuffer
                     if tweet.text
@@ -164,6 +163,7 @@ exports.init = (content_id, config_id, session) ->
                             tweets: "[#{streamBuffer}]"
                         print_tweets null, result
                 streamBuffer = ""
+        session.twitter[content_id].update_stream = update_stream
 
     if not session.twitter.access_token || not session.twitter.access_secret
         async.series {auth: authenticate, tweets: get_stream}, print_tweets
