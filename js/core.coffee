@@ -61,7 +61,7 @@ createBox = (numBoxes) ->
 
     # Show list of Modules (Only do if init is done)
     if init_done
-        list "#box-content-#{numBoxes}", "#box-#{numBoxes}"
+        config_dialogue_module_add "#box-content-#{numBoxes}", "#box-#{numBoxes}"
 
     # Configure mouseclick event on Preference button in box
     $("div.box-control span#box-control-button-#{numBoxes}").click ->
@@ -81,11 +81,11 @@ $("#new-box").click ->
 # Add new Module to Box
 $("#control-menu-add").click ->
     contentDiv = "#" + $(selectedBox).children("div.box-content").prop "id"
-    list contentDiv, selectedBox
+    config_dialogue_module_add contentDiv, selectedBox
 
 # Show list of Modules, remove selected ones
 $("#control-menu-remove").click ->
-    list_loaded_modules()
+    config_dialogue_module_removal()
 
 # Open configuration of Box containing all Modules to config
 $("#control-menu-config").click ->
@@ -94,21 +94,6 @@ $("#control-menu-config").click ->
 $("#control-menu-delete").click ->
 
 ### END Define Listeners ###
-
-list_loaded_modules = ->
-    modules = session.boxes[selectedBox].loaded_modules
-    content = "<h3>Remove modules from box</h3>"
-    content += "<div><ul id='config-box-list-modules'>"
-
-    for module in modules
-        content += create_module_list_items module
-    content += "</ul></div>"
-
-    $("#config-box-list-modules").selectable()
-
-    # Open Config Dialogue with content
-    $("#config-box").lightbox_me().html content
-
 
 # Path to the trickle-modules
 modpath = "./modules"
@@ -148,26 +133,6 @@ toggle_highlighted_boxes = (thisBox) ->
         selectedBox = thisBox
 
 
-# List all modules
-list = (boxid, outer_id) ->
-    # Header
-    content = "<h3>Choose your module</h3>"
-
-    content += "<ul>"
-    for module in modules
-        if (module.charAt 0) != '.'
-            content += create_module_list_items module
-
-    content += "</ul>"
-
-    # Open Config Dialogue with content
-    $(configDialogue).lightbox_me().html content
-
-    # Add listener
-    $(".module-single").click ->
-        load_module $(this).attr("name"), boxid, outer_id
-
-
 # Get into the module and look for config.json
 load_module = (modname, boxid, outer_id) ->
     if session.boxes[outer_id].loaded_modules
@@ -202,9 +167,7 @@ load_conf = (moddir) ->
 # Creates colorized list items with corresponding icons from module's config.json
 create_module_list_items = (module) ->
     config = load_conf path.join(modpath, module)
-    content = ""
-
-    content += "<li class='module-entry'><a class='module-single' href='#' name='#{module}'"
+    content = "<li class='module-entry'><a class='module-single' href='#' name='#{module}'"
 
     # Assign values from the correlated config.json
     if config
@@ -241,13 +204,52 @@ $.fn.center = ->
     this
 
 
+### Config Dialogue Logic ###
+
+# List all modules to add them to a box
+config_dialogue_module_add = (boxid, outer_id) ->
+    # Header
+    content = "<h3>Choose your module</h3>"
+
+    content += "<ul>"
+    for module in modules
+        if (module.charAt 0) != '.'
+            content += create_module_list_items module
+
+    content += "</ul>"
+
+    # Open Config Dialogue with content
+    $(configDialogue).lightbox_me().html content
+
+    # Add listener
+    $(".module-single").click ->
+        load_module $(this).attr("name"), boxid, outer_id
+
+
+# Show all modules for removal
+config_dialogue_module_removal = ->
+    modules = session.boxes[selectedBox].loaded_modules
+    content = "<h3>Remove modules from box</h3>"
+    content += "<div><ul id='config-box-list-modules'>"
+
+    for module in modules
+        content += create_module_list_items module
+    content += "</ul></div>"
+
+    $("#config-box-list-modules").selectable()
+
+    # Open Config Dialogue with content
+    $("#config-box").lightbox_me().html content
+
+### END Config Dialogue Logic ###
+
 ### Core Logic (Startup and Close) ###
 
 getNumFromName = (name) ->
     pattern = /^#.*-(\d+)$/
     Number name.match(pattern)[1]
 
-#restore all old windows
+# Restore all old windows
 for boxName, value of session.boxes
     child_content = value.content_child
     num = getNumFromName boxName
@@ -256,11 +258,11 @@ for boxName, value of session.boxes
     $(child_content).html value.content
     $(boxName).css 'heigth', value.size.height
     $(boxName).css 'width', value.size.width
-    if value.loaded_modules #check for empty windows
+    if value.loaded_modules # Check for empty windows
         for module in value.loaded_modules
             load_module module, child_content, boxName
 
-init_done = true  #set when all session startup is done
+init_done = true  # Set when all session startup is done
 
 # Get the current window
 win = gui.Window.get()
@@ -288,3 +290,5 @@ win.on "close", ->
     jsonified = JSON.stringify(session, null, 4)
     fs.writeFileSync home_path+'/.trickle/session.json', jsonified, 'utf8'
     gui.App.quit()
+
+### END Core Logic (Startup and Close) ###
