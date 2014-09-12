@@ -41,6 +41,13 @@ getNextNum = () ->
     num++ while num in session.present_boxes
     num
 
+# Center boxes in window, use it with $("path").center()
+$.fn.center = ->
+    @css "position", "absolute"
+    @css "top", Math.max(0, (($(window).height() - $(this).outerHeight()) / 2) + $(window).scrollTop()) + "px"
+    @css "left", Math.max(0, (($(window).width() - $(this).outerWidth()) / 2) + $(window).scrollLeft()) + "px"
+    this
+
 # Make boxes draggable and resizable
 createBox = (numBoxes) ->
     if not session.boxes
@@ -146,7 +153,6 @@ config_dialogue_module_add = (boxContentId, boxOuterId) ->
     for module in modules
         if (module.charAt 0) != '.'
             content += create_module_list_items module
-
     content += "</ul>"
 
     # Open Config Dialogue with content
@@ -157,8 +163,9 @@ config_dialogue_module_add = (boxContentId, boxOuterId) ->
         load_module $(this).attr("name"), boxContentId, boxOuterId
 
 
-# Show all modules for removal
+# Destroy modules from a box
 config_dialogue_module_removal = (boxContentId, boxOuterId) ->
+    configBox = "#config-box"
     modules = session.boxes[selectedBox].loaded_modules
     content = "<h3>Remove modules from box</h3>"
     content += "<div><ul id='config-box-list-modules'>"
@@ -170,11 +177,14 @@ config_dialogue_module_removal = (boxContentId, boxOuterId) ->
     $("#config-box-list-modules").selectable()
 
     # Open Config Dialogue with content
-    $("#config-box").lightbox_me().html content
+    $(configBox).lightbox_me().html content
 
     # Add listener
     $(".module-single").click ->
         destroy_module $(this).attr("name"), boxContentId, boxOuterId
+        $(configBox).html "<span class='btn'><span class='glyphicon glyphicon-ok'></span> Module successfully removed.</span>"
+        closeConfigDialogue = -> $(configBox).trigger "close"
+        setTimeout closeConfigDialogue, 2000
 
 
 # Creates colorized list items with corresponding icons from module's config.json
@@ -239,18 +249,8 @@ destroy_module = (modname, boxContentId, boxOuterId) ->
     if config
         # Take hook and require it. This should be in a different function
         mod = require("./" + path.join(moddir, path.basename(config.hook, path.extname(config.hook))))
-
-        console.log "Before:"
-        console.log session.boxes[boxOuterId].loaded_modules
-
-        console.log session
-
         # Destroy module
         mod.destroy boxOuterId, "#config-box", session
-
-        console.log "After:"
-        console.log session.boxes[boxOuterId].loaded_modules
-
 
 
 # Load config of given module
@@ -312,17 +312,3 @@ win.on "close", ->
     gui.App.quit()
 
 ### END Core Logic (Startup and Close) ###
-
-### Extend Coffeescript Arrays ###
-# Removes one item if found. Example:
-# a = [1,2,3]; a.remove 1;
-# Then a is [2,3]. No need to reassign array
-Array::remove = (e) -> @[t..t] = [] if (t = @indexOf(e)) > -1
-
-### Extend jQuery ###
-# Center boxes in window, use it with $("path").center()
-$.fn.center = ->
-    @css "position", "absolute"
-    @css "top", Math.max(0, (($(window).height() - $(this).outerHeight()) / 2) + $(window).scrollTop()) + "px"
-    @css "left", Math.max(0, (($(window).width() - $(this).outerWidth()) / 2) + $(window).scrollLeft()) + "px"
-    this

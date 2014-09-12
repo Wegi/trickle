@@ -57,6 +57,13 @@ getNextNum = function() {
   return num;
 };
 
+$.fn.center = function() {
+  this.css("position", "absolute");
+  this.css("top", Math.max(0, (($(window).height() - $(this).outerHeight()) / 2) + $(window).scrollTop()) + "px");
+  this.css("left", Math.max(0, (($(window).width() - $(this).outerWidth()) / 2) + $(window).scrollLeft()) + "px");
+  return this;
+};
+
 createBox = function(numBoxes) {
   var box, defaultContent;
   if (!session.boxes) {
@@ -177,7 +184,8 @@ config_dialogue_module_add = function(boxContentId, boxOuterId) {
 };
 
 config_dialogue_module_removal = function(boxContentId, boxOuterId) {
-  var content, module, _i, _len;
+  var configBox, content, module, _i, _len;
+  configBox = "#config-box";
   modules = session.boxes[selectedBox].loaded_modules;
   content = "<h3>Remove modules from box</h3>";
   content += "<div><ul id='config-box-list-modules'>";
@@ -187,9 +195,15 @@ config_dialogue_module_removal = function(boxContentId, boxOuterId) {
   }
   content += "</ul></div>";
   $("#config-box-list-modules").selectable();
-  $("#config-box").lightbox_me().html(content);
+  $(configBox).lightbox_me().html(content);
   return $(".module-single").click(function() {
-    return destroy_module($(this).attr("name"), boxContentId, boxOuterId);
+    var closeConfigDialogue;
+    destroy_module($(this).attr("name"), boxContentId, boxOuterId);
+    $(configBox).html("<span class='btn'><span class='glyphicon glyphicon-ok'></span> Module successfully removed.</span>");
+    closeConfigDialogue = function() {
+      return $(configBox).trigger("close");
+    };
+    return setTimeout(closeConfigDialogue, 2000);
   });
 };
 
@@ -247,12 +261,7 @@ destroy_module = function(modname, boxContentId, boxOuterId) {
   config = load_conf(moddir);
   if (config) {
     mod = require("./" + path.join(moddir, path.basename(config.hook, path.extname(config.hook))));
-    console.log("Before:");
-    console.log(session.boxes[boxOuterId].loaded_modules);
-    console.log(session);
-    mod.destroy(boxOuterId, "#config-box", session);
-    console.log("After:");
-    return console.log(session.boxes[boxOuterId].loaded_modules);
+    return mod.destroy(boxOuterId, "#config-box", session);
   }
 };
 
@@ -330,23 +339,3 @@ win.on("close", function() {
 
 
 /* END Core Logic (Startup and Close) */
-
-
-/* Extend Coffeescript Arrays */
-
-Array.prototype.remove = function(e) {
-  var t, _ref2;
-  if ((t = this.indexOf(e)) > -1) {
-    return ([].splice.apply(this, [t, t - t + 1].concat(_ref2 = [])), _ref2);
-  }
-};
-
-
-/* Extend jQuery */
-
-$.fn.center = function() {
-  this.css("position", "absolute");
-  this.css("top", Math.max(0, (($(window).height() - $(this).outerHeight()) / 2) + $(window).scrollTop()) + "px");
-  this.css("left", Math.max(0, (($(window).width() - $(this).outerWidth()) / 2) + $(window).scrollLeft()) + "px");
-  return this;
-};
