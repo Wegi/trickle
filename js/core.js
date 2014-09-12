@@ -218,10 +218,10 @@ create_module_list_items = function(module) {
   return content;
 };
 
-load_module = function(modname, boxid, outer_id) {
+load_module = function(modname, boxContentId, boxOuterId) {
   var config, mod, moddir;
-  if (session.boxes[outer_id].loaded_modules) {
-    if (__indexOf.call(session.boxes[outer_id].loaded_modules, modname) >= 0) {
+  if (session.boxes[boxOuterId].loaded_modules) {
+    if (__indexOf.call(session.boxes[boxOuterId].loaded_modules, modname) >= 0) {
       return;
     }
   }
@@ -229,28 +229,28 @@ load_module = function(modname, boxid, outer_id) {
   config = load_conf(moddir);
   if (config) {
     mod = require("./" + path.join(moddir, path.basename(config.hook, path.extname(config.hook))));
-    mod.init(boxid, configDialogue, session);
-    if (!session.boxes[outer_id].loaded_modules) {
-      session.boxes[outer_id].loaded_modules = [];
+    mod.init(boxContentId, configDialogue, session);
+    if (!session.boxes[boxOuterId].loaded_modules) {
+      session.boxes[boxOuterId].loaded_modules = [];
     }
-    if (__indexOf.call(session.boxes[outer_id].loaded_modules, modname) < 0) {
-      return session.boxes[outer_id].loaded_modules.push(modname);
+    if (__indexOf.call(session.boxes[boxOuterId].loaded_modules, modname) < 0) {
+      return session.boxes[boxOuterId].loaded_modules.push(modname);
     }
   }
 };
 
-destroy_module = function(modname, boxid, outer_id) {
+destroy_module = function(modname, boxContentId, boxOuterId) {
   var config, mod, moddir;
   moddir = path.join(modpath, modname);
   config = load_conf(moddir);
   if (config) {
     mod = require("./" + path.join(moddir, path.basename(config.hook, path.extname(config.hook))));
-    mod.destroy(boxid, "#config-box", session);
-    if (!session.boxes[outer_id].loaded_modules) {
-      session.boxes[outer_id].loaded_modules = [];
+    mod.destroy(boxContentId, "#config-box", session);
+    if (!session.boxes[boxOuterId].loaded_modules) {
+      session.boxes[boxOuterId].loaded_modules = [];
     }
-    if (__indexOf.call(session.boxes[outer_id].loaded_modules, modname) < 0) {
-      return session.boxes[outer_id].loaded_modules.push(modname);
+    if (__indexOf.call(session.boxes[boxOuterId].loaded_modules, modname) < 0) {
+      return session.boxes[boxOuterId].loaded_modules.push(modname);
     }
   }
 };

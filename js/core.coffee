@@ -209,9 +209,9 @@ create_module_list_items = (module) ->
 
 
 # Get into the module and look for config.json
-load_module = (modname, boxid, outer_id) ->
-    if session.boxes[outer_id].loaded_modules
-        if modname in session.boxes[outer_id].loaded_modules
+load_module = (modname, boxContentId, boxOuterId) ->
+    if session.boxes[boxOuterId].loaded_modules
+        if modname in session.boxes[boxOuterId].loaded_modules
             return # do not add modules that are already loaded
     moddir = path.join(modpath, modname)
     config = load_conf moddir
@@ -221,17 +221,17 @@ load_module = (modname, boxid, outer_id) ->
         mod = require("./" + path.join(moddir, path.basename(config.hook, path.extname(config.hook))))
 
         # Load module
-        mod.init boxid, configDialogue, session
+        mod.init boxContentId, configDialogue, session
 
         #tell core that you loaded module
-        if not session.boxes[outer_id].loaded_modules
-            session.boxes[outer_id].loaded_modules = [ ]
-        if modname not in session.boxes[outer_id].loaded_modules
-            session.boxes[outer_id].loaded_modules.push modname
+        if not session.boxes[boxOuterId].loaded_modules
+            session.boxes[boxOuterId].loaded_modules = [ ]
+        if modname not in session.boxes[boxOuterId].loaded_modules
+            session.boxes[boxOuterId].loaded_modules.push modname
 
 
 # Get into the module and look for config.json
-destroy_module = (modname, boxid, outer_id) ->
+destroy_module = (modname, boxContentId, boxOuterId) ->
     moddir = path.join(modpath, modname)
     config = load_conf moddir
 
@@ -240,13 +240,13 @@ destroy_module = (modname, boxid, outer_id) ->
         mod = require("./" + path.join(moddir, path.basename(config.hook, path.extname(config.hook))))
 
         # Load module
-        mod.destroy boxid, "#config-box", session
+        mod.destroy boxContentId, "#config-box", session
 
         # Tell core that you loaded module
-        if not session.boxes[outer_id].loaded_modules
-            session.boxes[outer_id].loaded_modules = [ ]
-        if modname not in session.boxes[outer_id].loaded_modules
-            session.boxes[outer_id].loaded_modules.push modname
+        if not session.boxes[boxOuterId].loaded_modules
+            session.boxes[boxOuterId].loaded_modules = [ ]
+        if modname not in session.boxes[boxOuterId].loaded_modules
+            session.boxes[boxOuterId].loaded_modules.push modname
 
 
 # Load config of given module
