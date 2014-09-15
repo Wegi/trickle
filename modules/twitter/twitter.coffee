@@ -13,7 +13,8 @@ gui = window.require 'nw.gui'
 
 exports.destroy = (boxOuterId, boxContentId, session) ->
     # stop updates
-    session.twitter[boxContentId].update_stream.removeAllListeners 'data'
+    if session.twitter[boxContentId].update_stream
+        session.twitter[boxContentId].update_stream.removeAllListeners 'data'
     # kill all your posts
     $(boxContentId).children('.trickle-twitter').remove()
     # remove from loaded modules
