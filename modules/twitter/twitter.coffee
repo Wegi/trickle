@@ -127,13 +127,19 @@ exports.init = (content_id, config_id, session) ->
             try
                 for tweet in tweets.reverse()
                     user_img = tweet.user.profile_image_url
-                    tweet_entry = """
-<div class="row trickle-twitter" style="margin-bottom: 0.5em; margin-right: 0.5em;">
-    <div class="col-md-2"><img class="img-rounded "src="#{user_img}" height="55" width="55"></div>
-    <div class="col-md-10">#{tweet.text}</div>
-    <div class="col-md-12" style="padding-top: 0.5em; border-bottom: 1px solid #ccc;"></div>
-</div>
-"""
+                    tweet_entry = """<div class="row trickle-twitter" style="margin-bottom: 0.5em; margin-right: 0.5em;">"""
+                    if tweet.retweeted_status
+                        tweet_entry += """<div class="col-md-2"><img class="img-rounded "src="#{tweet.retweeted_status.user.profile_image_url}" height="55" width="55"></div>"""
+                        tweet_entry += """<div class="col-md-10"><div class="row"><div class="col-md-12"><strong>#{tweet.retweeted_status.user.name}</strong> <small>@#{tweet.retweeted_status.user.screen_name} (retweeted by #{tweet.user.name})</small></div></div> """
+                        tweet_entry += """<div class="row"><div class="col-md-12">#{tweet.retweeted_status.text}</div></div>"""
+                    else
+                        tweet_entry += """<div class="col-md-2"><img class="img-rounded "src="#{user_img}" height="55" width="55"></div>"""
+                        tweet_entry += """<div class="col-md-10"><div class="row"><div class="col-md-12"><strong>#{tweet.user.name}</strong> <small>@#{tweet.user.screen_name}</small></div></div> """
+                        tweet_entry += """<div class="row"><div class="col-md-12">#{tweet.text}</div></div>"""
+                    tweet_entry += """</div>"""
+                    tweet_entry += """<div class="row" style="margin-right: 0.5em;">"""
+                    tweet_entry += """<div class="col-md-12" style="padding-top: 0.5em; padding-right: 0.5em; border-bottom: 1px solid #ccc;"></div></div>"""
+
                     $(content_id).prepend tweet_entry
                     #set last retrieved tweet
             catch

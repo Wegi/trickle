@@ -323,9 +323,10 @@ destroy_module = (modname, boxContentId, boxOuterId) ->
 load_conf = (moddir) ->
     try
         config = fs.readFileSync path.join(moddir, "config.json"), "utf8"
+        result = JSON.parse(config)
     catch e
-        config = null
-    return JSON.parse(config)
+        result = ""
+    return result
 
 ### END Config Dialogue Logic ###
 

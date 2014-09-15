@@ -341,14 +341,15 @@ destroy_module = function(modname, boxContentId, boxOuterId) {
 };
 
 load_conf = function(moddir) {
-  var config, e;
+  var config, e, result;
   try {
     config = fs.readFileSync(path.join(moddir, "config.json"), "utf8");
+    result = JSON.parse(config);
   } catch (_error) {
     e = _error;
-    config = null;
+    result = "";
   }
-  return JSON.parse(config);
+  return result;
 };
 
 
