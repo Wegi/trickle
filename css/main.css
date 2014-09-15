@@ -21,7 +21,9 @@ html, body {
     .config-dialogue h3 {
         padding-bottom: 0.5em;
     }
-
+#config-tabs ul li {
+    display: inline;
+}
 .glyphicon-fade {
     opacity: 0.3;
     transition: opacity .25s ease-in-out;

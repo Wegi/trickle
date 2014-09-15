@@ -324,7 +324,7 @@ load_module = function(modname, boxContentId, boxOuterId, configWindow) {
     }
     if (!showConfig) {
       selectConfigBox = "config-" + boxOuterId.slice(1);
-      $("#config-tabs").children("span").append("<a href='#" + selectConfigBox + "-" + modname + "'>" + modname + "</a>");
+      $("#config-tabs-ul").append("<li><a href='#" + selectConfigBox + "-" + modname + "'>" + modname + "</a></li>");
       return $("#" + selectConfigBox).append("<div id='" + selectConfigBox + "-" + modname + "'></div>");
     }
   }

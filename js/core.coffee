@@ -303,7 +303,7 @@ load_module = (modname, boxContentId, boxOuterId, configWindow) ->
         if not showConfig
             # Prepare configuration window for each module in a box
             selectConfigBox = "config-" + boxOuterId[1..]
-            $("#config-tabs").children("span").append "<a href='##{selectConfigBox}-#{modname}'>#{modname}</a>"
+            $("#config-tabs-ul").append "<li><a href='##{selectConfigBox}-#{modname}'>#{modname}</a></li>"
             $("#"+selectConfigBox).append "<div id='#{selectConfigBox}-#{modname}'></div>"
 
 
