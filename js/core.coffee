@@ -10,6 +10,7 @@ path = require "path"
 ### Core Logic Preparations ###
 # Set Startup-Parameters
 init_done = false
+showConfig = false
 
 # Get Home PATH
 home_path = process.env.HOME || process.env.HOMEPATH || process.env.USERPROFILE
@@ -30,7 +31,6 @@ catch
         boxes: { }
 
 ### General Commands ###
-showConfig = false
 $ ->
     $("#config-tabs").tabs();
 
@@ -71,7 +71,7 @@ createBox = (numBoxes) ->
 
     # Append box to boxes-div
     $("#boxes").append defaultContent
-    $("#config-tabs").append "<div id='config-box-#{numBoxes}'></div>"
+    $("#config-tabs").append "<div id='config-box-#{numBoxes}-tabs'><ul></ul></div>"
 
     # Set options to each box
     box = $("#box-#{numBoxes}").draggable(grid: [10, 10]).resizable(grid: 10).center()
@@ -188,10 +188,19 @@ config_dialogue_module_add = (boxContentId, boxOuterId) ->
 
 # Show Config Dialogue
 config_dialogue_edit = (boxContentId, boxOuterId) ->
-    for module in modules
-        if (module.charAt 0) != '.'
-            load_module module, boxContentId, boxOuterId, "#config-" + boxOuterId[1..] + "-" + module
-    $("#config-tabs").lightbox_me()
+    tempLoadedModules = session.boxes[boxOuterId].loaded_modules
+    if not tempLoadedModules or tempLoadedModules.length == 0
+        $("#config-empty").lightbox_me()
+        closeConfigDialogue = -> $("#config-empty").trigger "close"
+        setTimeout closeConfigDialogue, 2000
+    else
+        for module in modules
+            if (module.charAt 0) != '.'
+                load_module module, boxContentId, boxOuterId, "#config-" + boxOuterId[1..] + "-" + module
+
+        selectConfigBoxTabs = "#config-"+boxOuterId[1..]+"-tabs"
+        $(selectConfigBoxTabs).tabs().lightbox_me()
+
     showConfig = false
 
 
@@ -240,6 +249,7 @@ config_dialogue_box_remove = (boxContentId, boxOuterId) ->
             destroy_module module, boxContentId, boxOuterId
         delete session.boxes[selectedBox]
         $(selectedBox).remove()
+        $("#config-"+boxOuterId[1..]).remove()
         toggle_highlighted_boxes selectedBox
         selectedBox = undefined
         $(configBox).html "<span class='btn'><span class='glyphicon glyphicon-ok'></span> Box successfully removed.</span>"
@@ -271,13 +281,9 @@ create_module_list_items = (module) ->
     if icon_fa
         content += "<span class='fa #{icon_fa}'></span>&nbsp;"
     else if icon
-        content += "<img class='icon' src='#{icon}' alt='#{module}' onerror='this.remove()'>"
+        content += "<img class='icon' src='#{icon}' alt='#{name}' onerror='this.remove()'>"
 
-    # Decide which name has to be shown
-    if name != "" && name
-        content += "#{name}</a></li>"
-    else
-        content += "#{module}</a></li>"
+    content += "#{name}</a></li>"
 
     return content
 
@@ -302,9 +308,9 @@ load_module = (modname, boxContentId, boxOuterId, configWindow) ->
 
         if not showConfig
             # Prepare configuration window for each module in a box
-            selectConfigBox = "config-" + boxOuterId[1..]
-            $("#config-tabs-ul").append "<li><a href='##{selectConfigBox}-#{modname}'>#{modname}</a></li>"
-            $("#"+selectConfigBox).append "<div id='#{selectConfigBox}-#{modname}'></div>"
+            selectConfigBox = "#config-" + boxOuterId[1..]
+            $(selectConfigBox+"-tabs ul").append "<li><a href='#{selectConfigBox}-#{modname}'>#{config.name}</a></li>"
+            $(selectConfigBox+"-tabs").append "<div id='" + selectConfigBox[1..] + "-#{modname}'></div>"
 
 
 # Get into the module and look for config.json

@@ -15,6 +15,8 @@ path = require("path");
 
 init_done = false;
 
+showConfig = false;
+
 home_path = process.env.HOME || process.env.HOMEPATH || process.env.USERPROFILE;
 
 if (!fs.existsSync(home_path + '/.trickle')) {
@@ -37,8 +39,6 @@ try {
 
 
 /* General Commands */
-
-showConfig = false;
 
 $(function() {
   return $("#config-tabs").tabs();
@@ -83,7 +83,7 @@ createBox = function(numBoxes) {
   }
   defaultContent = "<div class='draggable ui-widget-content box' id='box-" + numBoxes + "' style='z-index: " + (baseZIndex + numBoxes) + "'>\n    <div class='box-control'>\n        <span id='box-control-button-" + numBoxes + "' class='glyphicon glyphicon-cog glyphicon-fade box-control-button'></span>\n    </div>\n    <div class='box-content' id='box-content-" + numBoxes + "'></div>\n</div>";
   $("#boxes").append(defaultContent);
-  $("#config-tabs").append("<div id='config-box-" + numBoxes + "'></div>");
+  $("#config-tabs").append("<div id='config-box-" + numBoxes + "-tabs'><ul></ul></div>");
   box = $("#box-" + numBoxes).draggable({
     grid: [10, 10]
   }).resizable({
@@ -214,14 +214,24 @@ config_dialogue_module_add = function(boxContentId, boxOuterId) {
 };
 
 config_dialogue_edit = function(boxContentId, boxOuterId) {
-  var module, _i, _len;
-  for (_i = 0, _len = modules.length; _i < _len; _i++) {
-    module = modules[_i];
-    if ((module.charAt(0)) !== '.') {
-      load_module(module, boxContentId, boxOuterId, "#config-" + boxOuterId.slice(1) + "-" + module);
+  var closeConfigDialogue, module, selectConfigBoxTabs, tempLoadedModules, _i, _len;
+  tempLoadedModules = session.boxes[boxOuterId].loaded_modules;
+  if (!tempLoadedModules || tempLoadedModules.length === 0) {
+    $("#config-empty").lightbox_me();
+    closeConfigDialogue = function() {
+      return $("#config-empty").trigger("close");
+    };
+    setTimeout(closeConfigDialogue, 2000);
+  } else {
+    for (_i = 0, _len = modules.length; _i < _len; _i++) {
+      module = modules[_i];
+      if ((module.charAt(0)) !== '.') {
+        load_module(module, boxContentId, boxOuterId, "#config-" + boxOuterId.slice(1) + "-" + module);
+      }
     }
+    selectConfigBoxTabs = "#config-" + boxOuterId.slice(1) + "-tabs";
+    $(selectConfigBoxTabs).tabs().lightbox_me();
   }
-  $("#config-tabs").lightbox_me();
   return showConfig = false;
 };
 
@@ -269,6 +279,7 @@ config_dialogue_box_remove = function(boxContentId, boxOuterId) {
     }
     delete session.boxes[selectedBox];
     $(selectedBox).remove();
+    $("#config-" + boxOuterId.slice(1)).remove();
     toggle_highlighted_boxes(selectedBox);
     selectedBox = void 0;
     $(configBox).html("<span class='btn'><span class='glyphicon glyphicon-ok'></span> Box successfully removed.</span>");
@@ -299,13 +310,9 @@ create_module_list_items = function(module) {
   if (icon_fa) {
     content += "<span class='fa " + icon_fa + "'></span>&nbsp;";
   } else if (icon) {
-    content += "<img class='icon' src='" + icon + "' alt='" + module + "' onerror='this.remove()'>";
+    content += "<img class='icon' src='" + icon + "' alt='" + name + "' onerror='this.remove()'>";
   }
-  if (name !== "" && name) {
-    content += "" + name + "</a></li>";
-  } else {
-    content += "" + module + "</a></li>";
-  }
+  content += "" + name + "</a></li>";
   return content;
 };
 
@@ -323,9 +330,9 @@ load_module = function(modname, boxContentId, boxOuterId, configWindow) {
       session.boxes[boxOuterId].loaded_modules.push(modname);
     }
     if (!showConfig) {
-      selectConfigBox = "config-" + boxOuterId.slice(1);
-      $("#config-tabs-ul").append("<li><a href='#" + selectConfigBox + "-" + modname + "'>" + modname + "</a></li>");
-      return $("#" + selectConfigBox).append("<div id='" + selectConfigBox + "-" + modname + "'></div>");
+      selectConfigBox = "#config-" + boxOuterId.slice(1);
+      $(selectConfigBox + "-tabs ul").append("<li><a href='" + selectConfigBox + "-" + modname + "'>" + config.name + "</a></li>");
+      return $(selectConfigBox + "-tabs").append("<div id='" + selectConfigBox.slice(1) + ("-" + modname + "'></div>"));
     }
   }
 };
