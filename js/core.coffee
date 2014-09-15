@@ -29,6 +29,12 @@ catch
     session =
         boxes: { }
 
+### General Commands ###
+showConfig = false
+$ ->
+    $("#config-tabs").tabs();
+
+
 ### Boxes Logic ###
 baseZIndex = 50
 configDialogue = "#config-dialogue"
@@ -63,7 +69,11 @@ createBox = (numBoxes) ->
         </div>
     """
 
+    # Append box to boxes-div
     $("#boxes").append defaultContent
+    $("#config-tabs").append "<div id='config-box-#{numBoxes}'></div>"
+
+    # Set options to each box
     box = $("#box-#{numBoxes}").draggable(grid: [10, 10]).resizable(grid: 10).center()
 
     # Show list of Modules (Only do if init is done)
@@ -74,7 +84,7 @@ createBox = (numBoxes) ->
     $("div.box-control span#box-control-button-#{numBoxes}").click ->
         # Set selected Box
         thisBox = "#" + $(this).parent().parent().prop "id"
-        toggle_highlighted_boxes(thisBox)
+        toggle_highlighted_boxes thisBox
 
     if numBoxes not in session.present_boxes
         session.present_boxes.push numBoxes
@@ -97,6 +107,9 @@ $("#control-menu-remove").click ->
 
 # Open configuration of Box containing all Modules to config
 $("#control-menu-config").click ->
+    showConfig = true
+    boxContentId = "#" + $(selectedBox).children("div.box-content").prop "id"
+    config_dialogue_edit boxContentId, selectedBox
 
 # Delete complete Box
 $("#control-menu-delete").click ->
@@ -170,7 +183,16 @@ config_dialogue_module_add = (boxContentId, boxOuterId) ->
         if session.boxes[boxOuterId].loaded_modules
             if $(this).attr("name") in session.boxes[boxOuterId].loaded_modules
                 return # do not add modules that are already loaded
-        load_module $(this).attr("name"), boxContentId, boxOuterId
+        load_module $(this).attr("name"), boxContentId, boxOuterId, configDialogue
+
+
+# Show Config Dialogue
+config_dialogue_edit = (boxContentId, boxOuterId) ->
+    for module in modules
+        if (module.charAt 0) != '.'
+            load_module module, boxContentId, boxOuterId, "#config-" + boxOuterId[1..] + "-" + module
+    $("#config-tabs").lightbox_me()
+    showConfig = false
 
 
 # Destroy modules from a box
@@ -240,18 +262,18 @@ create_module_list_items = (module) ->
         icon   = path.join modpath, module, config.icon
         icon_fa = config.icon_fa
 
-    # assign the color to the background
+    # Assign the color to the background
     if bcolor != "" && bcolor
         content += " style='background-color: #{bcolor};'"
     content += ">"
 
-    # decide which icon has to be showed
+    # Decide which icon has to be showed
     if icon_fa
         content += "<span class='fa #{icon_fa}'></span>&nbsp;"
     else if icon
         content += "<img class='icon' src='#{icon}' alt='#{module}' onerror='this.remove()'>"
 
-    # decide which name has to be showed
+    # Decide which name has to be shown
     if name != "" && name
         content += "#{name}</a></li>"
     else
@@ -261,7 +283,7 @@ create_module_list_items = (module) ->
 
 
 # Get into the module and look for config.json
-load_module = (modname, boxContentId, boxOuterId) ->
+load_module = (modname, boxContentId, boxOuterId, configWindow) ->
     moddir = path.join(modpath, modname)
     config = load_conf moddir
 
@@ -270,13 +292,19 @@ load_module = (modname, boxContentId, boxOuterId) ->
         mod = require("./" + path.join(moddir, path.basename(config.hook, path.extname(config.hook))))
 
         # Load module
-        mod.init boxContentId, configDialogue, session
+        mod.init boxContentId, configWindow, session
 
-        #tell core that you loaded module
+        # Tell core that you loaded module
         if not session.boxes[boxOuterId].loaded_modules
             session.boxes[boxOuterId].loaded_modules = [ ]
         if modname not in session.boxes[boxOuterId].loaded_modules
             session.boxes[boxOuterId].loaded_modules.push modname
+
+        if not showConfig
+            # Prepare configuration window for each module in a box
+            selectConfigBox = "config-" + boxOuterId[1..]
+            $("#config-tabs").children("span").append "<a href='##{selectConfigBox}-#{modname}'>#{modname}</a>"
+            $("#"+selectConfigBox).append "<div id='#{selectConfigBox}-#{modname}'></div>"
 
 
 # Get into the module and look for config.json
@@ -318,7 +346,7 @@ for boxName, value of session.boxes
     $(boxName).css 'width', value.size.width
     if value.loaded_modules # Check for empty windows
         for module in value.loaded_modules
-            load_module module, child_content, boxName
+            load_module module, child_content, boxName, configDialogue
 
 init_done = true  # Set when all session startup is done
 

@@ -33,6 +33,7 @@ div#boxes div.box-content {
 
 /* General styles for boxes and overlays */
 .box {
+    text-align: left;
     background: rgba(30, 30, 30, 0.7);
 }
 
