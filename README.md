@@ -12,7 +12,7 @@ Build it with:
 ╰─$ zip -r trickle.nw * && nw trickle.nw
 ```
 
-With OS X you might use the following command, because node-webkit is a little buggy when executed from the Terminal:
+On OS X you may use the following command, because node-webkit is buggy:
 ```bash
 ╭─user@host  ~/trickle
 ╰─$ zip -r trickle.nw * && open trickle.nw
