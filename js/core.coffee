@@ -11,6 +11,7 @@ path = require "path"
 # Set Startup-Parameters
 init_done = false
 showConfig = false
+animateBoxes = false
 
 # Get Home PATH
 home_path = process.env.HOME || process.env.HOMEPATH || process.env.USERPROFILE
@@ -84,7 +85,7 @@ createBox = (numBoxes) ->
     $("div.box-control span#box-control-button-#{numBoxes}").click ->
         # Set selected Box
         thisBox = "#" + $(this).parent().parent().prop "id"
-        toggle_highlighted_boxes thisBox
+        toggle_control_menu thisBox
 
     if numBoxes not in session.present_boxes
         session.present_boxes.push numBoxes
@@ -97,29 +98,41 @@ $("#new-box").click ->
 
 # Add new Module to Box
 $("#control-menu-add").click ->
-    boxContentId = "#" + $(selectedBox).children("div.box-content").prop "id"
-    config_dialogue_module_add boxContentId, selectedBox
+    if selectedBox
+        boxContentId = "#" + $(selectedBox).children("div.box-content").prop "id"
+        config_dialogue_module_add boxContentId, selectedBox
+    else
+        toggle_control_menu undefined
 
 # Show list of Modules, remove selected ones
 $("#control-menu-remove").click ->
-    boxContentId = "#" + $(selectedBox).children("div.box-content").prop "id"
-    config_dialogue_module_removal boxContentId, selectedBox
+    if selectedBox
+        boxContentId = "#" + $(selectedBox).children("div.box-content").prop "id"
+        config_dialogue_module_removal boxContentId, selectedBox
+    else
+        toggle_control_menu undefined
 
 # Open configuration of Box containing all Modules to config
 $("#control-menu-config").click ->
-    showConfig = true
-    boxContentId = "#" + $(selectedBox).children("div.box-content").prop "id"
-    config_dialogue_edit boxContentId, selectedBox
+    if selectedBox
+        showConfig = true
+        boxContentId = "#" + $(selectedBox).children("div.box-content").prop "id"
+        config_dialogue_edit boxContentId, selectedBox
+    else
+        toggle_control_menu undefined
 
 # Delete complete Box
 $("#control-menu-delete").click ->
-    boxContentId = "#" + $(selectedBox).children("div.box-content").prop "id"
-    config_dialogue_box_remove boxContentId, selectedBox
+    if selectedBox
+        boxContentId = "#" + $(selectedBox).children("div.box-content").prop "id"
+        config_dialogue_box_remove boxContentId, selectedBox
+    else
+        toggle_control_menu undefined
 
 # Clicking on preferences icon closes menu
 $("#control-menu-close").click ->
     $("#config-box").trigger "close"
-    toggle_highlighted_boxes selectedBox
+    toggle_control_menu selectedBox
 
 ### END Define Listeners ###
 
@@ -134,9 +147,23 @@ fs.readdir modpath, (err, files) ->
     throw err if err
     modules = files
 
+### Configure Control Menu ###
+# Hide standard menu and show box options
+control_menu_show_edit_hide_standard = (animationDirection) ->
+    animateBoxes = true
+    $("#control-standard").hide "slide", direction: animationDirection, ->
+        $("#control-edit-box").show "slide", direction: animationDirection, ->
+            animateBoxes = false
+# Hide box options and show standard menu
+control_menu_show_standard_hide_edit = (animationDirection) ->
+    animateBoxes = true
+    $("#control-edit-box").hide "slide", direction: animationDirection, ->
+        $("#control-standard").show "slide", direction: animationDirection, ->
+            animateBoxes = false
+
 
 # Toggle highlighted box if selecting config
-toggle_highlighted_boxes = (thisBox) ->
+toggle_control_menu = (thisBox) ->
     normalBorder = "1px solid #aaa"
     highlightedBorder = "1px solid red"
     animationDirection =  "down"
@@ -145,21 +172,21 @@ toggle_highlighted_boxes = (thisBox) ->
     if not selectedBox
         selectedBox = thisBox
         $(selectedBox).css "border", highlightedBorder
-        $("#control-standard").hide "slide", direction: animationDirection, ->
-            $("#control-edit-box").show "slide", direction: animationDirection
-
+        if not animateBoxes
+            control_menu_show_edit_hide_standard animationDirection
     # if you click on the same box as before
     else if selectedBox is thisBox
         $(selectedBox).css "border", normalBorder
-        $("#control-edit-box").hide "slide", direction: animationDirection, ->
-            $("#control-standard").show "slide", direction: animationDirection
+        if not animateBoxes
+            control_menu_show_standard_hide_edit animationDirection
         selectedBox = null
-
     # if one box is already highlighted, but another config is selected
     else
         $(selectedBox).css "border", normalBorder
         $(thisBox).css "border", highlightedBorder
         selectedBox = thisBox
+
+### END Configure Control Menu ###
 
 
 ### Config Dialogue Logic ###
@@ -250,7 +277,7 @@ config_dialogue_box_remove = (boxContentId, boxOuterId) ->
         delete session.boxes[selectedBox]
         $(selectedBox).remove()
         $("#config-"+boxOuterId[1..]).remove()
-        toggle_highlighted_boxes selectedBox
+        toggle_control_menu selectedBox
         selectedBox = undefined
         $(configBox).html "<span class='btn'><span class='glyphicon glyphicon-ok'></span> Box successfully removed.</span>"
         closeConfigDialogue = -> $(configBox).trigger "close"
