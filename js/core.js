@@ -338,12 +338,16 @@ load_module = function(modname, boxContentId, boxOuterId, configWindow) {
 };
 
 destroy_module = function(modname, boxContentId, boxOuterId) {
-  var config, mod, moddir;
+  var config, i, mod, moddir;
   moddir = path.join(modpath, modname);
   config = load_conf(moddir);
   if (config) {
     mod = require("./" + path.join(moddir, path.basename(config.hook, path.extname(config.hook))));
-    return mod.destroy(boxOuterId, boxContentId, session);
+    mod.destroy(boxOuterId, boxContentId, session);
+    i = session.boxes[boxOuterId].loaded_modules.indexOf("twitter");
+    if (i !== -1) {
+      return session.boxes[boxOuterId].loaded_modules.splice(i, 1);
+    }
   }
 };
 

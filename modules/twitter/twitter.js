@@ -19,16 +19,11 @@ $ = require('jquery');
 
 gui = window.require('nw.gui');
 
-exports.destroy = function(boxOuterId, boxContentId, session) {
-  var i;
+exports.destroy = function(boxContentId, session) {
   if (session.twitter[boxContentId].update_stream) {
     session.twitter[boxContentId].update_stream.removeAllListeners('data');
   }
   $(boxContentId).children('.trickle-twitter').remove();
-  i = session.boxes[boxOuterId].loaded_modules.indexOf("twitter");
-  if (i !== -1) {
-    session.boxes[boxOuterId].loaded_modules.splice(i, 1);
-  }
   return delete session.twitter[boxContentId];
 };
 

@@ -323,6 +323,10 @@ destroy_module = (modname, boxContentId, boxOuterId) ->
         mod = require("./" + path.join(moddir, path.basename(config.hook, path.extname(config.hook))))
         # Destroy module
         mod.destroy boxOuterId, boxContentId, session
+        # remove from loaded modules
+        i = session.boxes[boxOuterId].loaded_modules.indexOf "twitter"
+        if i != -1
+            session.boxes[boxOuterId].loaded_modules.splice i, 1
 
 
 # Load config of given module
