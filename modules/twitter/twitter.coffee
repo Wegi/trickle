@@ -149,9 +149,6 @@ exports.init = (content_id, config_id, session, api) ->
             catch
                 console.log "Tweet unreadable (probably Limit exceeded)"
 
-    console.log "##------------------ running before onclick"
-    console.log api
-    api.out()
     $(".twitter-image").click ->
         console.log "Im inside the click event"
         src = $(this).prop 'src'

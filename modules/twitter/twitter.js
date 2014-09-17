@@ -156,9 +156,6 @@ exports.init = function(content_id, config_id, session, api) {
       }
     }
   };
-  console.log("##------------------ running before onclick");
-  console.log(api);
-  api.out();
   $(".twitter-image").click(function() {
     var content, src;
     console.log("Im inside the click event");

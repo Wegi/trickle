@@ -14,6 +14,8 @@ init_done = false
 showConfig = false
 animateBoxes = false
 
+lightboxCloseDelay = 3000   # close lightbox after some ms
+
 # Path to the trickle-modules
 modpath = "./modules"
 modules = []
@@ -54,11 +56,18 @@ $ ->
 ### API ###
 api = {}
 
+# Open lightbox with content
 api.lightbox = (content) ->
-    $('#lightbox-window').lightbox_me().html content
+    $("#lightbox-window").lightbox_me().html content
 
-api.out = ->
-    console.log "API POWER ACTIVATE ########################"
+# Close lightbox after delay in ms, e.g. 3000 ms
+api.closeLightbox = (delay) ->
+    closeConfigDialogue = -> $("#lightbox-window").trigger "close"
+    setTimeout closeConfigDialogue, delay
+
+# Load CSS files for modules
+api.loadCSS = (path) ->
+
 
 ### END API ###
 
@@ -246,7 +255,7 @@ config_dialogue_edit = (boxContentId, boxOuterId) ->
     if not tempLoadedModules or tempLoadedModules.length == 0
         $("#config-empty").lightbox_me()
         closeConfigDialogue = -> $("#config-empty").trigger "close"
-        setTimeout closeConfigDialogue, 3000
+        setTimeout closeConfigDialogue, lightboxCloseDelay
     else
         for module in modules
             if (module.charAt 0) != '.'
@@ -279,11 +288,11 @@ config_dialogue_module_removal = (boxContentId, boxOuterId) ->
             destroy_module $(this).attr("name"), boxContentId, boxOuterId
             $(configBox).html "<span class='btn'><span class='glyphicon glyphicon-ok'></span> Module successfully removed.</span>"
             closeConfigDialogue = -> $(configBox).trigger "close"
-            setTimeout closeConfigDialogue, 3000
+            setTimeout closeConfigDialogue, lightboxCloseDelay
     else
         $("#config-empty").lightbox_me()
         closeConfigDialogue = -> $("#config-empty").trigger "close"
-        setTimeout closeConfigDialogue, 3000
+        setTimeout closeConfigDialogue, lightboxCloseDelay
 
 # Remove box and destroy all assigned modules
 config_dialogue_box_remove = (boxContentId, boxOuterId) ->
@@ -311,7 +320,7 @@ config_dialogue_box_remove = (boxContentId, boxOuterId) ->
         selectedBox = undefined
         $(configBox).html "<span class='btn'><span class='glyphicon glyphicon-ok'></span> Box successfully removed.</span>"
         closeConfigDialogue = -> $(configBox).trigger "close"
-        setTimeout closeConfigDialogue, 3000
+        setTimeout closeConfigDialogue, lightboxCloseDelay
 
     $("#box-remove-no").click ->
         $(configBox).trigger "close"
