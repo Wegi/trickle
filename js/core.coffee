@@ -46,6 +46,22 @@ catch
 ### END Core Logic Preparations ###
 
 
+### Extend languages ###
+# coffee> "foo".startsWith "f"
+# => true
+String::startsWith ?= (s) -> @slice(0, s.length) == s
+String::endsWith   ?= (s) -> s == '' or @slice(-s.length) == s
+
+# Center boxes in window, use it with $("path").center()
+$.fn.center = ->
+    @css "position", "absolute"
+    @css "top", Math.max(0, (($(window).height() - $(this).outerHeight()) / 2) + $(window).scrollTop()) + "px"
+    @css "left", Math.max(0, (($(window).width() - $(this).outerWidth()) / 2) + $(window).scrollLeft()) + "px"
+    this
+
+### END Extend languages ###
+
+
 ### General Commands ###
 $ ->
     $("#config-tabs").tabs();
@@ -83,13 +99,6 @@ getNextNum = ->
     num = 0
     num++ while num in session.present_boxes
     num
-
-# Center boxes in window, use it with $("path").center()
-$.fn.center = ->
-    @css "position", "absolute"
-    @css "top", Math.max(0, (($(window).height() - $(this).outerHeight()) / 2) + $(window).scrollTop()) + "px"
-    @css "left", Math.max(0, (($(window).width() - $(this).outerWidth()) / 2) + $(window).scrollLeft()) + "px"
-    this
 
 # Make boxes draggable and resizable
 createBox = (numBoxes) ->
