@@ -80,7 +80,6 @@ exports.init = function(content_id, config_id, session, api) {
       token: session.twitter.access_token,
       token_secret: session.twitter.access_secret
     };
-    console.log("hey dick im where im supposed to be");
     treq = new twitter_req(readyoauth);
     if (!session.twitter[content_id].last_id) {
       session.twitter[content_id].last_id = 1;
@@ -89,7 +88,6 @@ exports.init = function(content_id, config_id, session, api) {
       since_id: session.twitter[content_id].last_id,
       count: 100
     };
-    console.log(query);
     return treq.request('statuses/home_timeline', {
       query: query
     }, function(err, res, body) {
@@ -189,7 +187,6 @@ exports.init = function(content_id, config_id, session, api) {
       end = data.toString().slice(-2);
       streamBuffer += data.toString();
       if (end === '\r\n') {
-        console.log(streamBuffer);
         try {
           tweet = JSON.parse(streamBuffer);
           if (tweet.text) {
@@ -204,15 +201,12 @@ exports.init = function(content_id, config_id, session, api) {
     });
     return session.twitter[content_id].update_stream = update_stream;
   };
-  console.log("bottom");
   if (!session.twitter.access_token || !session.twitter.access_secret) {
-    console.log("first");
     return async.series({
       auth: authenticate,
       tweets: get_stream
     }, print_tweets);
   } else {
-    console.log("second");
     return async.series({
       tweets: get_stream
     }, print_tweets);
