@@ -150,8 +150,6 @@ createBox = function(numBoxes) {
   }).resizable({
     grid: 10
   }).center();
-  box.draggable("disable");
-  box.resizable("disable");
   if (init_done) {
     config_dialogue_module_add("#box-content-" + numBoxes, "#box-" + numBoxes);
   }
@@ -268,7 +266,6 @@ toggle_control_menu = function(thisBox) {
   if (!selectedBox) {
     selectedBox = thisBox;
     $(selectedBox).css("border", highlightedBorder);
-    control_box_drag_resize(selectedBox, "enable");
     if (!animateBoxes) {
       return control_menu_show_edit_hide_standard(animationDirection);
     }
@@ -277,13 +274,10 @@ toggle_control_menu = function(thisBox) {
     if (!animateBoxes) {
       control_menu_show_standard_hide_edit(animationDirection);
     }
-    control_box_drag_resize(selectedBox, "disable");
     return selectedBox = null;
   } else {
     $(selectedBox).css("border", normalBorder);
-    control_box_drag_resize(selectedBox, "disable");
     $(thisBox).css("border", highlightedBorder);
-    control_box_drag_resize(thisBox, "enable");
     return selectedBox = thisBox;
   }
 };
