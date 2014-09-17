@@ -23,7 +23,7 @@ div#boxes div.box-content {
     box-shadow: 0 0 5px rgba(255, 255, 255, 1);
     -webkit-box-shadow: 0 0 5px rgba(255, 255, 255, 1);
     -moz-box-shadow: 0 0 5px rgba(255, 255, 255, 1);
-    border:1px solid rgba(255, 255, 255, 0.8);
+    border: 1px solid rgba(255, 255, 255, 0.8);
 }
 
 .icon {

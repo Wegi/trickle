@@ -85,6 +85,8 @@ createBox = (numBoxes) ->
 
     # Set options to each box
     box = $("#box-#{numBoxes}").draggable(grid: [10, 10]).resizable(grid: 10).center()
+    box.draggable "disable"
+    box.resizable "disable"
 
     # Show list of Modules (Only do if init is done)
     if init_done
@@ -170,6 +172,9 @@ control_menu_show_standard_hide_edit = (animationDirection) ->
         $("#control-standard").show "slide", direction: animationDirection, ->
             animateBoxes = false
 
+control_box_drag_resize = (editBox, type) ->
+    $(editBox).draggable type
+    $(editBox).resizable type
 
 # Toggle highlighted box if selecting config
 toggle_control_menu = (thisBox) ->
@@ -181,6 +186,7 @@ toggle_control_menu = (thisBox) ->
     if not selectedBox
         selectedBox = thisBox
         $(selectedBox).css "border", highlightedBorder
+        control_box_drag_resize selectedBox, "enable"
         if not animateBoxes
             control_menu_show_edit_hide_standard animationDirection
     # if you click on the same box as before
@@ -188,11 +194,14 @@ toggle_control_menu = (thisBox) ->
         $(selectedBox).css "border", normalBorder
         if not animateBoxes
             control_menu_show_standard_hide_edit animationDirection
+        control_box_drag_resize selectedBox, "disable"
         selectedBox = null
     # if one box is already highlighted, but another config is selected
     else
         $(selectedBox).css "border", normalBorder
+        control_box_drag_resize selectedBox, "disable"
         $(thisBox).css "border", highlightedBorder
+        control_box_drag_resize thisBox, "enable"
         selectedBox = thisBox
 
 ### END Configure Control Menu ###
@@ -228,7 +237,7 @@ config_dialogue_edit = (boxContentId, boxOuterId) ->
     if not tempLoadedModules or tempLoadedModules.length == 0
         $("#config-empty").lightbox_me()
         closeConfigDialogue = -> $("#config-empty").trigger "close"
-        setTimeout closeConfigDialogue, 2000
+        setTimeout closeConfigDialogue, 3000
     else
         for module in modules
             if (module.charAt 0) != '.'
@@ -247,21 +256,26 @@ config_dialogue_module_removal = (boxContentId, boxOuterId) ->
     content = "<h3>Remove modules from box</h3>"
     content += "<div><ul id='config-box-list-modules'>"
 
-    for module in boxModules
-        content += create_module_list_items module
-    content += "</ul></div>"
+    if boxModules
+        for module in boxModules
+            content += create_module_list_items module
+        content += "</ul></div>"
 
-    $("#config-box-list-modules").selectable()
+        $("#config-box-list-modules").selectable()
 
-    # Open Config Dialogue with content
-    $(configBox).lightbox_me().html content
+        # Open Config Dialogue with content
+        $(configBox).lightbox_me().html content
 
-    # Add listener
-    $(".module-single").click ->
-        destroy_module $(this).attr("name"), boxContentId, boxOuterId
-        $(configBox).html "<span class='btn'><span class='glyphicon glyphicon-ok'></span> Module successfully removed.</span>"
-        closeConfigDialogue = -> $(configBox).trigger "close"
-        setTimeout closeConfigDialogue, 2000
+        # Add listener
+        $(".module-single").click ->
+            destroy_module $(this).attr("name"), boxContentId, boxOuterId
+            $(configBox).html "<span class='btn'><span class='glyphicon glyphicon-ok'></span> Module successfully removed.</span>"
+            closeConfigDialogue = -> $(configBox).trigger "close"
+            setTimeout closeConfigDialogue, 3000
+    else
+        $("#config-empty").lightbox_me()
+        closeConfigDialogue = -> $("#config-empty").trigger "close"
+        setTimeout closeConfigDialogue, 3000
 
 
 # Remove box and destroy all assigned modules
@@ -290,7 +304,7 @@ config_dialogue_box_remove = (boxContentId, boxOuterId) ->
         selectedBox = undefined
         $(configBox).html "<span class='btn'><span class='glyphicon glyphicon-ok'></span> Box successfully removed.</span>"
         closeConfigDialogue = -> $(configBox).trigger "close"
-        setTimeout closeConfigDialogue, 2000
+        setTimeout closeConfigDialogue, 3000
 
     $("#box-remove-no").click ->
         $(configBox).trigger "close"
