@@ -19,18 +19,16 @@ showConfig = false;
 
 animateBoxes = false;
 
+modpath = "./modules";
 
-/* API */
+modules = [];
 
-api = {};
-
-api.lightbox = function(content) {
-  return $('#lightbox-window').lightbox_me().html(content);
-};
-
-api.out = function() {
-  return console.log("API POWER ACTIVATE ########################");
-};
+fs.readdir(modpath, function(err, files) {
+  if (err) {
+    throw err;
+  }
+  return modules = files;
+});
 
 home_path = process.env.HOME || process.env.HOMEPATH || process.env.USERPROFILE;
 
@@ -53,11 +51,33 @@ try {
 }
 
 
+/* END Core Logic Preparations */
+
+
 /* General Commands */
 
 $(function() {
   return $("#config-tabs").tabs();
 });
+
+
+/* END General Commands */
+
+
+/* API */
+
+api = {};
+
+api.lightbox = function(content) {
+  return $('#lightbox-window').lightbox_me().html(content);
+};
+
+api.out = function() {
+  return console.log("API POWER ACTIVATE ########################");
+};
+
+
+/* END API */
 
 
 /* Boxes Logic */
@@ -120,7 +140,10 @@ createBox = function(numBoxes) {
 };
 
 
-/* Define Listeners */
+/* END Boxes Logic */
+
+
+/* Global Listeners */
 
 $("#new-box").click(function() {
   var num;
@@ -175,18 +198,7 @@ $("#control-menu-close").click(function() {
 });
 
 
-/* END Define Listeners */
-
-modpath = "./modules";
-
-modules = [];
-
-fs.readdir(modpath, function(err, files) {
-  if (err) {
-    throw err;
-  }
-  return modules = files;
-});
+/* END Global Listeners */
 
 
 /* Configure Control Menu */
