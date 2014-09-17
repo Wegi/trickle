@@ -263,7 +263,7 @@ config_dialogue_edit = function(boxContentId, boxOuterId) {
     closeConfigDialogue = function() {
       return $("#config-empty").trigger("close");
     };
-    setTimeout(closeConfigDialogue, 2000);
+    setTimeout(closeConfigDialogue, 3000);
   } else {
     for (_i = 0, _len = modules.length; _i < _len; _i++) {
       module = modules[_i];
@@ -278,27 +278,35 @@ config_dialogue_edit = function(boxContentId, boxOuterId) {
 };
 
 config_dialogue_module_removal = function(boxContentId, boxOuterId) {
-  var boxModules, configBox, content, module, _i, _len;
+  var boxModules, closeConfigDialogue, configBox, content, module, _i, _len;
   configBox = "#config-box";
   boxModules = session.boxes[selectedBox].loaded_modules;
   content = "<h3>Remove modules from box</h3>";
   content += "<div><ul id='config-box-list-modules'>";
-  for (_i = 0, _len = boxModules.length; _i < _len; _i++) {
-    module = boxModules[_i];
-    content += create_module_list_items(module);
-  }
-  content += "</ul></div>";
-  $("#config-box-list-modules").selectable();
-  $(configBox).lightbox_me().html(content);
-  return $(".module-single").click(function() {
-    var closeConfigDialogue;
-    destroy_module($(this).attr("name"), boxContentId, boxOuterId);
-    $(configBox).html("<span class='btn'><span class='glyphicon glyphicon-ok'></span> Module successfully removed.</span>");
+  if (boxModules) {
+    for (_i = 0, _len = boxModules.length; _i < _len; _i++) {
+      module = boxModules[_i];
+      content += create_module_list_items(module);
+    }
+    content += "</ul></div>";
+    $("#config-box-list-modules").selectable();
+    $(configBox).lightbox_me().html(content);
+    return $(".module-single").click(function() {
+      var closeConfigDialogue;
+      destroy_module($(this).attr("name"), boxContentId, boxOuterId);
+      $(configBox).html("<span class='btn'><span class='glyphicon glyphicon-ok'></span> Module successfully removed.</span>");
+      closeConfigDialogue = function() {
+        return $(configBox).trigger("close");
+      };
+      return setTimeout(closeConfigDialogue, 3000);
+    });
+  } else {
+    $("#config-empty").lightbox_me();
     closeConfigDialogue = function() {
-      return $(configBox).trigger("close");
+      return $("#config-empty").trigger("close");
     };
-    return setTimeout(closeConfigDialogue, 2000);
-  });
+    return setTimeout(closeConfigDialogue, 3000);
+  }
 };
 
 config_dialogue_box_remove = function(boxContentId, boxOuterId) {
@@ -328,7 +336,7 @@ config_dialogue_box_remove = function(boxContentId, boxOuterId) {
     closeConfigDialogue = function() {
       return $(configBox).trigger("close");
     };
-    return setTimeout(closeConfigDialogue, 2000);
+    return setTimeout(closeConfigDialogue, 3000);
   });
   return $("#box-remove-no").click(function() {
     return $(configBox).trigger("close");

@@ -219,7 +219,7 @@ config_dialogue_edit = (boxContentId, boxOuterId) ->
     if not tempLoadedModules or tempLoadedModules.length == 0
         $("#config-empty").lightbox_me()
         closeConfigDialogue = -> $("#config-empty").trigger "close"
-        setTimeout closeConfigDialogue, 2000
+        setTimeout closeConfigDialogue, 3000
     else
         for module in modules
             if (module.charAt 0) != '.'
@@ -238,21 +238,26 @@ config_dialogue_module_removal = (boxContentId, boxOuterId) ->
     content = "<h3>Remove modules from box</h3>"
     content += "<div><ul id='config-box-list-modules'>"
 
-    for module in boxModules
-        content += create_module_list_items module
-    content += "</ul></div>"
+    if boxModules
+        for module in boxModules
+            content += create_module_list_items module
+        content += "</ul></div>"
 
-    $("#config-box-list-modules").selectable()
+        $("#config-box-list-modules").selectable()
 
-    # Open Config Dialogue with content
-    $(configBox).lightbox_me().html content
+        # Open Config Dialogue with content
+        $(configBox).lightbox_me().html content
 
-    # Add listener
-    $(".module-single").click ->
-        destroy_module $(this).attr("name"), boxContentId, boxOuterId
-        $(configBox).html "<span class='btn'><span class='glyphicon glyphicon-ok'></span> Module successfully removed.</span>"
-        closeConfigDialogue = -> $(configBox).trigger "close"
-        setTimeout closeConfigDialogue, 2000
+        # Add listener
+        $(".module-single").click ->
+            destroy_module $(this).attr("name"), boxContentId, boxOuterId
+            $(configBox).html "<span class='btn'><span class='glyphicon glyphicon-ok'></span> Module successfully removed.</span>"
+            closeConfigDialogue = -> $(configBox).trigger "close"
+            setTimeout closeConfigDialogue, 3000
+    else
+        $("#config-empty").lightbox_me()
+        closeConfigDialogue = -> $("#config-empty").trigger "close"
+        setTimeout closeConfigDialogue, 3000
 
 
 # Remove box and destroy all assigned modules
@@ -281,7 +286,7 @@ config_dialogue_box_remove = (boxContentId, boxOuterId) ->
         selectedBox = undefined
         $(configBox).html "<span class='btn'><span class='glyphicon glyphicon-ok'></span> Box successfully removed.</span>"
         closeConfigDialogue = -> $(configBox).trigger "close"
-        setTimeout closeConfigDialogue, 2000
+        setTimeout closeConfigDialogue, 3000
 
     $("#box-remove-no").click ->
         $(configBox).trigger "close"
