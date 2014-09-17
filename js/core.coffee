@@ -1,11 +1,12 @@
-############
-#    Trickle Core
-############
+################
+# Trickle Core #
+################
 
 ### Require modules ###
 fs = require "fs"
 gui = require "nw.gui"
 path = require "path"
+
 
 ### Core Logic Preparations ###
 # Set Startup-Parameters
@@ -13,14 +14,16 @@ init_done = false
 showConfig = false
 animateBoxes = false
 
-### API ###
-api = {}
+lightboxCloseDelay = 3000   # close lightbox after some ms
 
-api.lightbox = (content) ->
-    $('#lightbox-window').lightbox_me().html content
+# Path to the trickle-modules
+modpath = "./modules"
+modules = []
 
-api.out = () ->
-    console.log "API POWER ACTIVATE ########################"
+# List all modules in path
+fs.readdir modpath, (err, files) ->
+    throw err if err
+    modules = files
 
 # Get Home PATH
 home_path = process.env.HOME || process.env.HOMEPATH || process.env.USERPROFILE
@@ -40,9 +43,49 @@ catch
     session =
         boxes: { }
 
+### END Core Logic Preparations ###
+
+
+### Extend languages ###
+# coffee> "foo".startsWith "f"
+# => true
+String::startsWith ?= (s) -> @slice(0, s.length) == s
+String::endsWith   ?= (s) -> s == '' or @slice(-s.length) == s
+
+# Center boxes in window, use it with $("path").center()
+$.fn.center = ->
+    @css "position", "absolute"
+    @css "top", Math.max(0, (($(window).height() - $(this).outerHeight()) / 2) + $(window).scrollTop()) + "px"
+    @css "left", Math.max(0, (($(window).width() - $(this).outerWidth()) / 2) + $(window).scrollLeft()) + "px"
+    this
+
+### END Extend languages ###
+
+
 ### General Commands ###
 $ ->
     $("#config-tabs").tabs();
+
+### END General Commands ###
+
+
+### API ###
+api = {}
+
+# Open lightbox with content
+api.lightbox = (content) ->
+    $("#lightbox-window").lightbox_me().html content
+
+# Close lightbox after delay in ms, e.g. 3000 ms
+api.closeLightbox = (delay) ->
+    closeConfigDialogue = -> $("#lightbox-window").trigger "close"
+    setTimeout closeConfigDialogue, delay
+
+# Load CSS files for modules
+api.loadCSS = (path) ->
+
+
+### END API ###
 
 
 ### Boxes Logic ###
@@ -56,13 +99,6 @@ getNextNum = ->
     num = 0
     num++ while num in session.present_boxes
     num
-
-# Center boxes in window, use it with $("path").center()
-$.fn.center = ->
-    @css "position", "absolute"
-    @css "top", Math.max(0, (($(window).height() - $(this).outerHeight()) / 2) + $(window).scrollTop()) + "px"
-    @css "left", Math.max(0, (($(window).width() - $(this).outerWidth()) / 2) + $(window).scrollLeft()) + "px"
-    this
 
 # Make boxes draggable and resizable
 createBox = (numBoxes) ->
@@ -101,8 +137,10 @@ createBox = (numBoxes) ->
     if numBoxes not in session.present_boxes
         session.present_boxes.push numBoxes
 
+### END Boxes Logic ###
 
-### Define Listeners ###
+
+### Global Listeners ###
 $("#new-box").click ->
     num = getNextNum()
     createBox num
@@ -145,18 +183,8 @@ $("#control-menu-close").click ->
     $("#config-box").trigger "close"
     toggle_control_menu selectedBox
 
-### END Define Listeners ###
+### END Global Listeners ###
 
-
-# Path to the trickle-modules
-modpath = "./modules"
-modules = []
-
-# List all modules in path
-# TODO Check for invalid files
-fs.readdir modpath, (err, files) ->
-    throw err if err
-    modules = files
 
 ### Configure Control Menu ###
 # Hide standard menu and show box options
@@ -230,14 +258,13 @@ config_dialogue_module_add = (boxContentId, boxOuterId) ->
                 return # do not add modules that are already loaded
         load_module $(this).attr("name"), boxContentId, boxOuterId, configDialogue
 
-
 # Show Config Dialogue
 config_dialogue_edit = (boxContentId, boxOuterId) ->
     tempLoadedModules = session.boxes[boxOuterId].loaded_modules
     if not tempLoadedModules or tempLoadedModules.length == 0
         $("#config-empty").lightbox_me()
         closeConfigDialogue = -> $("#config-empty").trigger "close"
-        setTimeout closeConfigDialogue, 3000
+        setTimeout closeConfigDialogue, lightboxCloseDelay
     else
         for module in modules
             if (module.charAt 0) != '.'
@@ -247,7 +274,6 @@ config_dialogue_edit = (boxContentId, boxOuterId) ->
         $(selectConfigBoxTabs).tabs().lightbox_me()
 
     showConfig = false
-
 
 # Destroy modules from a box
 config_dialogue_module_removal = (boxContentId, boxOuterId) ->
@@ -271,12 +297,11 @@ config_dialogue_module_removal = (boxContentId, boxOuterId) ->
             destroy_module $(this).attr("name"), boxContentId, boxOuterId
             $(configBox).html "<span class='btn'><span class='glyphicon glyphicon-ok'></span> Module successfully removed.</span>"
             closeConfigDialogue = -> $(configBox).trigger "close"
-            setTimeout closeConfigDialogue, 3000
+            setTimeout closeConfigDialogue, lightboxCloseDelay
     else
         $("#config-empty").lightbox_me()
         closeConfigDialogue = -> $("#config-empty").trigger "close"
-        setTimeout closeConfigDialogue, 3000
-
+        setTimeout closeConfigDialogue, lightboxCloseDelay
 
 # Remove box and destroy all assigned modules
 config_dialogue_box_remove = (boxContentId, boxOuterId) ->
@@ -304,11 +329,10 @@ config_dialogue_box_remove = (boxContentId, boxOuterId) ->
         selectedBox = undefined
         $(configBox).html "<span class='btn'><span class='glyphicon glyphicon-ok'></span> Box successfully removed.</span>"
         closeConfigDialogue = -> $(configBox).trigger "close"
-        setTimeout closeConfigDialogue, 3000
+        setTimeout closeConfigDialogue, lightboxCloseDelay
 
     $("#box-remove-no").click ->
         $(configBox).trigger "close"
-
 
 # Creates colorized list items with corresponding icons from module's config.json
 create_module_list_items = (module) ->
@@ -337,7 +361,6 @@ create_module_list_items = (module) ->
 
     return content
 
-
 # Get into the module and look for config.json
 load_module = (modname, boxContentId, boxOuterId, configWindow) ->
     moddir = path.join(modpath, modname)
@@ -362,7 +385,6 @@ load_module = (modname, boxContentId, boxOuterId, configWindow) ->
             $(selectConfigBox+"-tabs ul").append "<li><a href='#{selectConfigBox}-#{modname}'>#{config.name}</a></li>"
             $(selectConfigBox+"-tabs").append "<div id='" + selectConfigBox[1..] + "-#{modname}'></div>"
 
-
 # Get into the module and look for config.json
 destroy_module = (modname, boxContentId, boxOuterId) ->
     moddir = path.join(modpath, modname)
@@ -378,7 +400,6 @@ destroy_module = (modname, boxContentId, boxOuterId) ->
         if i != -1
             session.boxes[boxOuterId].loaded_modules.splice i, 1
 
-
 # Load config of given module
 load_conf = (moddir) ->
     try
@@ -389,6 +410,7 @@ load_conf = (moddir) ->
     return result
 
 ### END Config Dialogue Logic ###
+
 
 ### Core Logic (Startup and Close) ###
 
