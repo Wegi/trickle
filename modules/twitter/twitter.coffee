@@ -136,6 +136,7 @@ exports.init = (content_id, config_id, session, api) ->
                         tweet_entry += """<div class="row"><div class="col-md-12">#{tweet.text}</div></div>"""
                     tweet_entry += """</div>"""
                     if tweet.entities.media
+                        image_id = 'twitter-image-' + tweet.id + content_id[1..]
                         #calculate how much to shift the viewport
                         pic_height = tweet.entities.media[0].sizes.medium.h
                         if pic_height > 300
@@ -143,22 +144,27 @@ exports.init = (content_id, config_id, session, api) ->
                         else
                             pic_height = 0
                         tweet_entry += """<div class="row"> <div class="col-md-12" style="text-align: center;"> <span class="glyphicon glyphicon-asterisk"></span> </div></div>"""
-                        tweet_entry += """<div class="row"> <div class="col-md-12" style="width: 100%; height: 300px; overflow:hidden"><img class="img-rounded img-responsive center-block twitter-image" src="#{tweet.entities.media[0].media_url}" style="margin-top: -#{pic_height}px;"></div> </div>"""
+                        tweet_entry += """<div class="row"> <div class="col-md-12" style="width: 100%; height: 300px; overflow:hidden"><img class="img-rounded img-responsive center-block twitter-image" id="#{image_id}" src="#{tweet.entities.media[0].media_url}" style="margin-top: -#{pic_height}px;"></div> </div>"""
                     tweet_entry += """<div class="row" style="margin-right: 0.5em;">"""
                     tweet_entry += """<div class="col-md-12" style="padding-top: 0.5em; padding-right: 0.5em; border-bottom: 1px solid #ccc;"></div></div>"""
 
                     $(content_id).prepend tweet_entry
+
+                    #only set listener if image is actually available
+                    if tweet.entities.media
+                        setLightboxEvent('#'+image_id)
             catch
                 console.log "Tweet unreadable (probably Limit exceeded)"
 
-    console.log "##------------------ running before onclick"
-    console.log api
-    api.out()
-    $(".twitter-image").click ->
-        console.log "Im inside the click event"
-        src = $(this).prop 'src'
-        content = """<img src="#{src}"> """
-        api.lightbox content
+    setLightboxEvent = (selector) ->
+        $("#{selector}").unbind 'click'
+        $("#{selector}").click ->
+            src = $(this).prop 'src'
+            content = """<img src="#{src}"> """
+            api.lightbox content
+
+    $(".twitter-image").each (index) ->
+        setLightboxEvent '#' + $(this).prop('id')
 
     streamBuffer = ""
     createTweetStream = () ->

@@ -28,7 +28,7 @@ lightbox = exports.destroy = function(boxContentId, session) {
 };
 
 exports.init = function(content_id, config_id, session, api) {
-  var authenticate, awaiting_config, createTweetStream, get_stream, oauth, print_tweets, streamBuffer;
+  var authenticate, awaiting_config, createTweetStream, get_stream, oauth, print_tweets, setLightboxEvent, streamBuffer;
   awaiting_config = false;
   if (!session.twitter) {
     session.twitter = {};
@@ -108,7 +108,7 @@ exports.init = function(content_id, config_id, session, api) {
     });
   };
   print_tweets = function(err, result) {
-    var pic_height, tweet, tweet_entry, tweets, user_img, _i, _len, _ref, _results;
+    var image_id, pic_height, tweet, tweet_entry, tweets, user_img, _i, _len, _ref, _results;
     if (err) {
       return console.log(err);
     } else {
@@ -139,6 +139,7 @@ exports.init = function(content_id, config_id, session, api) {
           }
           tweet_entry += "</div>";
           if (tweet.entities.media) {
+            image_id = 'twitter-image-' + tweet.id + content_id.slice(1);
             pic_height = tweet.entities.media[0].sizes.medium.h;
             if (pic_height > 300) {
               pic_height = (pic_height - 300) / 2;
@@ -146,11 +147,16 @@ exports.init = function(content_id, config_id, session, api) {
               pic_height = 0;
             }
             tweet_entry += "<div class=\"row\"> <div class=\"col-md-12\" style=\"text-align: center;\"> <span class=\"glyphicon glyphicon-asterisk\"></span> </div></div>";
-            tweet_entry += "<div class=\"row\"> <div class=\"col-md-12\" style=\"width: 100%; height: 300px; overflow:hidden\"><img class=\"img-rounded img-responsive center-block twitter-image\" src=\"" + tweet.entities.media[0].media_url + "\" style=\"margin-top: -" + pic_height + "px;\"></div> </div>";
+            tweet_entry += "<div class=\"row\"> <div class=\"col-md-12\" style=\"width: 100%; height: 300px; overflow:hidden\"><img class=\"img-rounded img-responsive center-block twitter-image\" id=\"" + image_id + "\" src=\"" + tweet.entities.media[0].media_url + "\" style=\"margin-top: -" + pic_height + "px;\"></div> </div>";
           }
           tweet_entry += "<div class=\"row\" style=\"margin-right: 0.5em;\">";
           tweet_entry += "<div class=\"col-md-12\" style=\"padding-top: 0.5em; padding-right: 0.5em; border-bottom: 1px solid #ccc;\"></div></div>";
-          _results.push($(content_id).prepend(tweet_entry));
+          $(content_id).prepend(tweet_entry);
+          if (tweet.entities.media) {
+            _results.push(setLightboxEvent('#' + image_id));
+          } else {
+            _results.push(void 0);
+          }
         }
         return _results;
       } catch (_error) {
@@ -158,15 +164,17 @@ exports.init = function(content_id, config_id, session, api) {
       }
     }
   };
-  console.log("##------------------ running before onclick");
-  console.log(api);
-  api.out();
-  $(".twitter-image").click(function() {
-    var content, src;
-    console.log("Im inside the click event");
-    src = $(this).prop('src');
-    content = "<img src=\"" + src + "\"> ";
-    return api.lightbox(content);
+  setLightboxEvent = function(selector) {
+    $("" + selector).unbind('click');
+    return $("" + selector).click(function() {
+      var content, src;
+      src = $(this).prop('src');
+      content = "<img src=\"" + src + "\"> ";
+      return api.lightbox(content);
+    });
+  };
+  $(".twitter-image").each(function(index) {
+    return setLightboxEvent('#' + $(this).prop('id'));
   });
   streamBuffer = "";
   createTweetStream = function() {
