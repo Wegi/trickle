@@ -76,6 +76,8 @@ createBox = (numBoxes) ->
 
     # Set options to each box
     box = $("#box-#{numBoxes}").draggable(grid: [10, 10]).resizable(grid: 10).center()
+    box.draggable "disable"
+    box.resizable "disable"
 
     # Show list of Modules (Only do if init is done)
     if init_done
@@ -161,6 +163,9 @@ control_menu_show_standard_hide_edit = (animationDirection) ->
         $("#control-standard").show "slide", direction: animationDirection, ->
             animateBoxes = false
 
+control_box_drag_resize = (editBox, type) ->
+    $(editBox).draggable type
+    $(editBox).resizable type
 
 # Toggle highlighted box if selecting config
 toggle_control_menu = (thisBox) ->
@@ -172,6 +177,8 @@ toggle_control_menu = (thisBox) ->
     if not selectedBox
         selectedBox = thisBox
         $(selectedBox).css "border", highlightedBorder
+        console.log "Selected:" + selectedBox
+        control_box_drag_resize selectedBox, "enable"
         if not animateBoxes
             control_menu_show_edit_hide_standard animationDirection
     # if you click on the same box as before
@@ -179,11 +186,14 @@ toggle_control_menu = (thisBox) ->
         $(selectedBox).css "border", normalBorder
         if not animateBoxes
             control_menu_show_standard_hide_edit animationDirection
+        control_box_drag_resize selectedBox, "disable"
         selectedBox = null
     # if one box is already highlighted, but another config is selected
     else
         $(selectedBox).css "border", normalBorder
+        control_box_drag_resize selectedBox, "disable"
         $(thisBox).css "border", highlightedBorder
+        control_box_drag_resize thisBox, "enable"
         selectedBox = thisBox
 
 ### END Configure Control Menu ###
