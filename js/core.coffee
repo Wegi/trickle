@@ -13,6 +13,15 @@ init_done = false
 showConfig = false
 animateBoxes = false
 
+### API ###
+api = {}
+
+api.lightbox = (content) ->
+    $('#lightbox-window').lightbox_me().html content
+
+api.out = () ->
+    console.log "API POWER ACTIVATE ########################"
+
 # Get Home PATH
 home_path = process.env.HOME || process.env.HOMEPATH || process.env.USERPROFILE
 
@@ -325,7 +334,7 @@ load_module = (modname, boxContentId, boxOuterId, configWindow) ->
         mod = require("./" + path.join(moddir, path.basename(config.hook, path.extname(config.hook))))
 
         # Load module
-        mod.init boxContentId, configWindow, session
+        mod.init boxContentId, configWindow, session, api
 
         # Tell core that you loaded module
         if not session.boxes[boxOuterId].loaded_modules
@@ -349,7 +358,7 @@ destroy_module = (modname, boxContentId, boxOuterId) ->
         # Take hook and require it. This should be in a different function
         mod = require("./" + path.join(moddir, path.basename(config.hook, path.extname(config.hook))))
         # Destroy module
-        mod.destroy boxOuterId, boxContentId, session
+        mod.destroy boxContentId, session
         # remove from loaded modules
         i = session.boxes[boxOuterId].loaded_modules.indexOf "twitter"
         if i != -1
