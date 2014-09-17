@@ -177,7 +177,6 @@ toggle_control_menu = (thisBox) ->
     if not selectedBox
         selectedBox = thisBox
         $(selectedBox).css "border", highlightedBorder
-        console.log "Selected:" + selectedBox
         control_box_drag_resize selectedBox, "enable"
         if not animateBoxes
             control_menu_show_edit_hide_standard animationDirection
