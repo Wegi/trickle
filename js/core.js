@@ -121,6 +121,10 @@ api.icon = function(icon) {
   return "<i class='fa fa-" + icon + " fa-lg'></i> ";
 };
 
+api.icon.spinning = function(icon) {
+  return "<i class='fa fa-" + icon + " fa-lg fa-spin'></i> ";
+};
+
 
 /* END API */
 

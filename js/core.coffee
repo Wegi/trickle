@@ -91,6 +91,9 @@ api.loadCSS = (path) ->
 api.icon = (icon) ->
     "<i class='fa fa-#{icon} fa-lg'></i> "
 
+api.icon.spinning = (icon) ->
+    "<i class='fa fa-#{icon} fa-lg fa-spin'></i> "
+
 ### END API ###
 
 
