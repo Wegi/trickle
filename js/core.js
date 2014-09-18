@@ -100,11 +100,7 @@ api.lightbox = function(content) {
 };
 
 api.closeLightbox = function(delay) {
-  var closeConfigDialogue;
-  closeConfigDialogue = function() {
-    return $("#lightbox-window").trigger("close");
-  };
-  return setTimeout(closeConfigDialogue, delay);
+  return api.closeLightbox(delay, "#lightbox-window");
 };
 
 api.closeLightbox = function(delay, lightbox) {

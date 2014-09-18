@@ -78,8 +78,7 @@ api.lightbox = (content) ->
 
 # Close lightbox after delay in ms, e.g. 3000 ms
 api.closeLightbox = (delay) ->
-    closeConfigDialogue = -> $("#lightbox-window").trigger "close"
-    setTimeout closeConfigDialogue, delay
+    api.closeLightbox delay, "#lightbox-window"
 
 api.closeLightbox = (delay, lightbox) ->
     closeConfigDialogue = -> $(lightbox).trigger "close"
@@ -88,9 +87,11 @@ api.closeLightbox = (delay, lightbox) ->
 # Load CSS files for modules
 api.loadCSS = (path) ->
 
+# Include font awesome icons
 api.icon = (icon) ->
     "<i class='fa fa-#{icon} fa-lg'></i> "
 
+# Include spinning font awesome icons
 api.icon.spinning = (icon) ->
     "<i class='fa fa-#{icon} fa-lg fa-spin'></i> &nbsp;"
 
