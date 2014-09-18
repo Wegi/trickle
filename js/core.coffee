@@ -81,9 +81,15 @@ api.closeLightbox = (delay) ->
     closeConfigDialogue = -> $("#lightbox-window").trigger "close"
     setTimeout closeConfigDialogue, delay
 
+api.closeLightbox = (delay, lightbox) ->
+    closeConfigDialogue = -> $(lightbox).trigger "close"
+    setTimeout closeConfigDialogue, delay
+
 # Load CSS files for modules
 api.loadCSS = (path) ->
 
+api.icon = (icon) ->
+    "<i class='fa fa-#{icon} fa-lg'></i> "
 
 ### END API ###
 
@@ -109,7 +115,7 @@ createBox = (numBoxes) ->
     defaultContent = """
         <div class='draggable ui-widget-content box' id='box-#{numBoxes}' style='z-index: #{baseZIndex + numBoxes}'>
             <div class='box-control'>
-                <span id='box-control-button-#{numBoxes}' class='glyphicon glyphicon-cog glyphicon-fade box-control-button'></span>
+                <i id='box-control-button-#{numBoxes}' class='fa fa-cog glyphicon-fade box-control-button'></i>
             </div>
             <div class='box-content' id='box-content-#{numBoxes}'></div>
         </div>
@@ -127,7 +133,7 @@ createBox = (numBoxes) ->
         config_dialogue_module_add "#box-content-#{numBoxes}", "#box-#{numBoxes}"
 
     # Configure mouseclick event on Preference button in box
-    $("div.box-control span#box-control-button-#{numBoxes}").click ->
+    $("div.box-control i#box-control-button-#{numBoxes}").click ->
         # Set selected Box
         thisBox = "#" + $(this).parent().parent().prop "id"
         toggle_control_menu thisBox
@@ -172,7 +178,7 @@ $("#control-menu-config").click ->
 $("#control-menu-delete").click ->
     if selectedBox
         boxContentId = "#" + $(selectedBox).children("div.box-content").prop "id"
-        config_dialogue_box_remove boxContentId, selectedBox
+        config_dialogue_box_delete boxContentId, selectedBox
     else
         toggle_control_menu undefined
 
@@ -289,16 +295,15 @@ config_dialogue_module_removal = (boxContentId, boxOuterId) ->
         # Add listener
         $(".module-single").click ->
             destroy_module $(this).attr("name"), boxContentId, boxOuterId
-            $(configBox).html "<span class='btn'><span class='glyphicon glyphicon-ok'></span> Module successfully removed.</span>"
-            closeConfigDialogue = -> $(configBox).trigger "close"
-            setTimeout closeConfigDialogue, lightboxCloseDelay
+            $(configBox).html "<span class='btn'>" + api.icon('check') + " Module successfully removed.</span>"
+            api.closeLightbox lightboxCloseDelay, configBox
     else
         $("#config-empty").lightbox_me()
         closeConfigDialogue = -> $("#config-empty").trigger "close"
         setTimeout closeConfigDialogue, lightboxCloseDelay
 
 # Remove box and destroy all assigned modules
-config_dialogue_box_remove = (boxContentId, boxOuterId) ->
+config_dialogue_box_delete = (boxContentId, boxOuterId) ->
     configBox = "#config-box"
 
     if session.boxes[selectedBox].loaded_modules
