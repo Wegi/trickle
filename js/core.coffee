@@ -115,7 +115,7 @@ createBox = (numBoxes) ->
     defaultContent = """
         <div class='draggable ui-widget-content box' id='box-#{numBoxes}' style='z-index: #{baseZIndex + numBoxes}'>
             <div class='box-control'>
-                <i id='box-control-button-#{numBoxes}' class='fa fa-cog glyphicon-fade box-control-button'></i>
+                <i id='box-control-button-#{numBoxes}' class='fa fa-cog fade box-control-button'></i>
             </div>
             <div class='box-content' id='box-content-#{numBoxes}'></div>
         </div>
@@ -294,7 +294,7 @@ config_dialogue_module_removal = (boxContentId, boxOuterId) ->
         # Add listener
         $(".module-single").click ->
             destroy_module $(this).attr("name"), boxContentId, boxOuterId
-            $(configBox).html api.icon('check') + " Module successfully removed."
+            $(configBox).html api.icon('check') + "Module successfully removed."
             api.closeLightbox lightboxCloseDelay, configBox
     else
         $("#config-empty").lightbox_me()
@@ -324,7 +324,7 @@ config_dialogue_box_delete = (boxContentId, boxOuterId) ->
         $("#config-"+boxOuterId[1..]).remove()
         toggle_control_menu selectedBox
         selectedBox = undefined
-        $(configBox).html "<span class='btn'><span class='glyphicon glyphicon-ok'></span> Box successfully removed.</span>"
+        $(configBox).html api.icon('check') + "Box successfully removed."
         api.closeLightbox lightboxCloseDelay, configBox
 
     $("#box-remove-no").click ->

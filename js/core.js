@@ -154,7 +154,7 @@ createBox = function(numBoxes) {
   if (!session.boxes["#box-" + numBoxes]) {
     session.boxes["#box-" + numBoxes] = {};
   }
-  defaultContent = "<div class='draggable ui-widget-content box' id='box-" + numBoxes + "' style='z-index: " + (baseZIndex + numBoxes) + "'>\n    <div class='box-control'>\n        <i id='box-control-button-" + numBoxes + "' class='fa fa-cog glyphicon-fade box-control-button'></i>\n    </div>\n    <div class='box-content' id='box-content-" + numBoxes + "'></div>\n</div>";
+  defaultContent = "<div class='draggable ui-widget-content box' id='box-" + numBoxes + "' style='z-index: " + (baseZIndex + numBoxes) + "'>\n    <div class='box-control'>\n        <i id='box-control-button-" + numBoxes + "' class='fa fa-cog fade box-control-button'></i>\n    </div>\n    <div class='box-content' id='box-content-" + numBoxes + "'></div>\n</div>";
   $("#boxes").append(defaultContent);
   $("#config-tabs").append("<div id='config-box-" + numBoxes + "-tabs'><ul></ul></div>");
   box = $("#box-" + numBoxes).draggable({
@@ -358,7 +358,7 @@ config_dialogue_module_removal = function(boxContentId, boxOuterId) {
     $(configBox).lightbox_me().html(content);
     return $(".module-single").click(function() {
       destroy_module($(this).attr("name"), boxContentId, boxOuterId);
-      $(configBox).html(api.icon('check') + " Module successfully removed.");
+      $(configBox).html(api.icon('check') + "Module successfully removed.");
       return api.closeLightbox(lightboxCloseDelay, configBox);
     });
   } else {
@@ -390,7 +390,7 @@ config_dialogue_box_delete = function(boxContentId, boxOuterId) {
     $("#config-" + boxOuterId.slice(1)).remove();
     toggle_control_menu(selectedBox);
     selectedBox = void 0;
-    $(configBox).html("<span class='btn'><span class='glyphicon glyphicon-ok'></span> Box successfully removed.</span>");
+    $(configBox).html(api.icon('check') + "Box successfully removed.");
     return api.closeLightbox(lightboxCloseDelay, configBox);
   });
   return $("#box-remove-no").click(function() {
