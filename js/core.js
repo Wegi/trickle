@@ -171,7 +171,7 @@ createBox = function(numBoxes) {
   if (!session.boxes["#box-" + numBoxes]) {
     session.boxes["#box-" + numBoxes] = {};
   }
-  defaultContent = "<div class='draggable ui-widget-content box' id='box-" + numBoxes + "' style='z-index: " + (baseZIndex + numBoxes) + "'>\n    <div class='box-control'>\n        <i id='box-control-button-" + numBoxes + "' class='fa fa-cog fade box-control-button'></i>\n    </div>\n    <div class='box-content' id='box-content-" + numBoxes + "'></div>\n</div>";
+  defaultContent = "<div class='draggable ui-widget-content box' id='box-" + numBoxes + "' style='z-index: " + (baseZIndex + numBoxes) + "'>\n    <div class='box-control'>\n        <i id='box-control-button-" + numBoxes + "' class='fa fa-cog fade box-control-button'></i>\n        <i id='box-lock-button-" + numBoxes + "' class='fa fa-unlock-alt fade box-lock-button'></i>\n    </div>\n    <div class='box-content' id='box-content-" + numBoxes + "'></div>\n</div>";
   $("#boxes").append(defaultContent);
   $("#config-tabs").append("<div id='config-box-" + numBoxes + "-tabs'><ul></ul></div>");
   box = $("#box-" + numBoxes).draggable({
@@ -186,6 +186,22 @@ createBox = function(numBoxes) {
     var thisBox;
     thisBox = "#" + $(this).parent().parent().prop("id");
     return toggle_control_menu(thisBox);
+  });
+  $("div.box-control i#box-lock-button-" + numBoxes).click(function() {
+    var lockButton, thisBox;
+    thisBox = "#" + $(this).parent().parent().prop("id");
+    lockButton = "#box-lock-button-" + numBoxes;
+    if ($(thisBox).hasClass("ui-draggable-disabled")) {
+      $(lockButton).removeClass("fa-lock");
+      $(lockButton).addClass("fa-unlock-alt");
+      $(thisBox).draggable("enable");
+      return $(thisBox).resizable("enable");
+    } else {
+      $(lockButton).removeClass("fa-unlock-alt");
+      $(lockButton).addClass("fa-lock");
+      $(thisBox).draggable("disable");
+      return $(thisBox).resizable("disable");
+    }
   });
   if (__indexOf.call(session.present_boxes, numBoxes) < 0) {
     return session.present_boxes.push(numBoxes);
