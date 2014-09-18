@@ -106,7 +106,7 @@ exports.init = function(content_id, config_id, session, api) {
     });
   };
   print_tweets = function(err, result) {
-    var image_id, pic_height, tweet, tweet_entry, tweets, user_img, _i, _len, _ref, _results;
+    var cnt, image_id, pic_height, picture, tweet, tweet_entry, tweets, user_img, _i, _j, _len, _len1, _ref, _ref1, _results;
     if (err) {
       return console.log(err);
     } else {
@@ -136,16 +136,21 @@ exports.init = function(content_id, config_id, session, api) {
             tweet_entry += "<div class=\"row\"><div class=\"col-md-12\">" + tweet.text + "</div></div>";
           }
           tweet_entry += "</div>";
-          if (tweet.entities.media) {
-            image_id = 'twitter-image-' + tweet.id + content_id.slice(1);
-            pic_height = tweet.entities.media[0].sizes.medium.h;
-            if (pic_height > 300) {
-              pic_height = (pic_height - 300) / 2;
-            } else {
-              pic_height = 0;
+          if (tweet.extended_entities) {
+            _ref1 = tweet.extended_entities.media;
+            for (_j = 0, _len1 = _ref1.length; _j < _len1; _j++) {
+              picture = _ref1[_j];
+              cnt = 1;
+              image_id = 'twitter-image-' + tweet.id + content_id.slice(1) + cnt;
+              pic_height = picture.sizes.medium.h;
+              if (pic_height > 300) {
+                pic_height = (pic_height - 300) / 2;
+              } else {
+                pic_height = 0;
+              }
+              tweet_entry += "<div class=\"row\"> <div class=\"col-md-12\" style=\"text-align: center;\"> <span class=\"glyphicon glyphicon-asterisk\" style=\"font-size: 0.6em;\"></span> </div></div>";
+              tweet_entry += "<div class=\"row\"> <div class=\"col-md-12\" style=\"width: 100%; height: 300px; overflow:hidden\"><img class=\"img-rounded img-responsive center-block twitter-image\" id=\"" + image_id + "\" src=\"" + picture.media_url + "\" style=\"margin-top: -" + pic_height + "px;\"></div> </div>";
             }
-            tweet_entry += "<div class=\"row\"> <div class=\"col-md-12\" style=\"text-align: center;\"> <span class=\"glyphicon glyphicon-asterisk\" style=\"font-size: 0.8em;\"></span> </div></div>";
-            tweet_entry += "<div class=\"row\"> <div class=\"col-md-12\" style=\"width: 100%; height: 300px; overflow:hidden\"><img class=\"img-rounded img-responsive center-block twitter-image\" id=\"" + image_id + "\" src=\"" + tweet.entities.media[0].media_url + "\" style=\"margin-top: -" + pic_height + "px;\"></div> </div>";
           }
           tweet_entry += "<div class=\"row\" style=\"margin-right: 0.5em;\">";
           tweet_entry += "<div class=\"col-md-12\" style=\"padding-top: 0.5em; padding-right: 0.5em; border-bottom: 1px solid #ccc;\"></div></div>";
