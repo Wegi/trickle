@@ -120,6 +120,7 @@ createBox = (numBoxes) ->
         <div class='draggable ui-widget-content box' id='box-#{numBoxes}' style='z-index: #{baseZIndex + numBoxes}'>
             <div class='box-control'>
                 <i id='box-control-button-#{numBoxes}' class='fa fa-cog fade box-control-button'></i>
+                <i id='box-lock-button-#{numBoxes}' class='fa fa-unlock-alt fade box-lock-button'></i>
             </div>
             <div class='box-content' id='box-content-#{numBoxes}'></div>
         </div>
@@ -141,6 +142,22 @@ createBox = (numBoxes) ->
         # Set selected Box
         thisBox = "#" + $(this).parent().parent().prop "id"
         toggle_control_menu thisBox
+
+    # Lock box and enable text highlighting
+    $("div.box-control i#box-lock-button-#{numBoxes}").click ->
+        # Set selected Box
+        thisBox = "#" + $(this).parent().parent().prop "id"
+        lockButton = "#box-lock-button-#{numBoxes}"
+        if $(thisBox).hasClass "ui-draggable-disabled"
+            $(lockButton).removeClass "fa-lock"
+            $(lockButton).addClass "fa-unlock-alt"
+            $(thisBox).draggable "enable"
+            $(thisBox).resizable "enable"
+        else
+            $(lockButton).removeClass "fa-unlock-alt"
+            $(lockButton).addClass "fa-lock"
+            $(thisBox).draggable "disable"
+            $(thisBox).resizable "disable"
 
     if numBoxes not in session.present_boxes
         session.present_boxes.push numBoxes
