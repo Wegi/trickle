@@ -95,6 +95,20 @@ api.icon = (icon) ->
 api.icon.spinning = (icon) ->
     "<i class='fa fa-#{icon} fa-lg fa-spin'></i> &nbsp;"
 
+# Posts content to a window-box. Handles amount and look inside the box
+api.postContent = (content, contentID) ->
+    if not session.maximumPosts
+        session.maximumPosts = 50
+    # The first two lines probably should be executed somewhere else
+    postCount = $(contentID).children().length
+    while postCount > session.maximumPosts
+        $(contentID).children().last().remove()
+        postCount = $(contentID).children().length
+    $(contentID).prepend content
+
+# Remove all content having a certain class
+api.removeAllContent = (modClass, contentID) ->
+    $(contentID).children('.'+modClass).remove()
 ### END API ###
 
 
@@ -341,6 +355,10 @@ config_dialogue_box_delete = (boxContentId, boxOuterId) ->
         for module in boxModules
             destroy_module module, boxContentId, boxOuterId
         delete session.boxes[selectedBox]
+        boxNum = getNumFromName boxOuterId
+        index = (session.present_boxes).indexOf boxNum
+        if index > -1
+            (session.present_boxes).splice index, 1
         $(selectedBox).remove()
         $("#config-"+boxOuterId[1..]).remove()
         toggle_control_menu selectedBox
@@ -411,7 +429,7 @@ destroy_module = (modname, boxContentId, boxOuterId) ->
         # Take hook and require it. This should be in a different function
         mod = require("./" + path.join(moddir, path.basename(config.hook, path.extname(config.hook))))
         # Destroy module
-        mod.destroy boxContentId, session
+        mod.destroy boxContentId, session, api
         # remove from loaded modules
         i = session.boxes[boxOuterId].loaded_modules.indexOf "twitter"
         if i != -1

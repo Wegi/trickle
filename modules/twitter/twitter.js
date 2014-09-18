@@ -19,11 +19,11 @@ $ = require('jquery');
 
 gui = window.require('nw.gui');
 
-exports.destroy = function(boxContentId, session) {
+exports.destroy = function(boxContentId, session, api) {
   if (session.twitter[boxContentId].update_stream) {
     session.twitter[boxContentId].update_stream.removeAllListeners('data');
   }
-  $(boxContentId).children('.trickle-twitter').remove();
+  api.removeAllContent('trickle-twitter', boxContentId);
   return delete session.twitter[boxContentId];
 };
 
@@ -106,7 +106,7 @@ exports.init = function(content_id, config_id, session, api) {
     });
   };
   print_tweets = function(err, result) {
-    var cnt, image_id, pic_height, picture, tweet, tweet_entry, tweets, user_img, _i, _j, _len, _len1, _ref, _ref1, _results;
+    var cnt, e, image_id, pic_height, picture, tweet, tweet_entry, tweets, user_img, _i, _j, _len, _len1, _ref, _ref1, _results;
     if (err) {
       return console.log(err);
     } else {
@@ -154,7 +154,7 @@ exports.init = function(content_id, config_id, session, api) {
           }
           tweet_entry += "<div class=\"row\" style=\"margin-right: 0.5em;\">";
           tweet_entry += "<div class=\"col-md-12\" style=\"padding-top: 0.5em; padding-right: 0.5em; border-bottom: 1px solid #ccc;\"></div></div>";
-          $(content_id).prepend(tweet_entry);
+          api.postContent(tweet_entry, content_id);
           if (tweet.entities.media) {
             _results.push(setLightboxEvent('#' + image_id));
           } else {
@@ -163,6 +163,8 @@ exports.init = function(content_id, config_id, session, api) {
         }
         return _results;
       } catch (_error) {
+        e = _error;
+        console.log(e);
         return console.log("Tweet unreadable (probably Limit exceeded)");
       }
     }

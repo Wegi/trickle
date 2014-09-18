@@ -121,6 +121,23 @@ api.icon.spinning = function(icon) {
   return "<i class='fa fa-" + icon + " fa-lg fa-spin'></i> &nbsp;";
 };
 
+api.postContent = function(content, contentID) {
+  var postCount;
+  if (!session.maximumPosts) {
+    session.maximumPosts = 50;
+  }
+  postCount = $(contentID).children().length;
+  while (postCount > session.maximumPosts) {
+    $(contentID).children().last().remove();
+    postCount = $(contentID).children().length;
+  }
+  return $(contentID).prepend(content);
+};
+
+api.removeAllContent = function(modClass, contentID) {
+  return $(contentID).children('.' + modClass).remove();
+};
+
 
 /* END API */
 
@@ -396,12 +413,17 @@ config_dialogue_box_delete = function(boxContentId, boxOuterId) {
   content += "<button class='btn btn-default' id='box-remove-no'>No</button>";
   $(configBox).lightbox_me().html(content);
   $("#box-remove-yes").click(function() {
-    var module, _i, _len;
+    var boxNum, index, module, _i, _len;
     for (_i = 0, _len = boxModules.length; _i < _len; _i++) {
       module = boxModules[_i];
       destroy_module(module, boxContentId, boxOuterId);
     }
     delete session.boxes[selectedBox];
+    boxNum = getNumFromName(boxOuterId);
+    index = session.present_boxes.indexOf(boxNum);
+    if (index > -1) {
+      session.present_boxes.splice(index, 1);
+    }
     $(selectedBox).remove();
     $("#config-" + boxOuterId.slice(1)).remove();
     toggle_control_menu(selectedBox);
@@ -464,7 +486,7 @@ destroy_module = function(modname, boxContentId, boxOuterId) {
   config = load_conf(moddir);
   if (config) {
     mod = require("./" + path.join(moddir, path.basename(config.hook, path.extname(config.hook))));
-    mod.destroy(boxContentId, session);
+    mod.destroy(boxContentId, session, api);
     i = session.boxes[boxOuterId].loaded_modules.indexOf("twitter");
     if (i !== -1) {
       return session.boxes[boxOuterId].loaded_modules.splice(i, 1);

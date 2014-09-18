@@ -11,12 +11,13 @@ $ = require 'jquery'
 gui = window.require 'nw.gui'
 
 
-exports.destroy = (boxContentId, session) ->
+exports.destroy = (boxContentId, session, api) ->
     # stop updates
     if session.twitter[boxContentId].update_stream
         session.twitter[boxContentId].update_stream.removeAllListeners 'data'
     # kill all your posts
-    $(boxContentId).children('.trickle-twitter').remove()
+    api.removeAllContent 'trickle-twitter', boxContentId
+    #$(boxContentId).children('.trickle-twitter').remove()
     # delete your data
     delete session.twitter[boxContentId]
 
@@ -147,12 +148,14 @@ exports.init = (content_id, config_id, session, api) ->
                     tweet_entry += """<div class="row" style="margin-right: 0.5em;">"""
                     tweet_entry += """<div class="col-md-12" style="padding-top: 0.5em; padding-right: 0.5em; border-bottom: 1px solid #ccc;"></div></div>"""
 
-                    $(content_id).prepend tweet_entry
+                    #$(content_id).prepend tweet_entry
+                    api.postContent tweet_entry, content_id
 
                     #only set listener if image is actually available
                     if tweet.entities.media
                         setLightboxEvent('#'+image_id)
-            catch
+            catch e
+                console.log e
                 console.log "Tweet unreadable (probably Limit exceeded)"
 
     setLightboxEvent = (selector) ->
