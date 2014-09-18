@@ -147,12 +147,14 @@ exports.init = (content_id, config_id, session, api) ->
                     tweet_entry += """<div class="row" style="margin-right: 0.5em;">"""
                     tweet_entry += """<div class="col-md-12" style="padding-top: 0.5em; padding-right: 0.5em; border-bottom: 1px solid #ccc;"></div></div>"""
 
-                    $(content_id).prepend tweet_entry
+                    #$(content_id).prepend tweet_entry
+                    api.postContent tweet_entry, content_id
 
                     #only set listener if image is actually available
                     if tweet.entities.media
                         setLightboxEvent('#'+image_id)
-            catch
+            catch e
+                console.log e
                 console.log "Tweet unreadable (probably Limit exceeded)"
 
     setLightboxEvent = (selector) ->
