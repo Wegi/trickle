@@ -9,7 +9,6 @@ twitter_req = require 'twitter-request'
 async = require 'async'
 $ = require 'jquery'
 gui = window.require 'nw.gui'
-lightbox =
 
 
 exports.destroy = (boxContentId, session) ->
