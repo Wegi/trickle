@@ -141,7 +141,7 @@ exports.init = (content_id, config_id, session, api) ->
                             pic_height = (pic_height - 300) / 2
                         else
                             pic_height = 0
-                        tweet_entry += """<div class="row"> <div class="col-md-12" style="text-align: center;"> <span class="glyphicon glyphicon-asterisk"></span> </div></div>"""
+                        tweet_entry += """<div class="row"> <div class="col-md-12" style="text-align: center;"> <span class="glyphicon glyphicon-asterisk" style="font-size: 0.8em;"></span> </div></div>"""
                         tweet_entry += """<div class="row"> <div class="col-md-12" style="width: 100%; height: 300px; overflow:hidden"><img class="img-rounded img-responsive center-block twitter-image" id="#{image_id}" src="#{tweet.entities.media[0].media_url}" style="margin-top: -#{pic_height}px;"></div> </div>"""
                     tweet_entry += """<div class="row" style="margin-right: 0.5em;">"""
                     tweet_entry += """<div class="col-md-12" style="padding-top: 0.5em; padding-right: 0.5em; border-bottom: 1px solid #ccc;"></div></div>"""
