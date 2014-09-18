@@ -19,11 +19,11 @@ $ = require('jquery');
 
 gui = window.require('nw.gui');
 
-exports.destroy = function(boxContentId, session) {
+exports.destroy = function(boxContentId, session, api) {
   if (session.twitter[boxContentId].update_stream) {
     session.twitter[boxContentId].update_stream.removeAllListeners('data');
   }
-  $(boxContentId).children('.trickle-twitter').remove();
+  api.removeAllContent('trickle-twitter', boxContentId);
   return delete session.twitter[boxContentId];
 };
 

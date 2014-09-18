@@ -106,6 +106,9 @@ api.postContent = (content, contentID) ->
         postCount = $(contentID).children().length
     $(contentID).prepend content
 
+# Remove all content having a certain class
+api.removeAllContent = (modClass, contentID) ->
+    $(contentID).children('.'+modClass).remove()
 ### END API ###
 
 
@@ -409,7 +412,7 @@ destroy_module = (modname, boxContentId, boxOuterId) ->
         # Take hook and require it. This should be in a different function
         mod = require("./" + path.join(moddir, path.basename(config.hook, path.extname(config.hook))))
         # Destroy module
-        mod.destroy boxContentId, session
+        mod.destroy boxContentId, session, api
         # remove from loaded modules
         i = session.boxes[boxOuterId].loaded_modules.indexOf "twitter"
         if i != -1

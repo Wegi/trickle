@@ -11,12 +11,13 @@ $ = require 'jquery'
 gui = window.require 'nw.gui'
 
 
-exports.destroy = (boxContentId, session) ->
+exports.destroy = (boxContentId, session, api) ->
     # stop updates
     if session.twitter[boxContentId].update_stream
         session.twitter[boxContentId].update_stream.removeAllListeners 'data'
     # kill all your posts
-    $(boxContentId).children('.trickle-twitter').remove()
+    api.removeAllContent 'trickle-twitter', boxContentId
+    #$(boxContentId).children('.trickle-twitter').remove()
     # delete your data
     delete session.twitter[boxContentId]
 

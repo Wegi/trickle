@@ -134,6 +134,10 @@ api.postContent = function(content, contentID) {
   return $(contentID).prepend(content);
 };
 
+api.removeAllContent = function(modClass, contentID) {
+  return $(contentID).children('.' + modClass).remove();
+};
+
 
 /* END API */
 
@@ -466,7 +470,7 @@ destroy_module = function(modname, boxContentId, boxOuterId) {
   config = load_conf(moddir);
   if (config) {
     mod = require("./" + path.join(moddir, path.basename(config.hook, path.extname(config.hook))));
-    mod.destroy(boxContentId, session);
+    mod.destroy(boxContentId, session, api);
     i = session.boxes[boxOuterId].loaded_modules.indexOf("twitter");
     if (i !== -1) {
       return session.boxes[boxOuterId].loaded_modules.splice(i, 1);
