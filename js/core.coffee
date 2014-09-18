@@ -263,8 +263,7 @@ config_dialogue_edit = (boxContentId, boxOuterId) ->
     tempLoadedModules = session.boxes[boxOuterId].loaded_modules
     if not tempLoadedModules or tempLoadedModules.length == 0
         $("#config-empty").lightbox_me()
-        closeConfigDialogue = -> $("#config-empty").trigger "close"
-        setTimeout closeConfigDialogue, lightboxCloseDelay
+        api.closeLightbox lightboxCloseDelay, "#config-empty"
     else
         for module in modules
             if (module.charAt 0) != '.'
@@ -295,12 +294,11 @@ config_dialogue_module_removal = (boxContentId, boxOuterId) ->
         # Add listener
         $(".module-single").click ->
             destroy_module $(this).attr("name"), boxContentId, boxOuterId
-            $(configBox).html "<span class='btn'>" + api.icon('check') + " Module successfully removed.</span>"
+            $(configBox).html api.icon('check') + " Module successfully removed."
             api.closeLightbox lightboxCloseDelay, configBox
     else
         $("#config-empty").lightbox_me()
-        closeConfigDialogue = -> $("#config-empty").trigger "close"
-        setTimeout closeConfigDialogue, lightboxCloseDelay
+        api.closeLightbox lightboxCloseDelay, "#config-empty"
 
 # Remove box and destroy all assigned modules
 config_dialogue_box_delete = (boxContentId, boxOuterId) ->
@@ -327,8 +325,7 @@ config_dialogue_box_delete = (boxContentId, boxOuterId) ->
         toggle_control_menu selectedBox
         selectedBox = undefined
         $(configBox).html "<span class='btn'><span class='glyphicon glyphicon-ok'></span> Box successfully removed.</span>"
-        closeConfigDialogue = -> $(configBox).trigger "close"
-        setTimeout closeConfigDialogue, lightboxCloseDelay
+        api.closeLightbox lightboxCloseDelay, configBox
 
     $("#box-remove-no").click ->
         $(configBox).trigger "close"

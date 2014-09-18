@@ -324,14 +324,11 @@ config_dialogue_module_add = function(boxContentId, boxOuterId) {
 };
 
 config_dialogue_edit = function(boxContentId, boxOuterId) {
-  var closeConfigDialogue, module, selectConfigBoxTabs, tempLoadedModules, _i, _len;
+  var module, selectConfigBoxTabs, tempLoadedModules, _i, _len;
   tempLoadedModules = session.boxes[boxOuterId].loaded_modules;
   if (!tempLoadedModules || tempLoadedModules.length === 0) {
     $("#config-empty").lightbox_me();
-    closeConfigDialogue = function() {
-      return $("#config-empty").trigger("close");
-    };
-    setTimeout(closeConfigDialogue, lightboxCloseDelay);
+    api.closeLightbox(lightboxCloseDelay, "#config-empty");
   } else {
     for (_i = 0, _len = modules.length; _i < _len; _i++) {
       module = modules[_i];
@@ -346,7 +343,7 @@ config_dialogue_edit = function(boxContentId, boxOuterId) {
 };
 
 config_dialogue_module_removal = function(boxContentId, boxOuterId) {
-  var boxModules, closeConfigDialogue, configBox, content, module, _i, _len;
+  var boxModules, configBox, content, module, _i, _len;
   configBox = "#config-box";
   boxModules = session.boxes[selectedBox].loaded_modules;
   content = "<h3>Remove modules from box</h3>";
@@ -361,15 +358,12 @@ config_dialogue_module_removal = function(boxContentId, boxOuterId) {
     $(configBox).lightbox_me().html(content);
     return $(".module-single").click(function() {
       destroy_module($(this).attr("name"), boxContentId, boxOuterId);
-      $(configBox).html("<span class='btn'>" + api.icon('check') + " Module successfully removed.</span>");
+      $(configBox).html(api.icon('check') + " Module successfully removed.");
       return api.closeLightbox(lightboxCloseDelay, configBox);
     });
   } else {
     $("#config-empty").lightbox_me();
-    closeConfigDialogue = function() {
-      return $("#config-empty").trigger("close");
-    };
-    return setTimeout(closeConfigDialogue, lightboxCloseDelay);
+    return api.closeLightbox(lightboxCloseDelay, "#config-empty");
   }
 };
 
@@ -386,7 +380,7 @@ config_dialogue_box_delete = function(boxContentId, boxOuterId) {
   content += "<button class='btn btn-default' id='box-remove-no'>No</button>";
   $(configBox).lightbox_me().html(content);
   $("#box-remove-yes").click(function() {
-    var closeConfigDialogue, module, _i, _len;
+    var module, _i, _len;
     for (_i = 0, _len = boxModules.length; _i < _len; _i++) {
       module = boxModules[_i];
       destroy_module(module, boxContentId, boxOuterId);
@@ -397,10 +391,7 @@ config_dialogue_box_delete = function(boxContentId, boxOuterId) {
     toggle_control_menu(selectedBox);
     selectedBox = void 0;
     $(configBox).html("<span class='btn'><span class='glyphicon glyphicon-ok'></span> Box successfully removed.</span>");
-    closeConfigDialogue = function() {
-      return $(configBox).trigger("close");
-    };
-    return setTimeout(closeConfigDialogue, lightboxCloseDelay);
+    return api.closeLightbox(lightboxCloseDelay, configBox);
   });
   return $("#box-remove-no").click(function() {
     return $(configBox).trigger("close");
