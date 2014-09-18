@@ -125,13 +125,15 @@ exports.init = (content_id, config_id, session, api) ->
                     user_img = tweet.user.profile_image_url
                     tweet_entry = """<div class="row trickle-twitter" style="margin-bottom: 0.5em; margin-right: 0.5em;">"""
                     if tweet.retweeted_status
+                        text = (tweet.retweeted_status.text).replace(/\n/g, "<br>")
                         tweet_entry += """<div class="col-md-2"><img class="img-rounded "src="#{tweet.retweeted_status.user.profile_image_url}" height="55" width="55"></div>"""
                         tweet_entry += """<div class="col-md-10"><div class="row"><div class="col-md-12"><strong>#{tweet.retweeted_status.user.name}</strong> <small>@#{tweet.retweeted_status.user.screen_name} (retweeted by #{tweet.user.name})</small></div></div> """
-                        tweet_entry += """<div class="row"><div class="col-md-12">#{tweet.retweeted_status.text}</div></div>"""
+                        tweet_entry += """<div class="row"><div class="col-md-12">#{text}</div></div>"""
                     else
+                        text = (tweet.text).replace("\n", "<br>")
                         tweet_entry += """<div class="col-md-2"><img class="img-rounded "src="#{user_img}" height="55" width="55"></div>"""
                         tweet_entry += """<div class="col-md-10"><div class="row"><div class="col-md-12"><strong>#{tweet.user.name}</strong> <small>@#{tweet.user.screen_name}</small></div></div> """
-                        tweet_entry += """<div class="row"><div class="col-md-12">#{tweet.text}</div></div>"""
+                        tweet_entry += """<div class="row"><div class="col-md-12">#{text}</div></div>"""
                     tweet_entry += """</div>"""
                     if tweet.extended_entities
                         for picture in tweet.extended_entities.media
