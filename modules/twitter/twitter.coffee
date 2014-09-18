@@ -43,7 +43,7 @@ exports.init = (content_id, config_id, session, api) ->
     authenticate = (callback) ->
         awaiting_config = true
         # Show spinner while loading
-        $(config_id).html "<span class='btn'><span class='glyphicon glyphicon-refresh'></span> Initializing...</span>"
+        $(config_id).html api.icon.spinning("refresh") + "Initializing..."
         oauth.getOAuthRequestToken (error, user_token, user_secret, results) ->
             session.twitter.user_token = user_token
             session.twitter.user_secret = user_secret
@@ -64,16 +64,16 @@ exports.init = (content_id, config_id, session, api) ->
                 PIN = $("#twitter-input-#{snipid}").val()
 
                 # Show spinner while loading
-                $(config_id).html "<span class='btn'><span class='glyphicon glyphicon-refresh'></span> Validating PIN...</span>"
+                $(config_id).html api.icon.spinning("refresh") + "Validating PIN..."
 
                 oauth.getOAuthAccessToken user_token, user_secret, PIN ,
                 (error, oauth_access_token, oauth_access_token_secret, results) ->
                     if error
-                        $(config_id).html "<span class='btn'><span class='glyphicon glyphicon-remove'></span> An error occured.</span>"
+                        $(config_id).html api.icon("close") +  "An error occured."
                         console.log(error)
                         awaiting_config = false
                     else
-                        $(config_id).html "<span class='btn'><span class='glyphicon glyphicon-refresh'></span> Loading Tweets...</span>"
+                        $(config_id).html api.icon.spinning("refresh") + "Loading Tweets..."
                         session.twitter.access_token = oauth_access_token;
                         session.twitter.access_secret = oauth_access_token_secret;
                         awaiting_config = false
@@ -81,7 +81,7 @@ exports.init = (content_id, config_id, session, api) ->
 
 
     get_stream = (callback) ->
-        $(config_id).html "<span class='btn'><span class='glyphicon glyphicon-ok'></span> Everything worked. You can close the config now.</span>"
+        $(config_id).html api.icon("check") + "Everything worked. You can close the config now."
         readyoauth =
             consumer_key: consumer_key
             consumer_secret: consumerSecret

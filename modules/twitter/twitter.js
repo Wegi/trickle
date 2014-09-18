@@ -39,7 +39,7 @@ exports.init = function(content_id, config_id, session, api) {
   oauth = new OAuth("https://api.twitter.com/oauth/request_token", "https://api.twitter.com/oauth/access_token", consumer_key, consumerSecret, "1.0", "oob", "HMAC-SHA1");
   authenticate = function(callback) {
     awaiting_config = true;
-    $(config_id).html("<span class='btn'><span class='glyphicon glyphicon-refresh'></span> Initializing...</span>");
+    $(config_id).html(api.icon.spinning("refresh") + "Initializing...");
     return oauth.getOAuthRequestToken(function(error, user_token, user_secret, results) {
       var link, query_html, snipid;
       session.twitter.user_token = user_token;
@@ -54,14 +54,14 @@ exports.init = function(content_id, config_id, session, api) {
       return $("#twitter-pin-" + snipid).click(function() {
         var PIN;
         PIN = $("#twitter-input-" + snipid).val();
-        $(config_id).html("<span class='btn'><span class='glyphicon glyphicon-refresh'></span> Validating PIN...</span>");
+        $(config_id).html(api.icon.spinning("refresh") + "Validating PIN...");
         return oauth.getOAuthAccessToken(user_token, user_secret, PIN, function(error, oauth_access_token, oauth_access_token_secret, results) {
           if (error) {
-            $(config_id).html("<span class='btn'><span class='glyphicon glyphicon-remove'></span> An error occured.</span>");
+            $(config_id).html(api.icon("close") + "An error occured.");
             console.log(error);
             return awaiting_config = false;
           } else {
-            $(config_id).html("<span class='btn'><span class='glyphicon glyphicon-refresh'></span> Loading Tweets...</span>");
+            $(config_id).html(api.icon.spinning("refresh") + "Loading Tweets...");
             session.twitter.access_token = oauth_access_token;
             session.twitter.access_secret = oauth_access_token_secret;
             awaiting_config = false;
@@ -73,7 +73,7 @@ exports.init = function(content_id, config_id, session, api) {
   };
   get_stream = function(callback) {
     var query, readyoauth, treq;
-    $(config_id).html("<span class='btn'><span class='glyphicon glyphicon-ok'></span> Everything worked. You can close the config now.</span>");
+    $(config_id).html(api.icon("check") + "Everything worked. You can close the config now.");
     readyoauth = {
       consumer_key: consumer_key,
       consumer_secret: consumerSecret,

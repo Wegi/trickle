@@ -92,7 +92,7 @@ api.icon = (icon) ->
     "<i class='fa fa-#{icon} fa-lg'></i> "
 
 api.icon.spinning = (icon) ->
-    "<i class='fa fa-#{icon} fa-lg fa-spin'></i> "
+    "<i class='fa fa-#{icon} fa-lg fa-spin'></i> &nbsp;"
 
 ### END API ###
 
