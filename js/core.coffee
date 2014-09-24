@@ -84,9 +84,6 @@ api.closeLightbox = (delay, lightbox) ->
     closeConfigDialogue = -> $(lightbox).trigger "close"
     setTimeout closeConfigDialogue, delay
 
-# Load CSS files for modules
-api.loadCSS = (path) ->
-
 # Include font awesome icons
 api.icon = (icon) ->
     "<i class='fa fa-#{icon} fa-lg'></i> "
@@ -395,10 +392,21 @@ create_module_list_items = (module) ->
 
     return content
 
+# Load CSS files for modules. Appends all files in a module's css subdirectory ending with .css
+load_css_of_module = (moddir) ->
+    cssDir = path.join moddir, "css"
+    fs.readdir cssDir, (err, files) ->
+        throw err if err
+        for file in files
+            if file.endsWith(".css")
+                css = path.join cssDir, file
+                $("head").append "<link rel='stylesheet' type='text/css' href='#{css}'>"
+
 # Get into the module and look for config.json
 load_module = (modname, boxContentId, boxOuterId, configWindow) ->
     moddir = path.join(modpath, modname)
     config = load_conf moddir
+    load_css_of_module moddir
 
     if config
         # Take hook and require it. This should be in a different function
