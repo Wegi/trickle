@@ -394,13 +394,15 @@ create_module_list_items = (module) ->
 
 # Load CSS files for modules. Appends all files in a module's css subdirectory ending with .css
 load_css_of_module = (moddir) ->
-    cssDir = path.join moddir, "css"
-    fs.readdir cssDir, (err, files) ->
-        throw err if err
-        for file in files
-            if file.endsWith(".css")
-                css = path.join cssDir, file
-                $("head").append "<link rel='stylesheet' type='text/css' href='#{css}'>"
+    try
+        cssDir = path.join moddir, "css"
+        fs.readdir cssDir, (err, files) ->
+            if err
+                return
+            for file in files
+                if file.endsWith(".css")
+                    css = path.join cssDir, file
+                    $("head").append "<link rel='stylesheet' type='text/css' href='#{css}'>"
 
 # Get into the module and look for config.json
 load_module = (modname, boxContentId, boxOuterId, configWindow) ->

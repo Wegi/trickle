@@ -459,24 +459,26 @@ create_module_list_items = function(module) {
 
 load_css_of_module = function(moddir) {
   var cssDir;
-  cssDir = path.join(moddir, "css");
-  return fs.readdir(cssDir, function(err, files) {
-    var css, file, _i, _len, _results;
-    if (err) {
-      throw err;
-    }
-    _results = [];
-    for (_i = 0, _len = files.length; _i < _len; _i++) {
-      file = files[_i];
-      if (file.endsWith(".css")) {
-        css = path.join(cssDir, file);
-        _results.push($("head").append("<link rel='stylesheet' type='text/css' href='" + css + "'>"));
-      } else {
-        _results.push(void 0);
+  try {
+    cssDir = path.join(moddir, "css");
+    return fs.readdir(cssDir, function(err, files) {
+      var css, file, _i, _len, _results;
+      if (err) {
+        return;
       }
-    }
-    return _results;
-  });
+      _results = [];
+      for (_i = 0, _len = files.length; _i < _len; _i++) {
+        file = files[_i];
+        if (file.endsWith(".css")) {
+          css = path.join(cssDir, file);
+          _results.push($("head").append("<link rel='stylesheet' type='text/css' href='" + css + "'>"));
+        } else {
+          _results.push(void 0);
+        }
+      }
+      return _results;
+    });
+  } catch (_error) {}
 };
 
 load_module = function(modname, boxContentId, boxOuterId, configWindow) {
