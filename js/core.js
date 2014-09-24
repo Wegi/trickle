@@ -27,7 +27,8 @@ modules = [];
 
 fs.readdir(modpath, function(err, files) {
   if (err) {
-    throw err;
+    modules = [];
+    return;
   }
   return modules = files;
 });

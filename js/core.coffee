@@ -22,7 +22,9 @@ modules = []
 
 # List all modules in path
 fs.readdir modpath, (err, files) ->
-    throw err if err
+    if err
+        modules = []
+        return
     modules = files
 
 # Get Home PATH
