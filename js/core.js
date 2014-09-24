@@ -319,7 +319,7 @@ toggle_control_menu = function(thisBox) {
     if (!animateBoxes) {
       control_menu_show_standard_hide_edit(animationDirection);
     }
-    return selectedBox = null;
+    return selectedBox = void 0;
   } else {
     $(selectedBox).css("border", normalBorder);
     $(thisBox).css("border", highlightedBorder);

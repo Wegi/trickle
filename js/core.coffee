@@ -260,7 +260,7 @@ toggle_control_menu = (thisBox) ->
         $(selectedBox).css "border", normalBorder
         if not animateBoxes
             control_menu_show_standard_hide_edit animationDirection
-        selectedBox = null
+        selectedBox = undefined
     # if one box is already highlighted, but another config is selected
     else
         $(selectedBox).css "border", normalBorder
@@ -306,7 +306,6 @@ config_dialogue_edit = (boxContentId, boxOuterId) ->
 
         selectConfigBoxTabs = "#config-"+boxOuterId[1..]+"-tabs"
         $(selectConfigBoxTabs).tabs().lightbox_me()
-
     showConfig = false
 
 # Destroy modules from a box
