@@ -125,17 +125,17 @@ exports.init = function(content_id, config_id, session, api) {
         for (_i = 0, _len = _ref.length; _i < _len; _i++) {
           tweet = _ref[_i];
           user_img = tweet.user.profile_image_url;
-          tweet_entry = "<div class=\"row trickle-twitter\" style=\"margin-bottom: 0.5em; margin-right: 0.5em;\">";
+          tweet_entry = "<div class='row trickle-twitter' style='margin-bottom: 0.5em; margin-right: 0.5em;'>";
           if (tweet.retweeted_status) {
             text = tweet.retweeted_status.text.replace(/\n/g, "<br>");
-            tweet_entry += "<div class=\"col-md-2\"><img class=\"img-rounded \"src=\"" + tweet.retweeted_status.user.profile_image_url + "\" height=\"55\" width=\"55\"></div>";
-            tweet_entry += "<div class=\"col-md-10\"><div class=\"row\"><div class=\"col-md-12\"><strong>" + tweet.retweeted_status.user.name + "</strong> <small>@" + tweet.retweeted_status.user.screen_name + " (retweeted by " + tweet.user.name + ")</small></div></div> ";
-            tweet_entry += "<div class=\"row\"><div class=\"col-md-12\">" + text + "</div></div>";
+            tweet_entry += "<div class='col-md-2'><img class='img-rounded 'src='" + tweet.retweeted_status.user.profile_image_url + "' height='55' width='55'></div>";
+            tweet_entry += "<div class='col-md-10'><div class='row'><div class='col-md-12'><strong>" + tweet.retweeted_status.user.name + "</strong> <small>@" + tweet.retweeted_status.user.screen_name + " (retweeted by " + tweet.user.name + ")</small></div></div> ";
+            tweet_entry += "<div class='row'><div class='col-md-12'>" + text + "</div></div>";
           } else {
             text = tweet.text.replace("\n", "<br>");
-            tweet_entry += "<div class=\"col-md-2\"><img class=\"img-rounded \"src=\"" + user_img + "\" height=\"55\" width=\"55\"></div>";
-            tweet_entry += "<div class=\"col-md-10\"><div class=\"row\"><div class=\"col-md-12\"><strong>" + tweet.user.name + "</strong> <small>@" + tweet.user.screen_name + "</small></div></div> ";
-            tweet_entry += "<div class=\"row\"><div class=\"col-md-12\">" + text + "</div></div>";
+            tweet_entry += "<div class='col-md-2'><img class='img-rounded 'src='" + user_img + "' height='55' width='55'></div>";
+            tweet_entry += "<div class='col-md-10'><div class='row'><div class='col-md-12'><strong>" + tweet.user.name + "</strong> <small>@" + tweet.user.screen_name + "</small></div></div> ";
+            tweet_entry += "<div class='row'><div class='col-md-12'>" + text + "</div></div>";
           }
           tweet_entry += "</div>";
           if (tweet.extended_entities) {
@@ -150,12 +150,12 @@ exports.init = function(content_id, config_id, session, api) {
               } else {
                 pic_height = 0;
               }
-              tweet_entry += "<div class=\"row\"> <div class=\"col-md-12\" style=\"text-align: center;\"> <span class=\"glyphicon glyphicon-asterisk\" style=\"font-size: 0.6em;\"></span> </div></div>";
-              tweet_entry += "<div class=\"row\"> <div class=\"col-md-12\" style=\"width: 100%; height: 300px; overflow:hidden\"><img class=\"img-rounded img-responsive center-block twitter-image\" id=\"" + image_id + "\" src=\"" + picture.media_url + "\" style=\"margin-top: -" + pic_height + "px;\"></div> </div>";
+              tweet_entry += "<div class='row'> <div class='col-md-12' style='text-align: center;'> <span class='glyphicon glyphicon-asterisk' style='font-size: 0.6em;'></span> </div></div>";
+              tweet_entry += "<div class='row'> <div class='col-md-12' style='width: 100%; height: 300px; overflow:hidden'><img class='img-rounded img-responsive center-block twitter-image' id='" + image_id + "' src='" + picture.media_url + "' style='margin-top: -" + pic_height + "px;'></div> </div>";
             }
           }
-          tweet_entry += "<div class=\"row\" style=\"margin-right: 0.5em;\">";
-          tweet_entry += "<div class=\"col-md-12\" style=\"padding-top: 0.5em; padding-right: 0.5em; border-bottom: 1px solid #ccc;\"></div></div>";
+          tweet_entry += "<div class='row' style='margin-right: 0.5em;'>";
+          tweet_entry += "<div class='col-md-12' style='padding-top: 0.5em; padding-right: 0.5em; border-bottom: 1px solid #ccc;'></div></div>";
           api.postContent(tweet_entry, content_id);
           if (tweet.entities.media) {
             _results.push(setLightboxEvent('#' + image_id));
@@ -176,7 +176,7 @@ exports.init = function(content_id, config_id, session, api) {
     return $("" + selector).click(function() {
       var content, src;
       src = $(this).prop('src');
-      content = "<img src=\"" + src + "\"> ";
+      content = "<img src='" + src + "'> ";
       return api.lightbox(content);
     });
   };
