@@ -551,8 +551,9 @@ load_theme = function() {
   }
   try {
     cssDir = path.join("themes", theme);
-    return append_css_files(cssDir);
+    append_css_files(cssDir);
   } catch (_error) {}
+  return $(".mastfoot").fadeIn(2000);
 };
 
 $(function() {

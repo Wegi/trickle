@@ -476,6 +476,8 @@ load_theme = ->
     try
         cssDir = path.join "themes", theme
         append_css_files cssDir
+    $(".mastfoot").fadeIn 2000
+
 
 $ ->
     # Select theme
