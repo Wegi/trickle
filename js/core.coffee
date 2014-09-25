@@ -107,7 +107,7 @@ api.postContent = (content, contentID) ->
 
 # Remove all content having a certain class
 api.removeAllContent = (modClass, contentID) ->
-    $(contentID).children('.'+modClass).remove()
+    $(contentID).children('.' + modClass).remove()
 ### END API ###
 
 

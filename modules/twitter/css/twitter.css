@@ -1,0 +1,27 @@
+.trickle-twitter {
+    margin-bottom: 0.5em;
+    margin-right: 0.5em;
+}
+
+    .trickle-twitter .img-small {
+        height: 55px;
+        width: 55px;
+    }
+
+    .trickle-twitter .img-wrapper {
+        width: 100%;
+        height: 300px;
+        overflow: hidden;
+    }
+
+    .trickle-twitter .img-divider {
+        text-align: center;
+        font-size: 0.6em;
+        padding: 0.25em 0;
+    }
+
+    .trickle-twitter .col-bottom {
+        padding-top: 0.5em;
+        padding-right: 0.5em;
+        border-bottom: 1px solid #ccc;
+    }
