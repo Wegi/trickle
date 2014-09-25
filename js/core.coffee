@@ -66,6 +66,7 @@ $.fn.center = ->
 
 ### General Commands ###
 $ ->
+    # Add Tabs to config menu
     $("#config-tabs").tabs();
 
 ### END General Commands ###
@@ -394,23 +395,27 @@ create_module_list_items = (module) ->
 
     return content
 
+# Load all css files
+append_css_files = (directory) ->
+    fs.readdir directory, (err, files) ->
+        if err
+            return
+        for file in files
+            if file.endsWith(".css")
+                css = path.join directory, file
+                $("head").append "<link rel='stylesheet' type='text/css' href='#{css}'>"
+
 # Load CSS files for modules. Appends all files in a module's css subdirectory ending with .css
-load_css_of_module = (moddir) ->
+load_css = (moddir) ->
     try
         cssDir = path.join moddir, "css"
-        fs.readdir cssDir, (err, files) ->
-            if err
-                return
-            for file in files
-                if file.endsWith(".css")
-                    css = path.join cssDir, file
-                    $("head").append "<link rel='stylesheet' type='text/css' href='#{css}'>"
+        append_css_files cssDir
 
 # Get into the module and look for config.json
 load_module = (modname, boxContentId, boxOuterId, configWindow) ->
     moddir = path.join(modpath, modname)
     config = load_conf moddir
-    load_css_of_module moddir
+    load_css moddir
 
     if config
         # Take hook and require it. This should be in a different function
@@ -459,6 +464,21 @@ load_conf = (moddir) ->
 
 
 ### Core Logic (Startup and Close) ###
+
+# Load CSS Files of selected theme
+load_theme = ->
+    if session.theme and session.theme is not ""
+        theme = session.theme
+    else
+        session.theme = "cover"
+        theme = "cover"
+    try
+        cssDir = path.join "themes", theme
+        append_css_files cssDir
+
+$ ->
+    # Select theme
+    load_theme()
 
 getNumFromName = (name) ->
     pattern = /^#.*-(\d+)$/
