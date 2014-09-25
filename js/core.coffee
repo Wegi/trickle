@@ -467,8 +467,9 @@ load_conf = (moddir) ->
 
 # Load CSS Files of selected theme
 load_theme = ->
-    if session.theme and session.theme is not ""
+    if session.theme and session.theme is not "" and not session[theme].startsWith "."
         theme = session.theme
+        console.log "I am here!"
     else
         session.theme = "cover"
         theme = "cover"

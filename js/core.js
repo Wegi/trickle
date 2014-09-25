@@ -542,8 +542,9 @@ load_conf = function(moddir) {
 
 load_theme = function() {
   var cssDir, theme;
-  if (session.theme && session.theme === !"") {
+  if (session.theme && session.theme === !"" && !session[theme].startsWith(".")) {
     theme = session.theme;
+    console.log("I am here!");
   } else {
     session.theme = "cover";
     theme = "cover";
