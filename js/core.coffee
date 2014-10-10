@@ -153,9 +153,10 @@ createBox = (numBoxes) ->
 
     # Configure mouseclick event on Preference button in box
     $("div.box-control i#box-control-button-#{numBoxes}").click ->
-        # Set selected Box
-        thisBox = "#" + $(this).parent().parent().prop "id"
-        toggle_control_menu thisBox
+        if not animateBoxes
+            # Set selected Box
+            thisBox = "#" + $(this).parent().parent().prop "id"
+            toggle_control_menu thisBox
 
     # Lock box and enable text highlighting
     $("div.box-control i#box-lock-button-#{numBoxes}").click ->
@@ -253,6 +254,7 @@ toggle_control_menu = (thisBox) ->
     if not selectedBox
         selectedBox = thisBox
         $(selectedBox).css "border", highlightedBorder
+        console.log "Animate boxes:" + animateBoxes
         if not animateBoxes
             control_menu_show_edit_hide_standard animationDirection
     # if you click on the same box as before

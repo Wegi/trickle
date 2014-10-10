@@ -183,8 +183,10 @@ createBox = function(numBoxes) {
   }
   $("div.box-control i#box-control-button-" + numBoxes).click(function() {
     var thisBox;
-    thisBox = "#" + $(this).parent().parent().prop("id");
-    return toggle_control_menu(thisBox);
+    if (!animateBoxes) {
+      thisBox = "#" + $(this).parent().parent().prop("id");
+      return toggle_control_menu(thisBox);
+    }
   });
   $("div.box-control i#box-lock-button-" + numBoxes).click(function() {
     var lockButton, thisBox;
@@ -310,6 +312,7 @@ toggle_control_menu = function(thisBox) {
   if (!selectedBox) {
     selectedBox = thisBox;
     $(selectedBox).css("border", highlightedBorder);
+    console.log("Animate boxes:" + animateBoxes);
     if (!animateBoxes) {
       return control_menu_show_edit_hide_standard(animationDirection);
     }
