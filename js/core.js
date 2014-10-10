@@ -339,7 +339,16 @@ toggle_control_menu = function(thisBox) {
 /* Config Dialogue Logic */
 
 installable_modules = function() {
-  return console.log("I should display installable modules...");
+  var content, repo, repos, _i, _len;
+  repos = JSON.parse(fs.readFileSync("repo.json", "utf8"));
+  content = "<h3>Install new modules</h3>";
+  content += "<ul>";
+  for (_i = 0, _len = repos.length; _i < _len; _i++) {
+    repo = repos[_i];
+    content += "<li>" + repo.name + "</li>";
+  }
+  content += "</ul>";
+  return $(configDialogue).html(content);
 };
 
 config_dialogue_module_add = function(boxContentId, boxOuterId) {

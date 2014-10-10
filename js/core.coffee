@@ -277,7 +277,17 @@ toggle_control_menu = (thisBox) ->
 
 # TODO
 installable_modules = ->
-    console.log "I should display installable modules..."
+    repos = JSON.parse(fs.readFileSync "repo.json", "utf8")
+
+    content = "<h3>Install new modules</h3>"
+    content += "<ul>"
+
+    for repo in repos
+        content += "<li>#{repo.name}</li>"
+    content += "</ul>"
+
+    $(configDialogue).html content
+
 
 # List all modules to add them to a box
 config_dialogue_module_add = (boxContentId, boxOuterId) ->
