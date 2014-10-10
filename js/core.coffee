@@ -91,7 +91,7 @@ api.closeLightbox = (delay, lightbox) ->
 
 # Include font awesome icons
 api.icon = (icon) ->
-    "<i class='fa fa-#{icon} fa-lg'></i> "
+    "<i class='fa fa-#{icon} fa-lg'></i> &nbsp;"
 
 # Include spinning font awesome icons
 api.icon.spinning = (icon) ->
@@ -275,6 +275,10 @@ toggle_control_menu = (thisBox) ->
 
 ### Config Dialogue Logic ###
 
+# TODO
+installable_modules = ->
+    console.log "I should display installable modules..."
+
 # List all modules to add them to a box
 config_dialogue_module_add = (boxContentId, boxOuterId) ->
     # Header
@@ -286,10 +290,15 @@ config_dialogue_module_add = (boxContentId, boxOuterId) ->
             content += create_module_list_items module
     content += "</ul>"
 
+    content += "<i id='installable-modules' class='fa fa-plus fa-lg fade'></i>"
+
     # Open Config Dialogue with content
     $(configDialogue).lightbox_me().html content
 
     # Add listener
+    $("#installable-modules").click ->
+        installable_modules()
+
     $(".module-single").click ->
         if session.boxes[boxOuterId].loaded_modules
             if $(this).attr("name") in session.boxes[boxOuterId].loaded_modules
