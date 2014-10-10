@@ -7,7 +7,6 @@ fs = require "fs"
 gui = require "nw.gui"
 path = require "path"
 
-
 ### Core Logic Preparations ###
 # Set Startup-Parameters
 init_done = false
@@ -15,17 +14,6 @@ showConfig = false
 animateBoxes = false
 
 lightboxCloseDelay = 3000   # close lightbox after some ms
-
-# Path to the trickle-modules
-modpath = "./modules"
-modules = []
-
-# List all modules in path
-fs.readdir modpath, (err, files) ->
-    if err
-        modules = []
-        return
-    modules = files
 
 # Get Home PATH
 home_path = process.env.HOME || process.env.HOMEPATH || process.env.USERPROFILE
@@ -44,6 +32,20 @@ catch
     console.log "gotcha buddy"
     session =
         boxes: { }
+
+if not fs.existsSync(home_path+'/.trickle/modules')
+    fs.mkdirSync home_path+'/.trickle/modules'
+
+# Path to the trickle-modules
+modpath = home_path+"/.trickle/modules"
+modules = []
+
+# List all modules in path
+fs.readdir modpath, (err, files) ->
+    if err
+        modules = []
+        return
+    modules = files
 
 ### END Core Logic Preparations ###
 
@@ -420,7 +422,7 @@ load_module = (modname, boxContentId, boxOuterId, configWindow) ->
 
     if config
         # Take hook and require it. This should be in a different function
-        mod = require("./" + path.join(moddir, path.basename(config.hook, path.extname(config.hook))))
+        mod = require(path.join(moddir, path.basename(config.hook, path.extname(config.hook))))
 
         # Load module
         mod.init boxContentId, configWindow, session, api
@@ -444,11 +446,11 @@ destroy_module = (modname, boxContentId, boxOuterId) ->
 
     if config
         # Take hook and require it. This should be in a different function
-        mod = require("./" + path.join(moddir, path.basename(config.hook, path.extname(config.hook))))
+        mod = require(path.join(moddir, path.basename(config.hook, path.extname(config.hook))))
         # Destroy module
         mod.destroy boxContentId, session, api
         # remove from loaded modules
-        i = session.boxes[boxOuterId].loaded_modules.indexOf "twitter"
+        i = session.boxes[boxOuterId].loaded_modules.indexOf modname
         if i != -1
             session.boxes[boxOuterId].loaded_modules.splice i, 1
 

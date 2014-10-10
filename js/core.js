@@ -21,18 +21,6 @@ animateBoxes = false;
 
 lightboxCloseDelay = 3000;
 
-modpath = "./modules";
-
-modules = [];
-
-fs.readdir(modpath, function(err, files) {
-  if (err) {
-    modules = [];
-    return;
-  }
-  return modules = files;
-});
-
 home_path = process.env.HOME || process.env.HOMEPATH || process.env.USERPROFILE;
 
 if (!fs.existsSync(home_path + '/.trickle')) {
@@ -52,6 +40,22 @@ try {
     boxes: {}
   };
 }
+
+if (!fs.existsSync(home_path + '/.trickle/modules')) {
+  fs.mkdirSync(home_path + '/.trickle/modules');
+}
+
+modpath = home_path + "/.trickle/modules";
+
+modules = [];
+
+fs.readdir(modpath, function(err, files) {
+  if (err) {
+    modules = [];
+    return;
+  }
+  return modules = files;
+});
 
 
 /* END Core Logic Preparations */
@@ -494,7 +498,7 @@ load_module = function(modname, boxContentId, boxOuterId, configWindow) {
   config = load_conf(moddir);
   load_css(moddir);
   if (config) {
-    mod = require("./" + path.join(moddir, path.basename(config.hook, path.extname(config.hook))));
+    mod = require(path.join(moddir, path.basename(config.hook, path.extname(config.hook))));
     mod.init(boxContentId, configWindow, session, api);
     if (!session.boxes[boxOuterId].loaded_modules) {
       session.boxes[boxOuterId].loaded_modules = [];
@@ -515,9 +519,9 @@ destroy_module = function(modname, boxContentId, boxOuterId) {
   moddir = path.join(modpath, modname);
   config = load_conf(moddir);
   if (config) {
-    mod = require("./" + path.join(moddir, path.basename(config.hook, path.extname(config.hook))));
+    mod = require(path.join(moddir, path.basename(config.hook, path.extname(config.hook))));
     mod.destroy(boxContentId, session, api);
-    i = session.boxes[boxOuterId].loaded_modules.indexOf("twitter");
+    i = session.boxes[boxOuterId].loaded_modules.indexOf(modname);
     if (i !== -1) {
       return session.boxes[boxOuterId].loaded_modules.splice(i, 1);
     }
