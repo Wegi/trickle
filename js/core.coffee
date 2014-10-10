@@ -275,17 +275,35 @@ toggle_control_menu = (thisBox) ->
 
 ### Config Dialogue Logic ###
 
+download_module = (name, repo) ->
+    download = require "download"
+
+    file = new download(
+        extract: true
+        strip: 1
+        mode: 755
+    ).get(repo+"/archive/master.zip").dest(home_path + '/.trickle/modules/' + name)
+    file.run (err, files, stream) ->
+        throw err    if err
+        console.log "File downloaded successfully!"
+
+
 # Open file with modules and their repos and create a list to choose which to install
 installable_modules = ->
     repos = JSON.parse(fs.readFileSync "repo.json", "utf8")
-
     content = "<h3>Install new modules</h3>"
     content += "<ul>"
     for repo in repos
-        content += "<li class='module-entry'><a class='module-single' href='#' name='#{repo.name}'>#{repo.name}</a></li>"
+        content += "<li class='module-entry'>
+                        <a class='module-single' href='#' name='#{repo.name}'>#{repo.name}</a>
+                    </li>"
     content += "</ul>"
 
     $(configDialogue).html content
+
+    # Install module from repo
+    $(".module-single").click ->
+        download_module(repo.name, repo.repo)
 
 
 # List all modules to add them to a box
