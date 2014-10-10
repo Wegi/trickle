@@ -1,0 +1,7 @@
+{"modules": [
+    {
+        "name": "twitter",
+        "description": "A Twitter timeline for trickle",
+        "repo": "https://github.com/Wegi/trickle_twitter"
+    },
+] }
