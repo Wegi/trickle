@@ -345,7 +345,7 @@ installable_modules = function() {
   content += "<ul>";
   for (_i = 0, _len = repos.length; _i < _len; _i++) {
     repo = repos[_i];
-    content += "<li>" + repo.name + "</li>";
+    content += "<li class='module-entry'><a class='module-single' href='#' name='" + repo.name + "'>" + repo.name + "</a></li>";
   }
   content += "</ul>";
   return $(configDialogue).html(content);
@@ -473,7 +473,7 @@ create_module_list_items = function(module) {
   }
   content += ">";
   if (icon_fa) {
-    content += "<span class='fa " + icon_fa + "'></span>&nbsp;";
+    content += "<i class='fa " + icon_fa + "'></i>&nbsp;";
   } else if (icon) {
     content += "<img class='icon' src='" + icon + "' alt='" + name + "' onerror='this.remove()'>";
   }

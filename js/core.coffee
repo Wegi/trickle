@@ -275,15 +275,14 @@ toggle_control_menu = (thisBox) ->
 
 ### Config Dialogue Logic ###
 
-# TODO
+# Open file with modules and their repos and create a list to choose which to install
 installable_modules = ->
     repos = JSON.parse(fs.readFileSync "repo.json", "utf8")
 
     content = "<h3>Install new modules</h3>"
     content += "<ul>"
-
     for repo in repos
-        content += "<li>#{repo.name}</li>"
+        content += "<li class='module-entry'><a class='module-single' href='#' name='#{repo.name}'>#{repo.name}</a></li>"
     content += "</ul>"
 
     $(configDialogue).html content
@@ -409,7 +408,7 @@ create_module_list_items = (module) ->
 
     # Decide which icon has to be showed
     if icon_fa
-        content += "<span class='fa #{icon_fa}'></span>&nbsp;"
+        content += "<i class='fa #{icon_fa}'></i>&nbsp;"
     else if icon
         content += "<img class='icon' src='#{icon}' alt='#{name}' onerror='this.remove()'>"
 
