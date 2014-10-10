@@ -254,7 +254,6 @@ toggle_control_menu = (thisBox) ->
     if not selectedBox
         selectedBox = thisBox
         $(selectedBox).css "border", highlightedBorder
-        console.log "Animate boxes:" + animateBoxes
         if not animateBoxes
             control_menu_show_edit_hide_standard animationDirection
     # if you click on the same box as before
@@ -471,7 +470,6 @@ load_conf = (moddir) ->
 load_theme = ->
     if session.theme and session.theme is not "" and not session[theme].startsWith "."
         theme = session.theme
-        console.log "I am here!"
     else
         session.theme = "cover"
         theme = "cover"

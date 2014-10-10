@@ -312,7 +312,6 @@ toggle_control_menu = function(thisBox) {
   if (!selectedBox) {
     selectedBox = thisBox;
     $(selectedBox).css("border", highlightedBorder);
-    console.log("Animate boxes:" + animateBoxes);
     if (!animateBoxes) {
       return control_menu_show_edit_hide_standard(animationDirection);
     }
@@ -547,7 +546,6 @@ load_theme = function() {
   var cssDir, theme;
   if (session.theme && session.theme === !"" && !session[theme].startsWith(".")) {
     theme = session.theme;
-    console.log("I am here!");
   } else {
     session.theme = "cover";
     theme = "cover";
