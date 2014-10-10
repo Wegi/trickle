@@ -1,0 +1,3 @@
+[submodule "trickle_twitter"]
+	path = trickle_twitter
+	url = git@github.com:Wegi/trickle_twitter.git
